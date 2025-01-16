@@ -46,9 +46,9 @@ const Navbar = () => {
     };
 
     return (
-        <AppBar position="absolute"
+        <AppBar position="fixed"
         sx={{
-            // backgroundColor: 'transparent', // Makes the background transparent
+            backgroundColor: 'transparent', // Makes the background transparent
             // boxShadow: 'none', // Removes the shadow for a cleaner look
           }}>
             <Container maxWidth="xl">

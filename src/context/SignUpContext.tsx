@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const signUpContext = createContext(null);
 
-const SignUp = ({ children }) => {
+const SignUpProvider = ({ children }) => {
   const [signUpUser, setSignUpUser] = useState();
   const [signUpSuccess, setSignUpSuccess] = useState([])
   const [signUpError, setSignUpError] = useState([])
@@ -26,4 +26,4 @@ const SignUp = ({ children }) => {
     </signUpContext.Provider>
   );
 };
-export default SignUp;
+export default SignUpProvider;

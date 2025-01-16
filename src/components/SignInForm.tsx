@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -15,6 +15,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 import { useNavigate } from "react-router-dom";
+import { signInContext } from '../context/SignInContext';
 
 // Componente Copyright
 function Copyright(props: React.HTMLAttributes<HTMLDivElement>) {
@@ -22,7 +23,7 @@ function Copyright(props: React.HTMLAttributes<HTMLDivElement>) {
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
             <Link color="inherit" href="https://mui.com/">
-                Your Website
+                Club Manager
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -45,9 +46,11 @@ const validationSchema = Yup.object({
 
 const SignInForm: React.FC = () => {
 
+    const {setSignInUser, signInSuccess, signInError } = useContext(signInContext);
+
     const handleSubmit = (values: { email: string; password: string }) => {
         const user = { username: values.email, password: values.password };
-        console.log(user);
+        setSignInUser(user);
         navigate("/home");
     };
 
@@ -58,8 +61,6 @@ const SignInForm: React.FC = () => {
     //         navigate("/home");
     //     }
     // }, [accessToken])
-
-
 
 
     return (
@@ -139,11 +140,11 @@ const SignInForm: React.FC = () => {
                         ¿Olvidaste tu contraseña?
                     </Link>
                 </Grid>
-                <Grid size={{ xs: 12, sm:"auto", md: "auto", lg: "auto" }} sx={{ textAlign: 'center' }}>
+                {/* <Grid size={{ xs: 12, sm:"auto", md: "auto", lg: "auto" }} sx={{ textAlign: 'center' }}>
                     <Link href="/signup" variant="body2">
                         ¿Aún no sos socio?
                     </Link>
-                </Grid>
+                </Grid> */}
             </Grid>
 
 

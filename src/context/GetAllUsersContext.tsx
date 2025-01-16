@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const getAllUsersContext = createContext(null);
 
-const GetAllUsers = ({ children }) => {
+const GetAllUsersProvider = ({ children }) => {
   const [allUsers, setAllUsers] = useState();
 
   useEffect(() => {
@@ -23,4 +23,4 @@ const GetAllUsers = ({ children }) => {
     </getAllUsersContext.Provider>
   );
 };
-export default GetAllUsers;
+export default GetAllUsersProvider;
