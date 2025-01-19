@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from "react"
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -15,20 +16,26 @@ import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import avatar from "../assets/backgroundImages/Background.jpg"
 
 
-
-const pageLinks = [
+const pageAdmin = [
     { name: 'Lista de usuarios', href: "/admin-users-list" },
-    { name: 'Pricing', href: '/pricing' },
-    { name: 'Blog', href: '/blog' },
+    { name: 'Opcion 1', href: '/pricing' },
+    { name: 'Opcion 1', href: '/blog' },
+];
+const pageUsers = [
+    { name: 'Noticias', href: "/history" },
+    { name: 'El Club', href: '/pricing' },
+    { name: 'Historia', href: '/blog' },
+    { name: 'Autoridades', href: '/blog' },
 ];
 
-
-const pages = ['Lista de usuarios', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Navbar = () => {
+    const [user, setUser] = useState(false)
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+
+    const pagesToMap = user ? pageAdmin : pageUsers;
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
@@ -47,10 +54,10 @@ const Navbar = () => {
 
     return (
         <AppBar position="fixed"
-        sx={{
-            backgroundColor: 'transparent', // Makes the background transparent
-            // boxShadow: 'none', // Removes the shadow for a cleaner look
-          }}>
+            sx={{
+                backgroundColor: 'transparent', // Makes the background transparent
+                // boxShadow: 'none', // Removes the shadow for a cleaner look
+            }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <SportsSoccerIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -99,8 +106,8 @@ const Navbar = () => {
                             onClose={handleCloseNavMenu}
                             sx={{ display: { xs: 'block', md: 'none' } }}
                         >
-                            {pageLinks.map((page) => (
-                                <MenuItem key={page.name}  href={page.href} onClick={handleCloseNavMenu}>
+                            {pagesToMap.map((page) => (
+                                <MenuItem key={page.name} href={page.href} onClick={handleCloseNavMenu}>
                                     <Typography sx={{ textAlign: 'center' }}>{page.name}</Typography>
                                 </MenuItem>
                             ))}
@@ -126,7 +133,7 @@ const Navbar = () => {
                         LOGO
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {pageLinks.map((page) => (
+                        {pagesToMap.map((page) => (
                             <Button
                                 key={page.name}
                                 href={page.href}
@@ -142,7 +149,7 @@ const Navbar = () => {
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                 {/* <Avatar alt="Remy Sharp" src={Background} /> */}
-                                <Avatar alt="Remy Sharp" src={avatar} /> 
+                                <Avatar alt="Remy Sharp" src={avatar} />
 
                             </IconButton>
                         </Tooltip>

@@ -3,6 +3,8 @@ import React, { useEffect, useContext } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
@@ -31,7 +33,7 @@ const validationSchema = Yup.object({
 
 
 
-const SignInForm: React.FC = () => {
+const JoinUpForm: React.FC = () => {
 
     const { setSignInUser, signInSuccess, signInError } = useContext(signInContext);
 
@@ -73,7 +75,7 @@ const SignInForm: React.FC = () => {
             }}>
                 <LockOutlinedIcon />
             </Avatar>
-            <Typography component="h1" variant="h5">Iniciar Sesión</Typography>
+            <Typography component="h1" variant="h5">Solicitud de Nuevo Socio</Typography>
 
             <Formik
                 initialValues={{ email: "", password: "" }}
@@ -160,5 +162,5 @@ const SignInForm: React.FC = () => {
     );
 };
 
-export default SignInForm;
+export default JoinUpForm;
 

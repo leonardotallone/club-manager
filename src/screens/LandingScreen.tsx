@@ -1,17 +1,27 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Grid from '@mui/material/Grid2';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Box, Container, Typography, Link, IconButton } from "@mui/material";
 import Background from "../assets/backgroundImages/Background.jpg"
 import Navbar from '../components/Navbar';
 import SignInForm from "../components/SignInForm";
+import JoinUpForm from '../components/JoinUpForm';
 import Advertising from "../components/Advertising";
 import Footer from "../components/Footer";
 import { signInContext } from '../context/SignInContext';
 
 const LandingScreen = () => {
+  const [join, setJoin] = useState(false)
 
   const { loading } = useContext(signInContext);
+
+
+  const handleJoin = () => {
+    setJoin(prevJoin => !prevJoin);
+    console.log(join)
+  }
+
+
 
   return (
     <>
@@ -41,7 +51,10 @@ const LandingScreen = () => {
               alignItems: 'flex-start',
               // justifyContent: { xs: "center", md: "flex-end", lg:"flex-end" },
             }}>
-              <Typography sx={{ fontSize: 54, color: "white", fontWeight: "600", justifyContent: { xs: "flex-start", md: "flex-start", lg: "flex-start", xl: "flex-start" } }}>Club Social de Junin</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'baseline' }}>
+                <Typography sx={{ fontSize: 54, color: "white", fontWeight: "800" }}>CLUB SOCIAL</Typography>
+                <Typography sx={{ fontSize: 38, color: "white", fontWeight: "400", ml: 2 }}>DE JUNÍN</Typography>
+              </Box>
               <Typography sx={{ mt: -1, fontSize: 16, color: "white", fontWeight: "450", justifyContent: { xs: "flex-start", md: "flex-start", lg: "flex-start", xl: "flex-start" } }}>Club Manager Solution</Typography>
             </Grid>
 
@@ -50,7 +63,7 @@ const LandingScreen = () => {
               justifyContent: 'flex-end', // Alinea el formulario a la derecha
               alignItems: 'center',
             }}>
-              <SignInForm />
+             {!join ? <SignInForm /> : <JoinUpForm />}
             </Grid>
           </Container>
 

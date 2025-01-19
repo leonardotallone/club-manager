@@ -7,6 +7,7 @@ import SignUpScreen from "./screens/SignUpScreen";
 import EmailRecoverScreen from "./screens/EmailRecoverScreen";
 import UsersListScreen from "./screens/Admin/UsersListScreen";
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -15,6 +16,7 @@ function App() {
         <Route path="/home" element={<HomeScreen />} />
         <Route path="/password-recover" element={<PasswordRecoverScreen />} />
         <Route path="/signup" element={<SignUpScreen />} />
+
         <Route path="/email-recover" element={<EmailRecoverScreen />} />
         <Route path="/admin-users-list" element={<UsersListScreen />} />
       </Routes>
