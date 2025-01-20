@@ -9,48 +9,74 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
+import Modal from '@mui/material/Modal';
+
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import { Formik, Form } from "formik";
+import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 
 import { useNavigate } from "react-router-dom";
-import { signInContext } from '../context/SignInContext';
+import { joinUpContext } from '../context/JoinUpContext';
+import { displayLandingFormsContext } from '../context/DisplayLandingForms';
 
 // Componente Copyright
 
+interface JoinUpFormValues {
+    email: string;
+    name: string;
+    lastName: string;
+    dni: string;
+}
 
 // Validación con Yup
 const validationSchema = Yup.object({
     email: Yup.string()
         .email("Dirección de correo electrónico inválida")
         .required("El campo es obligatorio"),
-    password: Yup.string()
-        .min(6, "La contraseña debe tener como mínimo 6 caracteres")
+    name: Yup.string()
+        .matches(/^[a-zA-ZÀ-ÿ\s]+$/, "Formato de nombre incorrecto")
         .required("El campo es obligatorio"),
+
+    lastName: Yup.string()
+        .matches(/^[a-zA-ZÀ-ÿ\s]+$/, "Formato de apellido incorrecto")
+        .required("El campo es obligatorio"),
+    dni: Yup.string()
+        .matches(/^\d+$/, "El DNI debe contener solo números")
+        .test(
+            "longitud-dni",
+            "El DNI debe tener entre 7 y 8 dígitos",
+            (value) => value && value.length >= 7 && value.length <= 8
+        )
+        .required("El campo es obligatorio"),
+
 });
-
-
 
 
 const JoinUpForm: React.FC = () => {
 
-    const { setSignInUser, signInSuccess, signInError } = useContext(signInContext);
+    const { setJoinUpUser, joinUpSuccess, joinUpError } = useContext(joinUpContext);
+    const { setJoin } = useContext(displayLandingFormsContext);
 
-    const handleSubmit = (values: { email: string; password: string }) => {
-        const user = { username: values.email, password: values.password };
-        setSignInUser(user);
-        navigate("/home");
+    const [open, setOpen] = React.useState(true);
+    const handleOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+
+    const handleSubmit = (
+        values: JoinUpFormValues,
+        formikHelpers: FormikHelpers<JoinUpFormValues>
+    ) => {
+        const user = { username: values.email, password: values.name, lastName: values.lastName, dni: values.dni };
+        setJoinUpUser(user);
+        setJoin(false)
     };
 
     const navigate = useNavigate();
-
-    // useEffect(() => {
-    //     if (accessToken) {
-    //         navigate("/home");
-    //     }
-    // }, [accessToken])
-
 
     return (
         <Box
@@ -66,7 +92,7 @@ const JoinUpForm: React.FC = () => {
                 backgroundColor: 'rgba(255, 255, 255, 0.8)',
                 borderRadius: 2,
                 width: 450,
-                height: 600,
+                height: "auto",
             }}
         >
             <Avatar sx={{
@@ -77,12 +103,12 @@ const JoinUpForm: React.FC = () => {
             </Avatar>
             <Typography component="h1" variant="h5">Solicitud de Nuevo Socio</Typography>
 
-            <Formik
-                initialValues={{ email: "", password: "" }}
+            <Formik<JoinUpFormValues>
+                initialValues={{ email: "", name: "", lastName: "", dni: "" }}
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
             >
-                {({ handleChange, handleBlur, values, errors, touched,isValid, dirty }) => (
+                {({ handleChange, handleBlur, values, errors, touched, isValid, dirty }) => (
                     <Form>
                         <TextField
                             margin="normal"
@@ -103,29 +129,58 @@ const JoinUpForm: React.FC = () => {
                             margin="normal"
                             required
                             fullWidth
-                            name="password"
-                            label="Contraseña"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                            value={values.password}
+                            name="name"
+                            label="Nombre"
+                            type="name"
+                            id="name"
+                            autoComplete="current-name"
+                            value={values.name}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            error={touched.password && Boolean(errors.password)}
-                            helperText={touched.password && errors.password}
+                            error={touched.name && Boolean(errors.name)}
+                            helperText={touched.name && errors.name}
                         />
-                        {/* <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
-                            label="Recordarme"
-                        /> */}
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="lastName"
+                            label="Apellido/s"
+                            type="lastName"
+                            id="lastName"
+                            autoComplete="lastName"
+                            value={values.lastName}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={touched.lastName && Boolean(errors.lastName)}
+                            helperText={touched.lastName && errors.lastName}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="dni"
+                            label="DNI"
+                            type="dni"
+                            id="dni"
+                            autoComplete="dni"
+                            value={values.dni}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={touched.dni && Boolean(errors.dni)}
+                            helperText={touched.dni && errors.dni}
+                        />
+
                         <Grid container spacing={2}>
                             <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
-                                <Button type="submit" fullWidth variant="contained" sx={{
-                                    mt: 3,
-                                    mb: 2,
-                                    // backgroundColor: "#558b2f"
-                                }}>
-                                    QUIERO ASOCIARME
+                                <Button
+                                    type="button" href='/'
+                                    fullWidth variant="contained" sx={{
+                                        mt: 3,
+                                        mb: 2,
+                                        // backgroundColor: "#558b2f"
+                                    }}>
+                                    CANCELAR
                                 </Button>
                             </Grid>
 
@@ -135,7 +190,7 @@ const JoinUpForm: React.FC = () => {
                                     mb: 2,
                                     // backgroundColor: "#558b2f"
                                 }}>
-                                    Iniciar Sesión
+                                    ENVIAR SOLICITUD
                                 </Button>
                             </Grid>
 
@@ -144,21 +199,110 @@ const JoinUpForm: React.FC = () => {
                 )}
             </Formik>
 
-
+            {/* 
             <Grid container alignItems="center" justifyContent={{ xs: "center", sm: "space-between", md: "space-between", lg: "space-between", }} spacing={{ xs: 3, sm: 20, md: 30, lg: 30 }} direction={{ xs: "column", sm: "row", md: "row", lg: "row", }}  >
                 <Grid size={{ xs: 12, sm: "auto", md: "auto", lg: "auto" }} sx={{ textAlign: 'center' }}>
                     <Link href="/password-recover" variant="body2">
                         ¿Olvidaste tu contraseña?
                     </Link>
                 </Grid>
-                {/* <Grid size={{ xs: 12, sm:"auto", md: "auto", lg: "auto" }} sx={{ textAlign: 'center' }}>
+                <Grid size={{ xs: 12, sm:"auto", md: "auto", lg: "auto" }} sx={{ textAlign: 'center' }}>
                     <Link href="/signup" variant="body2">
                         ¿Aún no sos socio?
                     </Link>
-                </Grid> */}
-            </Grid>
+                </Grid>
+            </Grid> */}
 
-        </Box>
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="child-modal-title"
+                aria-describedby="child-modal-description"
+            >
+                <Box sx={{
+                    maxWidth: 300,
+                    // maxHeight: 200,
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    bgcolor: 'rgba(29, 29, 29, 0.75)', // Fondo oscuro semitransparente
+                    borderRadius: '20px', // Esquinas redondeadas
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', // Sombra sutil
+                    display: 'flex', // Usar flexbox para centrar
+                    flexDirection: 'column', // Colocar elementos en columna
+                    alignItems: 'center', // Centrar horizontalmente
+                    textAlign: 'center' // Centrar texto
+                }}>
+                    <Typography id="child-modal-title"
+                        sx={{ fontSize: 17, color: "white", fontWeight: "700", display: 'flex', fontFamily: 'San Francisco, -apple-system, BlinkMacSystemFont', pt: 3, mr: 2, ml: 2 }} >
+                        Solicitud Enviada Exitosamente
+                    </Typography>
+
+                    <Typography id="child-modal-description"
+                        sx={{ fontSize: 13, color: "white", fontWeight: "400", display: 'flex', fontFamily: 'San Francisco, -apple-system, BlinkMacSystemFont', pt: 1, pb: 3, mr: 2, ml: 2 }} >
+                        Te contactaremos a la brevedad! Muchas gracias.
+                    </Typography>
+
+                    {/* Línea divisoria horizontal */}
+                    <Box sx={{
+                        width: '100%', // Ancho completo
+                        height: '1px', // Altura de la línea horizontal
+                        backgroundColor: 'rgba(255, 255, 255, 0.15)', // Color blanco suave
+                    }} />
+
+                    {/* Contenedor para los botones y la línea vertical */}
+                    <Box sx={{
+                        display: 'flex',
+                        alignItems: 'center', // Alinear verticalmente
+                        height: 50,
+                        // backgroundColor: "red",
+                        width: '100%', // Ancho completo para alinear correctamente
+                        justifyContent: 'space-between' // Espacio entre los botones y la línea vertical
+                    }}>
+                        {/* Botón Izquierdo */}
+                        <Button
+                            onClick={handleClose}
+                            sx={{
+                               
+                                backgroundColor: 'transparent', // Sin fondo
+                                color: '#007aff', // Color azul predeterminado de iOS
+                                ml: 4,
+                                textTransform: 'none', // Sin mayúsculas
+                                fontSize: 17,
+                                fontWeight: "400",
+                            }}
+                        >
+                            Cancelar
+                        </Button>
+
+                        {/* Línea divisoria vertical */}
+                        <Box sx={{
+                            width: '1px', // Ancho de la línea vertical
+                            height: '50px', // Altura de la línea vertical
+                            backgroundColor: 'rgba(255, 255, 255, 0.15)', // Color blanco suave
+
+                        }} />
+
+                        {/* Botón Derecho */}
+                        <Button
+                            onClick={handleClose}
+                            sx={{
+                          
+                                backgroundColor: 'transparent', // Sin fondo
+                                color: '#007aff', // Color azul predeterminado de iOS
+                                mr: 5,
+                                textTransform: 'none', // Sin mayúsculas
+                                fontSize: 17,
+                                fontWeight: "400",
+                            }}
+                        >
+                            Aceptar
+                        </Button>
+                    </Box>
+                </Box>
+            </Modal>
+        </Box >
     );
 };
 

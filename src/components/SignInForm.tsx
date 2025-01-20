@@ -14,8 +14,7 @@ import * as Yup from "yup";
 
 import { useNavigate } from "react-router-dom";
 import { signInContext } from '../context/SignInContext';
-
-// Componente Copyright
+import { displayLandingFormsContext } from '../context/DisplayLandingForms';
 
 
 // Validación con Yup
@@ -30,10 +29,10 @@ const validationSchema = Yup.object({
 
 
 
-
 const SignInForm: React.FC = () => {
 
     const { setSignInUser, signInSuccess, signInError } = useContext(signInContext);
+    const { setJoin } = useContext(displayLandingFormsContext);
 
     const handleSubmit = (values: { email: string; password: string }) => {
         const user = { username: values.email, password: values.password };
@@ -41,7 +40,13 @@ const SignInForm: React.FC = () => {
         navigate("/home");
     };
 
+    const handleJoin = () => {
+        setJoin(prevJoin => !prevJoin);
+    }
+
+
     const navigate = useNavigate();
+
 
     // useEffect(() => {
     //     if (accessToken) {
@@ -51,112 +56,121 @@ const SignInForm: React.FC = () => {
 
 
     return (
-        <Box
-            component={Paper}
-            elevation={6}
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                // justifyContent: 'center',
-                px: 4,
-                py: 8,
-                backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                borderRadius: 2,
-                width: 450,
-                height: 600,
-            }}
-        >
-            <Avatar sx={{
-                m: 1,
-                bgcolor: 'primary.main'
-            }}>
-                <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">Iniciar Sesión</Typography>
-
-            <Formik
-                initialValues={{ email: "", password: "" }}
-                validationSchema={validationSchema}
-                onSubmit={handleSubmit}
+        <>
+            <Box
+                component={Paper}
+                elevation={6}
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    // justifyContent: 'center',
+                    px: 4,
+                    py: 8,
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    borderRadius: 2,
+                    width: 450,
+                    height: 600,
+                }}
             >
-                {({ handleChange, handleBlur, values, errors, touched,isValid, dirty }) => (
-                    <Form>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Dirección de correo"
-                            name="email"
-                            autoComplete="email"
-                            autoFocus
-                            value={values.email}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={touched.email && Boolean(errors.email)}
-                            helperText={touched.email && errors.email}
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Contraseña"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                            value={values.password}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={touched.password && Boolean(errors.password)}
-                            helperText={touched.password && errors.password}
-                        />
-                        {/* <FormControlLabel
+                <Avatar sx={{
+                    m: 1,
+                    bgcolor: 'primary.main'
+                }}>
+                    <LockOutlinedIcon />
+                </Avatar>
+                <Typography component="h1" variant="h5">Iniciar Sesión</Typography>
+
+                <Formik
+                    initialValues={{ email: "", password: "" }}
+                    validationSchema={validationSchema}
+                    onSubmit={handleSubmit}
+                >
+                    {({ handleChange, handleBlur, values, errors, touched, isValid, dirty }) => (
+                        <Form>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="email"
+                                label="Dirección de correo"
+                                name="email"
+                                autoComplete="email"
+                                autoFocus
+                                value={values.email}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={touched.email && Boolean(errors.email)}
+                                helperText={touched.email && errors.email}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Contraseña"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                                value={values.password}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={touched.password && Boolean(errors.password)}
+                                helperText={touched.password && errors.password}
+                            />
+                            {/* <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
                             label="Recordarme"
                         /> */}
-                        <Grid container spacing={2}>
-                            <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
-                                <Button type="submit" fullWidth variant="contained" sx={{
-                                    mt: 3,
-                                    mb: 2,
-                                    // backgroundColor: "#558b2f"
-                                }}>
-                                    QUIERO ASOCIARME
-                                </Button>
+                            <Grid container spacing={2}>
+                                <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
+                                    <Button onClick={(e) => {
+                                        e.preventDefault(); // Prevenir el envío del formulario
+                                        handleJoin();
+                                    }} fullWidth variant="contained" sx={{
+                                        mt: 3,
+                                        mb: 2,
+                                        // backgroundColor: "#558b2f"
+                                    }}>
+                                        QUIERO ASOCIARME
+                                    </Button>
+                                </Grid>
+
+                                <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
+                                    <Button type="submit" fullWidth variant="contained" disabled={!isValid || !dirty} sx={{
+                                        mt: 3,
+                                        mb: 2,
+                                        // backgroundColor: "#558b2f"
+                                    }}>
+                                        INICIAR SESIÓN
+                                    </Button>
+                                </Grid>
                             </Grid>
 
-                            <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
-                                <Button type="submit" fullWidth variant="contained" disabled={!isValid || !dirty} sx={{
-                                    mt: 3,
-                                    mb: 2,
-                                    // backgroundColor: "#558b2f"
-                                }}>
-                                    Iniciar Sesión
-                                </Button>
-                            </Grid>
-
-                        </Grid>
-                    </Form>
-                )}
-            </Formik>
+                        </Form>
+                    )}
+                </Formik>
 
 
-            <Grid container alignItems="center" justifyContent={{ xs: "center", sm: "space-between", md: "space-between", lg: "space-between", }} spacing={{ xs: 3, sm: 20, md: 30, lg: 30 }} direction={{ xs: "column", sm: "row", md: "row", lg: "row", }}  >
-                <Grid size={{ xs: 12, sm: "auto", md: "auto", lg: "auto" }} sx={{ textAlign: 'center' }}>
-                    <Link href="/password-recover" variant="body2">
-                        ¿Olvidaste tu contraseña?
-                    </Link>
-                </Grid>
-                {/* <Grid size={{ xs: 12, sm:"auto", md: "auto", lg: "auto" }} sx={{ textAlign: 'center' }}>
+                <Grid container alignItems="center" justifyContent={{ xs: "center", sm: "space-between", md: "space-between", lg: "space-between", }} spacing={{ xs: 3, sm: 20, md: 30, lg: 30 }} direction={{ xs: "column", sm: "row", md: "row", lg: "row", }}  >
+                    <Grid size={{ xs: 12, sm: "auto", md: "auto", lg: "auto" }} sx={{ textAlign: 'center' }}>
+                        <Link href="/password-recover" variant="body2">
+                            ¿Olvidaste tu contraseña?
+                        </Link>
+
+                    </Grid>
+                    {/* <Grid size={{ xs: 12, sm:"auto", md: "auto", lg: "auto" }} sx={{ textAlign: 'center' }}>
                     <Link href="/signup" variant="body2">
-                        ¿Aún no sos socio?
+                    ¿Aún no sos socio?
                     </Link>
-                </Grid> */}
-            </Grid>
+                    </Grid> */}
+                </Grid>
+            </Box>
+            
 
-        </Box>
+
+        </>
+
     );
 };
 

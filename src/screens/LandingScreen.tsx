@@ -9,18 +9,12 @@ import JoinUpForm from '../components/JoinUpForm';
 import Advertising from "../components/Advertising";
 import Footer from "../components/Footer";
 import { signInContext } from '../context/SignInContext';
+import { displayLandingFormsContext } from '../context/DisplayLandingForms';
 
 const LandingScreen = () => {
-  const [join, setJoin] = useState(false)
 
   const { loading } = useContext(signInContext);
-
-
-  const handleJoin = () => {
-    setJoin(prevJoin => !prevJoin);
-    console.log(join)
-  }
-
+  const { join } = useContext(displayLandingFormsContext);
 
 
   return (
@@ -63,7 +57,7 @@ const LandingScreen = () => {
               justifyContent: 'flex-end', // Alinea el formulario a la derecha
               alignItems: 'center',
             }}>
-             {!join ? <SignInForm /> : <JoinUpForm />}
+              {!join ? <SignInForm /> : <JoinUpForm />}
             </Grid>
           </Container>
 

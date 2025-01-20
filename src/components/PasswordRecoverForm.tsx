@@ -66,7 +66,7 @@ const PasswordRecoverForm: React.FC = () => {
                 py: 8,
                 backgroundColor: 'rgba(255, 255, 255, 0.8)',
                 borderRadius: 2,
-                width: 600,
+                width:  450,
                 height: 600,
             }}
         >

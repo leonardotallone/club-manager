@@ -5,7 +5,9 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 // Context
 import SignInContext from "./context/SignInContext";
+import JoinUpContext from "./context/JoinUpContext";
 import GetAllUsersProvider from "./context/GetAllUsersContext";
+import DisplayLandingFormsProvider from "./context/DisplayLandingForms";
 
 import App from "./App";
 
@@ -20,13 +22,17 @@ root.render(
   <React.StrictMode>
     <CssBaseline />
     <ThemeProvider theme={theme}>
-
-      <SignInContext>
-        <GetAllUsersProvider>
-          <App />
-        </GetAllUsersProvider>
-      </SignInContext>
       
+      <JoinUpContext>
+        <DisplayLandingFormsProvider>
+          <SignInContext>
+            <GetAllUsersProvider>
+              <App />
+            </GetAllUsersProvider>
+          </SignInContext>
+        </DisplayLandingFormsProvider>
+      </JoinUpContext>
+
     </ThemeProvider>
   </React.StrictMode>
 );
