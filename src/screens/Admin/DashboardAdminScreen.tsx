@@ -5,11 +5,13 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import Navbar from '../../components/Navbar';
 import BlackBanner from '../../components/BlackBanner';
-import UsersList from '../../components/Admin/UsersList';
+import Dashboard from '../../components/Admin/Dashboard';
+import Footer from '../../components/Footer';
+import Advertising from '../../components/Advertising';
 
 import { getAllUsersContext } from '../../context/GetAllUsersContext';
 
-const UserListScreen = () => {
+const DashboardAdminScreen = () => {
 
     const { loading } = useContext(getAllUsersContext);
     return (
@@ -36,6 +38,7 @@ const UserListScreen = () => {
                     mt: 3, // Ajusta este valor según la altura de tu Navbar
                 }}
             >
+            </Grid>
             {loading ? (
                 <Box sx={{
                     position: 'absolute',
@@ -51,10 +54,21 @@ const UserListScreen = () => {
                 }}>
                     <CircularProgress color="inherit" />
                 </Box>
-            ) : <UsersList />}
+            ) : <Dashboard />}
+            <Grid
+                container
+                sx={{
+                    width: '100%',
+                    height: 435,
+                    display: 'flex',
+
+                }}
+            >
             </Grid>
+            <Advertising />
+            <Footer />
         </>
     );
 };
 
-export default UserListScreen;
+export default DashboardAdminScreen;

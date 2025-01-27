@@ -1,24 +1,28 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import LandingScreen from "./screens/LandingScreen";
-import HomeScreen from "./screens/Admin/HomeScreen";
-import PasswordRecoverScreen from "./screens/PasswordRecoverScreen";
-import SignUpScreen from "./screens/SignUpScreen";
-import EmailRecoverScreen from "./screens/EmailRecoverScreen";
-import UsersListScreen from "./screens/Admin/UsersListScreen";
 
+import DashboardAdminScreen from "./screens/Admin/DashboardAdminScreen";
+import UsersListScreen from "./screens/Admin/UsersListScreen";
+import SignUpScreen from "./screens/Admin/SignUpScreen";
+
+import PasswordRecoverScreen from "./screens/PasswordRecoverScreen";
+import EmailRecoverScreen from "./screens/EmailRecoverScreen";
+import DashboardUserScreen from "./screens/DashboardUserScreen";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingScreen />} />
-        <Route path="/home" element={<HomeScreen />} />
-        <Route path="/password-recover" element={<PasswordRecoverScreen />} />
+
+        <Route path="/dashboard-admin-screen" element={<DashboardAdminScreen />} />
+        <Route path="/admin-users-list" element={<UsersListScreen />} />
         <Route path="/signup" element={<SignUpScreen />} />
 
+        <Route path="/password-recover" element={<PasswordRecoverScreen />} />
         <Route path="/email-recover" element={<EmailRecoverScreen />} />
-        <Route path="/admin-users-list" element={<UsersListScreen />} />
+        <Route path="/dashboard-screen" element={<DashboardUserScreen />} />
       </Routes>
     </BrowserRouter>
   );

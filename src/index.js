@@ -6,8 +6,10 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 // Context
 import SignInContext from "./context/SignInContext";
 import JoinUpContext from "./context/JoinUpContext";
+import SignUpContext from "./context/SignUpContext";
 import GetAllUsersProvider from "./context/GetAllUsersContext";
 import DisplayLandingFormsProvider from "./context/DisplayLandingForms";
+import SignedUserContext from "./context/SignedUserContext";
 
 import App from "./App";
 
@@ -22,16 +24,20 @@ root.render(
   <React.StrictMode>
     <CssBaseline />
     <ThemeProvider theme={theme}>
-      
-      <JoinUpContext>
-        <DisplayLandingFormsProvider>
-          <SignInContext>
-            <GetAllUsersProvider>
-              <App />
-            </GetAllUsersProvider>
-          </SignInContext>
-        </DisplayLandingFormsProvider>
-      </JoinUpContext>
+
+              <SignInContext>
+      <SignedUserContext>
+        <SignUpContext>
+          <JoinUpContext>
+            <DisplayLandingFormsProvider>
+                <GetAllUsersProvider>
+                  <App />
+                </GetAllUsersProvider>
+            </DisplayLandingFormsProvider>
+          </JoinUpContext>
+        </SignUpContext>
+      </SignedUserContext>
+              </SignInContext>
 
     </ThemeProvider>
   </React.StrictMode>

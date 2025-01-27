@@ -7,10 +7,12 @@ const JoinUpProvider = ({ children }) => {
   const [joinUpUser, setJoinUpUser] = useState();
   const [joinUpSuccess, setJoinUpSuccess] = useState([])
   const [joinUpError, setJoinUpError] = useState([])
+  const [loading, setLoading] = useState(false)
 
   console.log(joinUpUser)
 
   useEffect(() => {
+    setLoading(true);
     axios
       .post("http://10.25.14.90:3001/lotes/crearLote", joinUpUser)
       .then((response) => {
@@ -20,10 +22,11 @@ const JoinUpProvider = ({ children }) => {
         setJoinUpError(error.message);
         console.error("Error al obtener Usuarios:", error.message);
       });
+      setLoading(false);
   }, [joinUpUser]);
 
   return (
-    <joinUpContext.Provider value={{ setJoinUpUser, joinUpSuccess, joinUpError }}>
+    <joinUpContext.Provider value={{ setJoinUpUser, joinUpSuccess, joinUpError, loading }}>
       {children}
     </joinUpContext.Provider>
   );

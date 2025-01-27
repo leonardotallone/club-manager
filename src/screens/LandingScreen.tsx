@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import Grid from '@mui/material/Grid2';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Box, Container, Typography, Link, IconButton } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import Background from "../assets/backgroundImages/Background.jpg"
 import Navbar from '../components/Navbar';
 import SignInForm from "../components/SignInForm";
@@ -22,17 +22,19 @@ const LandingScreen = () => {
       <Navbar />
       <Grid container >
         <Grid
-          container sx={{
-            width: '100%',
-            height: "auto",
-            display: 'flex',
-            // backgroundImage: 'url("https://cdn.pixabay.com/photo/2023/04/17/10/31/tennis-7932066_1280.jpg")', // Path to your image
-            backgroundImage: `url(${Background})`,
-            backgroundSize: 'cover', // Cover the entire area
-            backgroundPosition: 'center', // Center the image
+          container 
+          // sx={{
+          //   width: '100%',
+          //   height: "auto",
+          //   display: 'flex',
+          //   // backgroundImage: 'url("https://cdn.pixabay.com/photo/2023/04/17/10/31/tennis-7932066_1280.jpg")', // Path to your image
+          //   backgroundImage: `url(${Background})`,
+          //   backgroundSize: 'cover', // Cover the entire area
+          //   backgroundPosition: 'center', // Center the image
 
-          }} >
-          <Container maxWidth="xl" sx={{
+          // }} 
+          >
+          <Container maxWidth="lg" sx={{
             display: 'flex',
             flexDirection: { xs: "column", sm: "column", md: "row", lg: "row", xl: "row" },
             mt: 15,
@@ -40,16 +42,16 @@ const LandingScreen = () => {
           }}>
             <Grid size={{ xs: 12, sm: 10, md: 6, lg: 6 }} sx={{
               display: 'flex',
-
               flexDirection: 'column',
               alignItems: 'flex-start',
+              
               // justifyContent: { xs: "center", md: "flex-end", lg:"flex-end" },
             }}>
-              <Box sx={{ display: 'flex', alignItems: 'baseline' }}>
-                <Typography sx={{ fontSize: 54, color: "white", fontWeight: "800" }}>CLUB SOCIAL</Typography>
-                <Typography sx={{ fontSize: 38, color: "white", fontWeight: "400", ml: 2 }}>DE JUNÍN</Typography>
+              <Box >
+                <Typography sx={{ fontSize: 48,  color: 'grey.800', fontWeight: "800" }}>CLUB SOCIAL</Typography>
+                {/* <Typography sx={{  mt: -2,fontSize: 28, color: "white", fontWeight: "400"}}>de Junin</Typography> */}
               </Box>
-              <Typography sx={{ mt: -1, fontSize: 16, color: "white", fontWeight: "450", justifyContent: { xs: "flex-start", md: "flex-start", lg: "flex-start", xl: "flex-start" } }}>Club Manager Solution</Typography>
+              <Typography sx={{ mt: -1, fontSize: 16,  color: 'grey.800', fontWeight: "450", justifyContent: { xs: "flex-start", md: "flex-start", lg: "flex-start", xl: "flex-start" } }}>Club Manager Solution</Typography>
             </Grid>
 
             <Grid size={{ xs: 12, sm: 10, md: 6, lg: 6 }} sx={{

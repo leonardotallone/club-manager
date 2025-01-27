@@ -7,8 +7,10 @@ const SignUpProvider = ({ children }) => {
   const [signUpUser, setSignUpUser] = useState();
   const [signUpSuccess, setSignUpSuccess] = useState([])
   const [signUpError, setSignUpError] = useState([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    setLoading(true);
     axios
       .post("http://10.25.14.90:3001/lotes/crearLote", signUpUser)
       .then((response) => {
@@ -18,10 +20,11 @@ const SignUpProvider = ({ children }) => {
         setSignUpError(error.message);
         console.error("Error al obtener Usuarios:", error.message);
       });
+    setLoading(false);
   }, [signUpUser]);
 
   return (
-    <signUpContext.Provider value={{ setSignUpUser, signUpSuccess, signUpError }}>
+    <signUpContext.Provider value={{ setSignUpUser, signUpSuccess, signUpError, loading }}>
       {children}
     </signUpContext.Provider>
   );

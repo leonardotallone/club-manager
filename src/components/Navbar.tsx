@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from "react"
+import { useState } from "react";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -13,35 +13,39 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
-import avatar from "../assets/backgroundImages/Background.jpg"
-
+import ClubSocial from "../assets/svg/ClubSocial.png"
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import avatar from "../assets/backgroundImages/Background.jpg";
 
 const pageAdmin = [
-    { name: 'Lista de usuarios', href: "/admin-users-list" },
-    { name: 'Opcion 1', href: '/pricing' },
-    { name: 'Opcion 1', href: '/blog' },
+    { name: 'alta de Socio', href: '/signup' },
+    { name: 'usuarios', href: "/admin-users-list" },
+    { name: 'Opcion 2', href: '/blog' },
 ];
 const pageUsers = [
-    { name: 'Noticias', href: "/history" },
-    { name: 'El Club', href: '/pricing' },
-    { name: 'Historia', href: '/blog' },
-    { name: 'Autoridades', href: '/blog' },
+    { name: 'Noticias', href: "/noticias" },
+    { name: 'El Club', href: '/elclub' },
+    { name: 'Historia', href: '/historia' },
+    { name: 'Autoridades', href: '/autoridades' },
 ];
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Navbar = () => {
-    const [user, setUser] = useState(false)
+    const [admin] = useState(false);
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
-    const pagesToMap = user ? pageAdmin : pageUsers;
+    const pagesToMap = admin ? pageAdmin : pageUsers;
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
     };
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(event.currentTarget);
+    };
+    const handleLogOut = (event: React.MouseEvent<HTMLElement>) => {
+        console.log("log out");
     };
 
     const handleCloseNavMenu = () => {
@@ -53,14 +57,12 @@ const Navbar = () => {
     };
 
     return (
-        <AppBar position="fixed"
-            sx={{
-                backgroundColor: 'transparent', // Makes the background transparent
-                // boxShadow: 'none', // Removes the shadow for a cleaner look
-            }}>
+        <AppBar position="fixed" sx={{ backgroundColor: 'white' }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <SportsSoccerIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+                    <a href="/">
+                        <img src={ClubSocial} style={{ width: 45, height: 45 }} alt="Club Social" />
+                    </a>
                     <Typography
                         variant="h6"
                         noWrap
@@ -68,17 +70,18 @@ const Navbar = () => {
                         href="#app-bar-with-responsive-menu"
                         sx={{
                             mr: 2,
+                            ml: 2,
                             display: { xs: 'none', md: 'flex' },
                             fontFamily: 'monospace',
                             fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: 'black',
+                            // letterSpacing: '.3rem',
+                            color: 'grey.800', // Cambia el color aquí
                             textDecoration: 'none',
                         }}
                     >
-                        CLUB MANAGER
+                        CLUB SOCIAL
                     </Typography>
-
+                    {/*---------------------------------------------------------------------------------  Navbar Comprimida  --------------------------------------------------------------- */}
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
                             size="large"
@@ -88,7 +91,7 @@ const Navbar = () => {
                             onClick={handleOpenNavMenu}
                             color="inherit"
                         >
-                            <MenuIcon />
+                            <MenuIcon sx={{ color: 'grey.800' }} />
                         </IconButton>
                         <Menu
                             id="menu-appbar"
@@ -107,79 +110,47 @@ const Navbar = () => {
                             sx={{ display: { xs: 'block', md: 'none' } }}
                         >
                             {pagesToMap.map((page) => (
-                                <MenuItem key={page.name} href={page.href} onClick={handleCloseNavMenu}>
-                                    <Typography sx={{ textAlign: 'center' }}>{page.name}</Typography>
+                                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                                    <Typography sx={{ textAlign: 'center', color: 'grey.800' }}>{page.name}</Typography> {/* Cambia el color aquí */}
                                 </MenuItem>
                             ))}
                         </Menu>
                     </Box>
-                    <SportsSoccerIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-                    <Typography
-                        variant="h5"
-                        noWrap
-                        component="a"
-                        href="#app-bar-with-responsive-menu"
-                        sx={{
-                            mr: 2,
-                            display: { xs: 'flex', md: 'none' },
-                            flexGrow: 1,
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: 'inherit',
-                            textDecoration: 'none',
-                        }}
-                    >
-                        LOGO
-                    </Typography>
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+
+                    {/*--------------------------------------------------------------------------------- Menu Descomprimido  --------------------------------------------------------------- */}
+
+                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex', color: "red" } }}>
                         {pagesToMap.map((page) => (
                             <Button
                                 key={page.name}
                                 href={page.href}
                                 onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: 'white', display: 'block' }}
+                                sx={{ my: 2, color: 'grey.800', display: 'block' }} // Cambia el color aquí
                             >
                                 {page.name}
                             </Button>
                         ))}
                     </Box>
+                    {/*---------------------------------------------------------------------------------  Margen Derecho si hay usuario Conectado  --------------------------------------------------------------- */}
 
-                    <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                {/* <Avatar alt="Remy Sharp" src={Background} /> */}
+                    {/* <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
+                        <Typography sx={{ fontSize: 14, fontWeight: "500", color: "#424242", mr: 1.5 }} >
+                            {admin ? "Bienvenido Admin" : "Leonardo Tallone"}
+                        </Typography>
+                        <IconButton onClick={handleLogOut} >
+                            <LogoutOutlinedIcon sx={{ display: { xs: 'flex', md: 'flex', color: '#424242' }, mr: 1.5 }} />
+                        </IconButton>
+                        <Tooltip title="leonardo.gabriel.tallone@gmail.com">
+                            <IconButton onClick={handleOpenUserMenu} >
                                 <Avatar alt="Remy Sharp" src={avatar} />
-
                             </IconButton>
                         </Tooltip>
+                    </Box> */}
 
-                        <Menu
-                            sx={{ mt: '45px' }}
-                            id="menu-appbar"
-                            anchorEl={anchorElUser}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={Boolean(anchorElUser)}
-                            onClose={handleCloseUserMenu}
-                        >
-                            {settings.map((setting) => (
-                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
-                                </MenuItem>
-                            ))}
-                        </Menu>
-                    </Box>
                 </Toolbar>
             </Container>
         </AppBar>
     );
 }
+
 export default Navbar;

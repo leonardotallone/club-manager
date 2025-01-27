@@ -1,41 +1,20 @@
-import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { Theme, useTheme } from '@mui/material/styles';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { Box, Container, Typography, Checkbox, Avatar, Button, TextField, Paper, Link, FormControlLabel, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Dayjs } from 'dayjs';
-
-import OutlinedInput from '@mui/material/OutlinedInput';
-import Chip from '@mui/material/Chip';
-
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 
-import { useNavigate } from "react-router-dom";
-import { ListItemText } from '@mui/material';
 
 const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
+const ITEM_PADDING_TOP = 0;
 const MenuProps = {
     PaperProps: {
         style: {
@@ -56,6 +35,7 @@ const names = [
     'Tenis',
     'Hockey',
     'Natación',
+    "Gym"
 ];
 
 function getStyles(name: string, discipline: readonly string[], theme: Theme) {
@@ -137,7 +117,6 @@ const validationSchema = Yup.object({
         .required("El campo es obligatorio"),
 
     category: Yup.string()
-        .oneOf(["A", "B", "C"], "La categoría debe ser A, B o C")
         .required("El campo es obligatorio"),
     discipline: Yup.array()
         .of(Yup.string().required("La disciplina es obligatoria"))
@@ -179,25 +158,7 @@ const SignUpForm: React.FC = () => {
     // }, [accessToken])
 
     return (
-        <Box
-            component={Paper}
-            elevation={6}
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                px: 4,
-                py: 8,
-                backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                borderRadius: 2,
-                width: 600,
-                height: "auto",
-            }}
-        >
-            <Avatar sx={{ m: 1, bgcolor: 'green' }}>
-                <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">Alta de nuevo socio</Typography>
+        <Container maxWidth="xl"  >
 
             <Formik<SignUpFormValues>
                 initialValues={{ email: "", password: "", name: "", lastName: "", dni: "", address: "", birthDate: null, contactNumber: "", familyGroup: false, category: "", discipline: [], }}
@@ -206,13 +167,9 @@ const SignUpForm: React.FC = () => {
             >
                 {({ handleChange, handleBlur, values, errors, touched, }) => (
                     <Form>
-                        <Grid
-                            container
-                            spacing={1}
-                            justifyContent="center" // Centers the buttons horizontally
-                            alignItems="center" // Aligns them vertically
-                        >
-                            <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
+
+                        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                            <Grid size={4}>
                                 <TextField
                                     margin="normal"
                                     required
@@ -229,8 +186,7 @@ const SignUpForm: React.FC = () => {
                                     helperText={touched.email && errors.email}
                                 />
                             </Grid>
-                            <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
-
+                            <Grid size={4}>
                                 <TextField
                                     margin="normal"
                                     required
@@ -247,7 +203,10 @@ const SignUpForm: React.FC = () => {
                                     helperText={touched.password && errors.password}
                                 />
                             </Grid>
-                            <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
+                            <Grid size={4}>
+                                {/* Empty */}
+                            </Grid>
+                            <Grid size={4}>
                                 <TextField
                                     margin="normal"
                                     required
@@ -264,7 +223,7 @@ const SignUpForm: React.FC = () => {
                                     helperText={touched.name && errors.name}
                                 />
                             </Grid>
-                            <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
+                            <Grid size={4}>
                                 <TextField
                                     margin="normal"
                                     required
@@ -281,7 +240,29 @@ const SignUpForm: React.FC = () => {
                                     helperText={touched.lastName && errors.lastName}
                                 />
                             </Grid>
-                            <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
+                            <Grid size={4}>
+                                {/* Empty */}
+                            </Grid>
+                            <Grid size={4} sx={{mt:1}}>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DemoContainer components={['DatePicker']} sx={{ width: '100%' }}>
+                                        <DatePicker
+                                            sx={{ width: '100%' }}
+                                            label="Fecha de Nacimiento"
+                                            value={values.birthDate} // This should now be a Dayjs object
+                                            onChange={(newValue) => {
+                                                handleChange({ target: { name: 'birthDate', value: newValue } }); // Update Formik state
+                                            }}
+                                        />
+                                    </DemoContainer>
+                                    {touched.birthDate && errors.birthDate && (
+                                        <Typography color="error" variant="caption" sx={{ mt: 1, fontSize: '0.75rem' }}>
+                                            {errors.birthDate as string}
+                                        </Typography>
+                                    )}
+                                </LocalizationProvider>
+                            </Grid>
+                            <Grid size={4}>
                                 <TextField
                                     margin="normal"
                                     required
@@ -298,7 +279,10 @@ const SignUpForm: React.FC = () => {
                                     helperText={touched.dni && errors.dni}
                                 />
                             </Grid>
-                            <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
+                            <Grid size={4}>
+                                {/* Empty */}
+                            </Grid>
+                            <Grid size={4}>
                                 <TextField
                                     margin="normal"
                                     required
@@ -315,27 +299,7 @@ const SignUpForm: React.FC = () => {
                                     helperText={touched.address && errors.address}
                                 />
                             </Grid>
-                            <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
-
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <DemoContainer components={['DatePicker']}>
-                                        <DatePicker
-                                            label="Fecha de Nacimiento"
-                                            value={values.birthDate} // This should now be a Dayjs object
-                                            onChange={(newValue) => {
-                                                handleChange({ target: { name: 'birthDate', value: newValue } }); // Update Formik state
-                                            }}
-                                        />
-                                    </DemoContainer>
-                                    {touched.birthDate && errors.birthDate && (
-                                        <Typography color="error" variant="caption" sx={{ mt: 1, fontSize: '0.75rem' }}>
-                                            {errors.birthDate as string}
-                                        </Typography>
-                                    )}
-                                </LocalizationProvider>
-                            </Grid>
-
-                            <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
+                            <Grid size={4}>
                                 <TextField
                                     margin="normal"
                                     required
@@ -352,7 +316,10 @@ const SignUpForm: React.FC = () => {
                                     helperText={touched.contactNumber && errors.contactNumber}
                                 />
                             </Grid>
-                            <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
+                            <Grid size={4}>
+                                {/* Empty */}
+                            </Grid>
+                            <Grid size={4} sx={{mt:2}}>
                                 <FormControl fullWidth>
                                     <InputLabel id="demo-simple-select-label">Categoria</InputLabel>
                                     <Select
@@ -373,39 +340,18 @@ const SignUpForm: React.FC = () => {
 
                                     </Select>
                                     {touched.category && errors.category && (
-                                        <Typography color="error" variant="caption" sx={{ mt: 1 }}>
+                                        <Typography color="error" variant="caption">
                                             {errors.category}
                                         </Typography>
                                     )}
                                 </FormControl>
                             </Grid>
-                            <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }} sx={{ mt: 3, mb: 2 }}>
-
-                                <FormControlLabel
-
-
-                                    control={
-                                        <Checkbox
-                                            checked={values.familyGroup} // Bind checkbox to Formik value
-                                            onChange={(event) => {
-                                                handleChange({ target: { name: 'familyGroup', value: event.target.checked } }); // Update Formik state
-                                            }}
-                                            color="primary"
-                                        />
-                                    }
-                                    label="Grupo Familiar"
-                                />
-                            </Grid>
-
-
-                   
-                            <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12 }} >
-
+                            <Grid size={4} sx={{mt:2}}>
                                 <FormControl fullWidth>
-                                <InputLabel id="demo-multiple-chip-label">Disciplinas</InputLabel>
+                                    <InputLabel id="demo-multiple-chip-label">Disciplinas</InputLabel>
                                     <Select
                                         labelId="demo-multiple-chip-label"
-                                         id="demo-multiple-chip"
+                                        id="demo-multiple-chip"
                                         multiple
                                         required
                                         value={discipline}
@@ -446,47 +392,58 @@ const SignUpForm: React.FC = () => {
                                         </Typography>
                                     )}
                                 </FormControl>
-
-
-
-
-
                             </Grid>
 
-
-                        </Grid >
-
-
-                        <Grid
-                            container
-                            spacing={2}
-                            justifyContent="center" // Centers the buttons horizontally
-                            alignItems="center" // Aligns them vertically
-                        >
-                            <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
-                                <Button href="/" variant="contained" fullWidth sx={{ mt: 3, mb: 2 }}>
+                            <Grid size={4}>
+                                {/* <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={values.familyGroup} // Bind checkbox to Formik value
+                                            onChange={(event) => {
+                                                handleChange({ target: { name: 'familyGroup', value: event.target.checked } }); // Update Formik state
+                                            }}
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Grupo Familiar"
+                                /> */}
+                            </Grid>
+                           
+                            
+                            <Grid size={4}>
+                                <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
+                                    mt: 3, mb: 2, backgroundColor: 'grey', // Color de fondo gris
+                                    '&:hover': {
+                                        backgroundColor: 'darkgrey', // Color al pasar el mouse
+                                    },
+                                }}>
                                     CANCELAR
                                 </Button>
+
                             </Grid>
-                            <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
+                            <Grid size={8}>
                                 <Button
                                     type="submit"
                                     variant="contained"
                                     fullWidth
-                                    sx={{ mt: 3, mb: 2 }}
+                                    sx={{
+                                        mt: 3, mb: 2, backgroundColor: '#b71c1c', // Color de fondo rojo
+                                        '&:hover': {
+                                            backgroundColor: 'darkred', // Color al pasar el mouse
+                                        },
+                                    }}
                                 >
-                                    ENVIAR SOLICITUD
+                                    REGISTRAR SOCIO
                                 </Button>
+
                             </Grid>
+
+
                         </Grid>
                     </Form>
                 )}
             </Formik>
-
-            <Box mt={5}>
-                <Copyright />
-            </Box>
-        </Box>
+        </Container>
     );
 };
 

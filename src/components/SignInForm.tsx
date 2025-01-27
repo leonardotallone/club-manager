@@ -37,7 +37,7 @@ const SignInForm: React.FC = () => {
     const handleSubmit = (values: { email: string; password: string }) => {
         const user = { username: values.email, password: values.password };
         setSignInUser(user);
-        navigate("/home");
+        navigate("/dashboard-admin-screen");
     };
 
     const handleJoin = () => {
