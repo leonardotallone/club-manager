@@ -7,11 +7,9 @@ const Dashboard = () => {
 
     return (
         <>
-            <Container maxWidth="xl">
-                <Typography sx={{ fontWeight: 800, fontSize: 14, color: '#616161', textDecoration: 'none' }}>
-                    ADMIN DASHBOARD
-                </Typography>
-            </Container>
+            <Typography sx={{ fontWeight: 800, fontSize: 14, color: '#616161', textDecoration: 'none' }}>
+                ADMIN DASHBOARD
+            </Typography>
         </>
     );
 };

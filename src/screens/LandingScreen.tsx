@@ -23,18 +23,24 @@ const LandingScreen = () => {
       <Grid container >
         <Grid
           container 
-          // sx={{
-          //   width: '100%',
-          //   height: "auto",
-          //   display: 'flex',
-          //   // backgroundImage: 'url("https://cdn.pixabay.com/photo/2023/04/17/10/31/tennis-7932066_1280.jpg")', // Path to your image
-          //   backgroundImage: `url(${Background})`,
-          //   backgroundSize: 'cover', // Cover the entire area
-          //   backgroundPosition: 'center', // Center the image
+          sx={{
+            width: '100%',
+            height: "auto",
+            display: 'flex',
+            // backgroundImage: 'url("https://cdn.pixabay.com/photo/2023/04/17/10/31/tennis-7932066_1280.jpg")', // Path to your image
+            // backgroundImage: `url(${Background})`,
+            backgroundColor:"#eeeeee",
+            backgroundSize: 'cover', // Cover the entire area
+            backgroundPosition: 'center', // Center the image
 
-          // }} 
+            // Hace creecer el Grid al maximo de la pantalla
+            flexDirection: 'column', // Apila los elementos en columna
+            minHeight: '100vh', // Altura mínima de toda la pantalla
+
+          }} 
           >
-          <Container maxWidth="lg" sx={{
+          <Container maxWidth="xl" sx={{
+            flexGrow: 1, // Empuja el Footer al final
             display: 'flex',
             flexDirection: { xs: "column", sm: "column", md: "row", lg: "row", xl: "row" },
             mt: 15,
@@ -44,7 +50,7 @@ const LandingScreen = () => {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'flex-start',
-              
+             
               // justifyContent: { xs: "center", md: "flex-end", lg:"flex-end" },
             }}>
               <Box >

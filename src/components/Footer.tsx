@@ -10,7 +10,7 @@ const Footer = () => {
 
 
     <Box sx={{ bgcolor: "grey.800", py: 4 }}>
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <Grid container spacing={4}>
           {/* Club Information Section */}
           <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>

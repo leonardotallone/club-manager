@@ -83,6 +83,7 @@ const JoinUpForm: React.FC = () => {
             component={Paper}
             elevation={6}
             sx={{
+
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -91,16 +92,11 @@ const JoinUpForm: React.FC = () => {
                 py: 8,
                 backgroundColor: 'rgba(255, 255, 255, 0.8)',
                 borderRadius: 2,
-                width: 450,
-                height: "auto",
+                width: 650,
+                height: 450,
             }}
         >
-            <Avatar sx={{
-                m: 1,
-                bgcolor: 'primary.main'
-            }}>
-                <LockOutlinedIcon />
-            </Avatar>
+
             <Typography component="h1" variant="h5">Solicitud de Nuevo Socio</Typography>
 
             <Formik<JoinUpFormValues>
@@ -110,75 +106,157 @@ const JoinUpForm: React.FC = () => {
             >
                 {({ handleChange, handleBlur, values, errors, touched, isValid, dirty }) => (
                     <Form>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Dirección de correo"
-                            name="email"
-                            autoComplete="email"
-                            autoFocus
-                            value={values.email}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={touched.email && Boolean(errors.email)}
-                            helperText={touched.email && errors.email}
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="name"
-                            label="Nombre"
-                            type="name"
-                            id="name"
-                            autoComplete="current-name"
-                            value={values.name}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={touched.name && Boolean(errors.name)}
-                            helperText={touched.name && errors.name}
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="lastName"
-                            label="Apellido/s"
-                            type="lastName"
-                            id="lastName"
-                            autoComplete="lastName"
-                            value={values.lastName}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={touched.lastName && Boolean(errors.lastName)}
-                            helperText={touched.lastName && errors.lastName}
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="dni"
-                            label="DNI"
-                            type="dni"
-                            id="dni"
-                            autoComplete="dni"
-                            value={values.dni}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={touched.dni && Boolean(errors.dni)}
-                            helperText={touched.dni && errors.dni}
-                        />
-
                         <Grid container spacing={2}>
+                            <Grid size={6}>
+                            <TextField
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    name="name"
+                                    label="Nombre"
+                                    type="name"
+                                    id="name"
+                                    autoComplete="current-name"
+                                    value={values.name}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={touched.name && Boolean(errors.name)}
+                                    helperText={touched.name && errors.name}
+                                    InputProps={{
+                                        sx: {
+                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                borderColor: "#b71c1c", // Cambia el color del borde activo
+                                            },
+                                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                            },
+                                        },
+                                    }}
+                                    InputLabelProps={{
+                                        sx: {
+                                            "&.Mui-focused": {
+                                                color: "#b71c1c", // Cambia el color del texto del label activo
+                                            },
+                                        },
+                                    }} />
+                               
+                            </Grid>
+
+
+                            <Grid size={6}>
+                            <TextField
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    name="lastName"
+                                    label="Apellido/s"
+                                    type="lastName"
+                                    id="lastName"
+                                    autoComplete="lastName"
+                                    value={values.lastName}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={touched.lastName && Boolean(errors.lastName)}
+                                    helperText={touched.lastName && errors.lastName}
+                                    InputProps={{
+                                        sx: {
+                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                borderColor: "#b71c1c", // Cambia el color del borde activo
+                                            },
+                                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                            },
+                                        },
+                                    }}
+                                    InputLabelProps={{
+                                        sx: {
+                                            "&.Mui-focused": {
+                                                color: "#b71c1c", // Cambia el color del texto del label activo
+                                            },
+                                        },
+                                    }}
+                                />
+                              
+                            </Grid>
+                            <Grid size={6}>
+                            <TextField
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="email"
+                                    label="Dirección de correo"
+                                    name="email"
+                                    autoComplete="email"
+                                    autoFocus
+                                    value={values.email}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={touched.email && Boolean(errors.email)}
+                                    helperText={touched.email && errors.email}
+                                    InputProps={{
+                                        sx: {
+                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                borderColor: "#b71c1c", // Cambia el color del borde activo
+                                            },
+                                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                            },
+                                        },
+                                    }}
+                                    InputLabelProps={{
+                                        sx: {
+                                            "&.Mui-focused": {
+                                                color: "#b71c1c", // Cambia el color del texto del label activo
+                                            },
+                                        },
+                                    }}
+                                />
+                                
+                            </Grid>
+                            <Grid size={6}>
+                                <TextField
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    name="dni"
+                                    label="DNI"
+                                    type="dni"
+                                    id="dni"
+                                    autoComplete="dni"
+                                    value={values.dni}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={touched.dni && Boolean(errors.dni)}
+                                    helperText={touched.dni && errors.dni}
+                                    InputProps={{
+                                        sx: {
+                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                borderColor: "#b71c1c", // Cambia el color del borde activo
+                                            },
+                                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                            },
+                                        },
+                                    }}
+                                    InputLabelProps={{
+                                        sx: {
+                                            "&.Mui-focused": {
+                                                color: "#b71c1c", // Cambia el color del texto del label activo
+                                            },
+                                        },
+                                    }}
+                                />
+                            </Grid>
                             <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
                                 <Button
                                     type="button" href='/'
                                     fullWidth variant="contained" sx={{
                                         mt: 3,
                                         mb: 2,
-                                        // backgroundColor: "#558b2f"
+                                        backgroundColor: "grey",
+                                        '&:hover': {
+                                            backgroundColor: 'darkred', // Color al pasar el mouse
+                                        },
                                     }}>
                                     CANCELAR
                                 </Button>
@@ -188,7 +266,10 @@ const JoinUpForm: React.FC = () => {
                                 <Button type="submit" fullWidth variant="contained" disabled={!isValid || !dirty} sx={{
                                     mt: 3,
                                     mb: 2,
-                                    // backgroundColor: "#558b2f"
+                                    backgroundColor: '#b71c1c',
+                                    '&:hover': {
+                                        backgroundColor: 'darkred', // Color al pasar el mouse
+                                    },
                                 }}>
                                     ENVIAR SOLICITUD
                                 </Button>
@@ -264,7 +345,7 @@ const JoinUpForm: React.FC = () => {
                         <Button
                             onClick={handleClose}
                             sx={{
-                               
+
                                 backgroundColor: 'transparent', // Sin fondo
                                 color: '#007aff', // Color azul predeterminado de iOS
                                 ml: 4,
@@ -288,7 +369,7 @@ const JoinUpForm: React.FC = () => {
                         <Button
                             onClick={handleClose}
                             sx={{
-                          
+
                                 backgroundColor: 'transparent', // Sin fondo
                                 color: '#007aff', // Color azul predeterminado de iOS
                                 mr: 5,

@@ -48,7 +48,7 @@ const validationSchema = Yup.object({
 const EmailRecoverForm: React.FC = () => {
 
     const handleSubmit = (values: { dni: string; }) => {
-        const user = { username: values.dni};
+        const user = { username: values.dni };
         console.log(user);
         navigate("/");
     };
@@ -73,25 +73,22 @@ const EmailRecoverForm: React.FC = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 px: 4,
-                py:8,
+                py: 8,
                 backgroundColor: 'rgba(255, 255, 255, 0.8)',
                 borderRadius: 2,
-                width:  450,
-                height: 600,
+                width: 450,
+                height: 450,
             }}
         >
-            <Avatar sx={{ m: 1, bgcolor: 'green' }}>
-                <LockOutlinedIcon />
-            </Avatar>
             <Typography component="h1" variant="h5">Recuperación de Correo</Typography>
 
             <Formik
-                initialValues={{ dni: ""}}
+                initialValues={{ dni: "" }}
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
             >
                 {({ handleChange, handleBlur, values, errors, touched }) => (
-                    <Form  style={{ width: '100%' }}>
+                    <Form style={{ width: '100%' }}>
                         <TextField
                             margin="normal"
                             required
@@ -106,15 +103,37 @@ const EmailRecoverForm: React.FC = () => {
                             onBlur={handleBlur}
                             error={touched.dni && Boolean(errors.dni)}
                             helperText={touched.dni && errors.dni}
+                            InputProps={{
+                                sx: {
+                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                        borderColor: "#b71c1c", // Cambia el color del borde activo
+                                    },
+                                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                                        borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                    },
+                                },
+                            }}
+                            InputLabelProps={{
+                                sx: {
+                                    "&.Mui-focused": {
+                                        color: "#b71c1c", // Cambia el color del texto del label activo
+                                    },
+                                },
+                            }}
                         />
-                            <Grid
+                        <Grid
                             container
                             spacing={2}
                             justifyContent="center" // Centers the buttons horizontally
                             alignItems="center" // Aligns them vertically
                         >
                             <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
-                                <Button href="/" variant="contained" fullWidth sx={{ mt: 3, mb: 2 }}>
+                                <Button href="/" variant="contained" fullWidth sx={{
+                                    mt: 3, mb: 2, backgroundColor: "grey",
+                                    '&:hover': {
+                                        backgroundColor: 'darkred', // Color al pasar el mouse
+                                    },
+                                }}>
                                     Cancelar
                                 </Button>
                             </Grid>
@@ -123,7 +142,12 @@ const EmailRecoverForm: React.FC = () => {
                                     type="submit"
                                     variant="contained"
                                     fullWidth
-                                    sx={{ mt: 3, mb: 2 }}
+                                    sx={{
+                                        mt: 3, mb: 2, backgroundColor: '#b71c1c',
+                                        '&:hover': {
+                                            backgroundColor: 'darkred', // Color al pasar el mouse
+                                        },
+                                    }}
                                 >
                                     ENVIAR
                                 </Button>
@@ -135,8 +159,8 @@ const EmailRecoverForm: React.FC = () => {
 
 
             <Grid container alignItems="center" justifyContent={{ xs: "center", sm: "space-between", md: "space-between", lg: "space-between", }} spacing={{ xs: 3, sm: 20, md: 30, lg: 30 }} direction={{ xs: "column", sm: "row", md: "row", lg: "row", }}  >
-                <Grid size={{ xs: 12, sm:"auto", md: "auto", lg: "auto" }} sx={{ textAlign: 'center' }}>
-                    <Link href="/password-recover" variant="body2">
+                <Grid size={{ xs: 12, sm: "auto", md: "auto", lg: "auto" }} sx={{ textAlign: 'center' }}>
+                    <Link href="/password-recover" variant="body2" sx={{ color: "#b71c1c", textDecoration: "none" }}>
                         ¿Olvidaste tu contraseña?
                     </Link>
                 </Grid>
@@ -147,10 +171,6 @@ const EmailRecoverForm: React.FC = () => {
                 </Grid> */}
             </Grid>
 
-
-            <Box mt={5}>
-                <Copyright />
-            </Box>
         </Box>
     );
 };

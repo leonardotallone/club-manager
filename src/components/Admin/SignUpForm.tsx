@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Box, Container, Typography, Checkbox, Avatar, Button, TextField, Paper, Link, FormControlLabel, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
+import { Box, Paper, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
 import Grid from '@mui/material/Grid2';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+
+
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -44,20 +45,6 @@ function getStyles(name: string, discipline: readonly string[], theme: Theme) {
             ? theme.typography.fontWeightMedium
             : theme.typography.fontWeightRegular,
     };
-}
-
-// Componente Copyright
-function Copyright(props: React.HTMLAttributes<HTMLDivElement>) {
-    return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
 }
 
 interface SignUpFormValues {
@@ -158,224 +145,391 @@ const SignUpForm: React.FC = () => {
     // }, [accessToken])
 
     return (
-        <Container maxWidth="xl"  >
+        <Box
+            component={Paper}
+            elevation={3}
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                // justifyContent: 'center',
+                px: 4,
+                py: 4,
+                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                borderRadius: 2,
+                width: "auto",
+                height: "auto",
+            }}
+        >
+            <Container maxWidth="xl"  >
 
-            <Formik<SignUpFormValues>
-                initialValues={{ email: "", password: "", name: "", lastName: "", dni: "", address: "", birthDate: null, contactNumber: "", familyGroup: false, category: "", discipline: [], }}
-                validationSchema={validationSchema}
-                onSubmit={handleSubmit}
-            >
-                {({ handleChange, handleBlur, values, errors, touched, }) => (
-                    <Form>
+                <Formik<SignUpFormValues>
+                    initialValues={{ email: "", password: "", name: "", lastName: "", dni: "", address: "", birthDate: null, contactNumber: "", familyGroup: false, category: "", discipline: [], }}
+                    validationSchema={validationSchema}
+                    onSubmit={handleSubmit}
+                >
+                    {({ handleChange, handleBlur, values, errors, touched, }) => (
+                        <Form>
 
-                        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                            <Grid size={4}>
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    id="email"
-                                    label="Dirección de correo"
-                                    name="email"
-                                    autoComplete="email"
-                                    autoFocus
-                                    value={values.email}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={touched.email && Boolean(errors.email)}
-                                    helperText={touched.email && errors.email}
-                                />
-                            </Grid>
-                            <Grid size={4}>
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Contraseña"
-                                    type="password"
-                                    id="password"
-                                    autoComplete="current-password"
-                                    value={values.password}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={touched.password && Boolean(errors.password)}
-                                    helperText={touched.password && errors.password}
-                                />
-                            </Grid>
-                            <Grid size={4}>
-                                {/* Empty */}
-                            </Grid>
-                            <Grid size={4}>
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="name"
-                                    label="Nombre"
-                                    type="name"
-                                    id="name"
-                                    autoComplete="name"
-                                    value={values.name}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={touched.name && Boolean(errors.name)}
-                                    helperText={touched.name && errors.name}
-                                />
-                            </Grid>
-                            <Grid size={4}>
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="lastName"
-                                    label="Apellido/s"
-                                    type="lastName"
-                                    id="lastName"
-                                    autoComplete="lastName"
-                                    value={values.lastName}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={touched.lastName && Boolean(errors.lastName)}
-                                    helperText={touched.lastName && errors.lastName}
-                                />
-                            </Grid>
-                            <Grid size={4}>
-                                {/* Empty */}
-                            </Grid>
-                            <Grid size={4} sx={{mt:1}}>
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <DemoContainer components={['DatePicker']} sx={{ width: '100%' }}>
-                                        <DatePicker
-                                            sx={{ width: '100%' }}
-                                            label="Fecha de Nacimiento"
-                                            value={values.birthDate} // This should now be a Dayjs object
-                                            onChange={(newValue) => {
-                                                handleChange({ target: { name: 'birthDate', value: newValue } }); // Update Formik state
-                                            }}
-                                        />
-                                    </DemoContainer>
-                                    {touched.birthDate && errors.birthDate && (
-                                        <Typography color="error" variant="caption" sx={{ mt: 1, fontSize: '0.75rem' }}>
-                                            {errors.birthDate as string}
-                                        </Typography>
-                                    )}
-                                </LocalizationProvider>
-                            </Grid>
-                            <Grid size={4}>
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="dni"
-                                    label="DNI"
-                                    type="dni"
-                                    id="dni"
-                                    autoComplete="dni"
-                                    value={values.dni}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={touched.dni && Boolean(errors.dni)}
-                                    helperText={touched.dni && errors.dni}
-                                />
-                            </Grid>
-                            <Grid size={4}>
-                                {/* Empty */}
-                            </Grid>
-                            <Grid size={4}>
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="address"
-                                    label="Domicilio"
-                                    type="address"
-                                    id="address"
-                                    autoComplete="address"
-                                    value={values.address}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={touched.address && Boolean(errors.address)}
-                                    helperText={touched.address && errors.address}
-                                />
-                            </Grid>
-                            <Grid size={4}>
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="contactNumber"
-                                    label="Número de Contacto"
-                                    type="contactNumber"
-                                    id="contactNumber"
-                                    autoComplete="contactNumber"
-                                    value={values.contactNumber}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={touched.contactNumber && Boolean(errors.contactNumber)}
-                                    helperText={touched.contactNumber && errors.contactNumber}
-                                />
-                            </Grid>
-                            <Grid size={4}>
-                                {/* Empty */}
-                            </Grid>
-                            <Grid size={4} sx={{mt:2}}>
-                                <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Categoria</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        value={values.category} // Bind Formik value
-                                        label="Categoria" // Update label to match the field
-                                        onChange={(event) => {
-                                            handleChange({ target: { name: 'category', value: event.target.value } }); // Correctly update Formik state
-                                        }}
-                                    // onBlur={handleBlur} // Optional: Handle blur event if needed
-                                    >
-                                        {category.map((cat) => (
-                                            <MenuItem key={cat} value={cat}>
-                                                {cat}
-                                            </MenuItem>
-                                        ))}
-
-                                    </Select>
-                                    {touched.category && errors.category && (
-                                        <Typography color="error" variant="caption">
-                                            {errors.category}
-                                        </Typography>
-                                    )}
-                                </FormControl>
-                            </Grid>
-                            <Grid size={4} sx={{mt:2}}>
-                                <FormControl fullWidth>
-                                    <InputLabel id="demo-multiple-chip-label">Disciplinas</InputLabel>
-                                    <Select
-                                        labelId="demo-multiple-chip-label"
-                                        id="demo-multiple-chip"
-                                        multiple
+                            <Grid container rowSpacing={0} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                <Grid size={4}>
+                                    <TextField
+                                        autoFocus
+                                        margin="normal"
                                         required
-                                        value={discipline}
-                                        onChange={(event) => {
-                                            handleDiscipline(event);
-                                            handleChange({ target: { name: 'discipline', value: event.target.value } });
+                                        fullWidth
+                                        name="name"
+                                        label="Nombre"
+                                        type="name"
+                                        id="name"
+                                        autoComplete="name"
+                                        value={values.name}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.name && Boolean(errors.name)}
+                                        helperText={touched.name && errors.name}
+                                        InputProps={{
+                                            sx: {
+                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color del borde activo
+                                                },
+                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                                },
+                                            },
                                         }}
-                                        input={<OutlinedInput id="select-multiple-chip" label="Disciplinas" />}
-                                        renderValue={(selected) => (
-                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                                {selected.map((value) => (
-                                                    <Chip key={value} label={value} />
-                                                ))}
-                                            </Box>
+                                        InputLabelProps={{
+                                            sx: {
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c", // Cambia el color del texto del label activo
+                                                },
+                                            },
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid size={4}>
+                                    <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        name="lastName"
+                                        label="Apellido/s"
+                                        type="lastName"
+                                        id="lastName"
+                                        autoComplete="lastName"
+                                        value={values.lastName}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.lastName && Boolean(errors.lastName)}
+                                        helperText={touched.lastName && errors.lastName}
+                                        InputProps={{
+                                            sx: {
+                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color del borde activo
+                                                },
+                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                                },
+                                            },
+                                        }}
+                                        InputLabelProps={{
+                                            sx: {
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c", // Cambia el color del texto del label activo
+                                                },
+                                            },
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid size={4}>
+                                    <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        id="email"
+                                        label="Dirección de correo"
+                                        name="email"
+                                        autoComplete="email"
+                                        // autoFocus
+                                        value={values.email}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.email && Boolean(errors.email)}
+                                        helperText={touched.email && errors.email}
+                                        InputProps={{
+                                            sx: {
+                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color del borde activo
+                                                },
+                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                                },
+                                            },
+                                        }}
+                                        InputLabelProps={{
+                                            sx: {
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c", // Cambia el color del texto del label activo
+                                                },
+                                            },
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid size={4} sx={{ mt: 1 }}>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <DemoContainer components={['DatePicker']} sx={{ width: '100%' }}>
+                                            <DatePicker
+                                                sx={{
+                                                    width: '100%',
+                                                    "& .MuiInputLabel-root": {
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c", // Change label text color when focused
+                                                        },
+                                                    },
+                                                    "& .MuiOutlinedInput-root": {
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c", // Change border color when focused
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c", // Change border color on hover
+                                                        },
+                                                    },
+                                                }}
+                                                label="Fecha de Nacimiento"
+                                                value={values.birthDate} // This should now be a Dayjs object
+                                                onChange={(newValue) => {
+                                                    handleChange({ target: { name: 'birthDate', value: newValue } }); // Update Formik state
+                                                }}
+
+                                            />
+                                        </DemoContainer>
+                                        {touched.birthDate && errors.birthDate && (
+                                            <Typography color="error" variant="caption" sx={{ mt: 1, fontSize: '0.75rem' }}>
+                                                {errors.birthDate as string}
+                                            </Typography>
                                         )}
-                                        MenuProps={MenuProps}
-                                    >
-                                        {names.map((name) => (
-                                            <MenuItem key={name} value={name} style={getStyles(name, discipline, theme)}>
-                                                <Checkbox checked={discipline.indexOf(name) > -1} />
-                                                <ListItemText primary={name} />
-                                            </MenuItem>
-                                        ))}
-                                        {/* {names.map((name) => (
+                                    </LocalizationProvider>
+                                </Grid>
+                                <Grid size={4}>
+                                    <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        name="dni"
+                                        label="DNI"
+                                        type="dni"
+                                        id="dni"
+                                        autoComplete="dni"
+                                        value={values.dni}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.dni && Boolean(errors.dni)}
+                                        helperText={touched.dni && errors.dni}
+                                        InputProps={{
+                                            sx: {
+                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color del borde activo
+                                                },
+                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                                },
+                                            },
+                                        }}
+                                        InputLabelProps={{
+                                            sx: {
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c", // Cambia el color del texto del label activo
+                                                },
+                                            },
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid size={4}>
+                                    <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        name="password"
+                                        label="Contraseña"
+                                        type="password"
+                                        id="password"
+                                        autoComplete="current-password"
+                                        value={values.password}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.password && Boolean(errors.password)}
+                                        helperText={touched.password && errors.password}
+                                        InputProps={{
+                                            sx: {
+                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color del borde activo
+                                                },
+                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                                },
+                                            },
+                                        }}
+                                        InputLabelProps={{
+                                            sx: {
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c", // Cambia el color del texto del label activo
+                                                },
+                                            },
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid size={4}>
+                                    <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        name="address"
+                                        label="Domicilio"
+                                        type="address"
+                                        id="address"
+                                        autoComplete="address"
+                                        value={values.address}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.address && Boolean(errors.address)}
+                                        helperText={touched.address && errors.address}
+                                        InputProps={{
+                                            sx: {
+                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color del borde activo
+                                                },
+                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                                },
+                                            },
+                                        }}
+                                        InputLabelProps={{
+                                            sx: {
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c", // Cambia el color del texto del label activo
+                                                },
+                                            },
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid size={4}>
+                                    <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        name="contactNumber"
+                                        label="Número de Contacto"
+                                        type="contactNumber"
+                                        id="contactNumber"
+                                        autoComplete="contactNumber"
+                                        value={values.contactNumber}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.contactNumber && Boolean(errors.contactNumber)}
+                                        helperText={touched.contactNumber && errors.contactNumber}
+                                        InputProps={{
+                                            sx: {
+                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color del borde activo
+                                                },
+                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                                },
+                                            },
+                                        }}
+                                        InputLabelProps={{
+                                            sx: {
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c", // Cambia el color del texto del label activo
+                                                },
+                                            },
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid size={4} sx={{ mt: 2 }}>
+                                    <FormControl fullWidth>
+                                        <InputLabel id="demo-simple-select-label" sx={{
+                                            "&.Mui-focused": {
+                                                color: "#b71c1c", // Ensure label color changes when focused
+                                            },
+                                        }}>Categoria</InputLabel>
+                                        <Select
+
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={values.category} // Bind Formik value
+                                            label="Categoria" // Update label to match the field
+                                            onChange={(event) => {
+                                                handleChange({ target: { name: 'category', value: event.target.value } }); // Correctly update Formik state
+                                            }}
+                                            sx={{
+                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Change border color when focused
+                                                },
+                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Change border color on hover
+                                                },
+                                            }}
+                                        // onBlur={handleBlur} // Optional: Handle blur event if needed
+                                        >
+                                            {category.map((cat) => (
+                                                <MenuItem key={cat} value={cat}>
+                                                    {cat}
+                                                </MenuItem>
+                                            ))}
+
+                                        </Select>
+                                        {touched.category && errors.category && (
+                                            <Typography color="error" variant="caption">
+                                                {errors.category}
+                                            </Typography>
+                                        )}
+                                    </FormControl>
+                                </Grid>
+
+
+                                <Grid size={8} sx={{ mt: 2 }}>
+                                    <FormControl fullWidth >
+                                        <InputLabel id="demo-multiple-chip-label" sx={{
+                                            "&.Mui-focused": {
+                                                color: "#b71c1c", // Ensure label color changes when focused
+                                            },
+                                        }}>Disciplinas</InputLabel>
+                                        <Select
+                                            labelId="demo-multiple-chip-label"
+                                            id="demo-multiple-chip"
+                                            multiple
+                                            required
+                                            value={discipline}
+                                            onChange={(event) => {
+                                                handleDiscipline(event);
+                                                handleChange({ target: { name: 'discipline', value: event.target.value } });
+                                            }}
+                                            sx={{
+                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Change border color when focused
+                                                },
+                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Change border color on hover
+                                                },
+                                            }}
+                                            input={<OutlinedInput id="select-multiple-chip" label="Disciplinas" />}
+                                            renderValue={(selected) => (
+                                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                                    {selected.map((value) => (
+                                                        <Chip key={value} label={value} />
+                                                    ))}
+                                                </Box>
+                                            )}
+                                            MenuProps={MenuProps}
+                                        >
+                                            {names.map((name) => (
+                                                <MenuItem key={name} value={name} style={getStyles(name, discipline, theme)}>
+                                                    <Checkbox checked={discipline.indexOf(name) > -1} />
+                                                    <ListItemText primary={name} />
+                                                </MenuItem>
+                                            ))}
+                                            {/* {names.map((name) => (
                                             <MenuItem
                                                 key={name}
                                                 value={name}
@@ -385,17 +539,17 @@ const SignUpForm: React.FC = () => {
                                                 {name}
                                             </MenuItem>
                                         ))} */}
-                                    </Select>
-                                    {touched.discipline && errors.discipline && (
-                                        <Typography color="error" variant="caption" sx={{ mt: 1 }}>
-                                            {errors.discipline}
-                                        </Typography>
-                                    )}
-                                </FormControl>
-                            </Grid>
+                                        </Select>
+                                        {touched.discipline && errors.discipline && (
+                                            <Typography color="error" variant="caption" sx={{ mt: 1 }}>
+                                                {errors.discipline}
+                                            </Typography>
+                                        )}
+                                    </FormControl>
+                                </Grid>
 
-                            <Grid size={4}>
-                                {/* <FormControlLabel
+                                <Grid size={4}>
+                                    {/* <FormControlLabel
                                     control={
                                         <Checkbox
                                             checked={values.familyGroup} // Bind checkbox to Formik value
@@ -407,43 +561,44 @@ const SignUpForm: React.FC = () => {
                                     }
                                     label="Grupo Familiar"
                                 /> */}
-                            </Grid>
-                           
-                            
-                            <Grid size={4}>
-                                <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
-                                    mt: 3, mb: 2, backgroundColor: 'grey', // Color de fondo gris
-                                    '&:hover': {
-                                        backgroundColor: 'darkgrey', // Color al pasar el mouse
-                                    },
-                                }}>
-                                    CANCELAR
-                                </Button>
+                                </Grid>
 
-                            </Grid>
-                            <Grid size={8}>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    fullWidth
-                                    sx={{
-                                        mt: 3, mb: 2, backgroundColor: '#b71c1c', // Color de fondo rojo
+
+                                <Grid size={8}>
+                                    <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
+                                        mt: 3, mb: 2, backgroundColor: 'grey', // Color de fondo gris
                                         '&:hover': {
-                                            backgroundColor: 'darkred', // Color al pasar el mouse
+                                            backgroundColor: 'darkgrey', // Color al pasar el mouse
                                         },
-                                    }}
-                                >
-                                    REGISTRAR SOCIO
-                                </Button>
+                                    }}>
+                                        CANCELAR
+                                    </Button>
+
+                                </Grid>
+                                <Grid size={4}>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        fullWidth
+                                        sx={{
+                                            mt: 3, mb: 2, backgroundColor: '#b71c1c', // Color de fondo rojo
+                                            '&:hover': {
+                                                backgroundColor: 'darkred', // Color al pasar el mouse
+                                            },
+                                        }}
+                                    >
+                                        REGISTRAR SOCIO
+                                    </Button>
+
+                                </Grid>
+
 
                             </Grid>
-
-
-                        </Grid>
-                    </Form>
-                )}
-            </Formik>
-        </Container>
+                        </Form>
+                    )}
+                </Formik>
+            </Container>
+        </Box>
     );
 };
 
