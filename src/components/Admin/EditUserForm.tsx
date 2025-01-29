@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
-import { Avatar, Box, Paper, Card, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
+import { Box, Paper, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
 import Grid from '@mui/material/Grid2';
-
-import avatar1 from "../../assets/avatars/1.jpg";
 
 
 
@@ -12,7 +11,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
-import dayjs from "dayjs";
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 
@@ -27,23 +25,6 @@ const MenuProps = {
         },
     },
 };
-const usuario =
-{
-    name: "Catalina",
-    lastName: "Tallone",
-    email: "catalina@gmail.com",
-    dni: "56.883.870",
-    birthdate: "11/02/2018",
-    address: "Alvarez Rodriguez 231",
-    category: "Activo",
-    group: true,
-    groupHead: false,
-    countState: "Sin Deuda",
-    avatar: avatar1,
-    contactNumber: "+54 236 4321985",
-    discipline: "Hockey Femenino",
-    blockade: false,
-}
 
 const category = [
     'Activo',
@@ -59,8 +40,6 @@ const names = [
     "Gym"
 ];
 
-
-
 function getStyles(name: string, discipline: readonly string[], theme: Theme) {
     return {
         fontWeight: discipline.includes(name)
@@ -70,21 +49,16 @@ function getStyles(name: string, discipline: readonly string[], theme: Theme) {
 }
 
 interface SignUpFormValues {
+    email: string;
     name: string;
     lastName: string;
-    email: string;
-    password: string;
     dni: string;
-    birthDate: Dayjs
     address: string;
+    birthDate: Dayjs;
     contactNumber: string;
-    group: boolean;
-    groupHead: boolean;
-    countState: string;
-    avatar: null;
+    familyGroup: boolean;
     category: string;
     discipline: string[];
-    blockade: boolean;
 }
 
 // Validación con Yup
@@ -98,26 +72,28 @@ const validationSchema = Yup.object({
     email: Yup.string()
         .email("Dirección de correo electrónico inválida")
         .required("El campo es obligatorio"),
-    password: Yup.string()
-        .min(6, "La contraseña debe tener como mínimo 6 caracteres")
-        .required("El campo es obligatorio"),
     dni: Yup.string()
         .matches(/^\d+$/, "El DNI debe contener solo números")
-        .test(
-            "longitud-dni",
+        .test("longitud-dni",
             "El DNI debe tener entre 7 y 8 dígitos",
             (value) => value && value.length >= 7 && value.length <= 8
         )
         .required("El campo es obligatorio"),
-    address: Yup.string()
-        .min(5, "La dirección debe tener como mínimo 5 caracteres")
-        .required("El campo es obligatorio"),
     birthDate: Yup.date()
         .max(new Date(), "La fecha de nacimiento no puede ser en el futuro")
+        .required("El campo es obligatorio"),
+    address: Yup.string()
+        .min(5, "La dirección debe tener como mínimo 5 caracteres")
         .required("El campo es obligatorio"),
     contactNumber: Yup.string()
         .matches(/^\+?\d{7,15}$/, "Número de contacto inválido")
         .required("El campo es obligatorio"),
+
+    group: Yup.boolean()
+        .required("El campo es obligatorio"),
+    groupHead: Yup.boolean()
+        .required("El campo es obligatorio"),
+
     category: Yup.string()
         .required("El campo es obligatorio"),
     discipline: Yup.array()
@@ -127,7 +103,12 @@ const validationSchema = Yup.object({
 });
 
 
-const SignUpForm: React.FC = () => {
+const EditUserForm: React.FC = () => {
+
+    const location = useLocation();
+    const user = location.state;
+
+    console.log("USUARIO EN EDICION", user)
 
     const [discipline, setDiscipline] = React.useState<string[]>([]);
 
@@ -147,23 +128,7 @@ const SignUpForm: React.FC = () => {
         values: SignUpFormValues,
         formikHelpers: FormikHelpers<SignUpFormValues>
     ) => {
-        const user = {
-            name: values.name,
-            lastName: values.lastName,
-            email: values.email,
-            password: values.password,
-            dni: values.dni,
-            birthDate: values.birthDate ? dayjs(values.birthDate).toDate() : null,
-            address: values.address,
-            contactNumber: values.contactNumber,
-            group: values.group,
-            groupHead: values.groupHead,
-            countState: values.countState,
-            avatar: null,
-            category: values.category,
-            discipline: values.discipline,
-            blockade: values.blockade,
-        };
+        const user = { username: values.email, name: values.name, lastName: values.lastName, dni: values.dni, address: values.address, familyGroup: values.familyGroup, category: values.category, discipline: values.discipline };
         console.log(user);
         // navigate("/home");
     };
@@ -195,55 +160,17 @@ const SignUpForm: React.FC = () => {
             <Container maxWidth="xl"  >
 
                 <Formik<SignUpFormValues>
-                    initialValues={{
-                        name: "",
-                        lastName: "",
-                        email: "",
-                        password: "",
-                        dni: "",
-                        birthDate: null,
-                        address: "",
-                        contactNumber: "",
-                        group: false,
-                        groupHead: false,
-                        countState: "Sin Deuda",
-                        avatar: null,
-                        category: "",
-                        discipline: [],
-                        blockade: false
-                    }}
+                    initialValues={{ email: user.email, name: user.name, lastName: user.lastName, dni: user.dni, address: user.address, birthDate: null, contactNumber: user.contactNumber, familyGroup: false, category: "", discipline: [], }}
                     validationSchema={validationSchema}
                     onSubmit={handleSubmit}
                 >
                     {({ handleChange, handleBlur, values, errors, touched, }) => (
                         <Form>
-                            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+
+                            <Grid container rowSpacing={0} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                                 <Grid size={4}>
-                                    <Box
-                                        component={Paper}
-                                        elevation={1}
-                                        sx={{
-                                            // flexGrow: 1,
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            alignItems: 'flex-start',
-                                            // justifyContent: 'center',
-                                            // px: 4,
-                                            padding:3,
-                                            mt:2,
-                                            
-                                            backgroundColor: 'rgba(196, 107, 107, 0.65)',
-                                            borderRadius: 2,
-                                            width: "auto",
-                                            height: "auto",
-                                        }}
-                                    >
-
-                                        <Avatar alt="Avatar" src={usuario.avatar} sx={{ width: 100, height: 100 }} />
-                                    </Box>
-
                                     <TextField
-                                        // autoFocus
+                                        autoFocus
                                         margin="normal"
                                         required
                                         fullWidth
@@ -256,44 +183,7 @@ const SignUpForm: React.FC = () => {
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                         error={touched.name && Boolean(errors.name)}
-                                        // helperText={touched.name && errors.name}
-                                        helperText={touched.name && errors.name ? errors.name : " "} // 
-                                        sx={{ mb: -0.5 }}
-                                        InputProps={{
-
-                                            sx: {
-                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c", // Cambia el color del borde activo
-                                                },
-                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c", // Cambia el color al pasar el mouse
-                                                },
-                                            },
-                                        }}
-                                        InputLabelProps={{
-                                            sx: {
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c", // Cambia el color del texto del label activo
-                                                },
-                                            },
-                                        }}
-                                    />
-
-                                    <TextField
-                                        margin="normal"
-                                        required
-                                        fullWidth
-                                        name="lastName"
-                                        label="Apellido/s"
-                                        type="lastName"
-                                        id="lastName"
-                                        autoComplete="lastName"
-                                        value={values.lastName}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={touched.lastName && Boolean(errors.lastName)}
-                                        helperText={touched.lastName && errors.lastName ? errors.lastName : " "} // 
-                                        sx={{ mb: -1 }}
+                                        helperText={touched.name && errors.name}
                                         InputProps={{
                                             sx: {
                                                 "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
@@ -313,7 +203,40 @@ const SignUpForm: React.FC = () => {
                                         }}
                                     />
                                 </Grid>
-
+                                <Grid size={4}>
+                                    <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        name="lastName"
+                                        label="Apellido/s"
+                                        type="lastName"
+                                        id="lastName"
+                                        autoComplete="lastName"
+                                        value={values.lastName}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.lastName && Boolean(errors.lastName)}
+                                        helperText={touched.lastName && errors.lastName}
+                                        InputProps={{
+                                            sx: {
+                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color del borde activo
+                                                },
+                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                                },
+                                            },
+                                        }}
+                                        InputLabelProps={{
+                                            sx: {
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c", // Cambia el color del texto del label activo
+                                                },
+                                            },
+                                        }}
+                                    />
+                                </Grid>
                                 <Grid size={4}>
                                     <TextField
                                         margin="normal"
@@ -328,110 +251,7 @@ const SignUpForm: React.FC = () => {
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                         error={touched.email && Boolean(errors.email)}
-                                        helperText={touched.email && errors.email ? errors.email : " "} // 
-                                        sx={{ mb: -1 }}
-                                        InputProps={{
-                                            sx: {
-                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c", // Cambia el color del borde activo
-                                                },
-                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c", // Cambia el color al pasar el mouse
-                                                },
-                                            },
-                                        }}
-                                        InputLabelProps={{
-                                            sx: {
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c", // Cambia el color del texto del label activo
-                                                },
-                                            },
-                                        }}
-                                    />
-
-                                    <TextField
-                                        margin="normal"
-                                        required
-                                        fullWidth
-                                        name="dni"
-                                        label="DNI"
-                                        type="dni"
-                                        id="dni"
-                                        autoComplete="dni"
-                                        value={values.dni}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={touched.dni && Boolean(errors.dni)}
-                                        helperText={touched.dni && errors.dni ? errors.dni : " "}
-                                        sx={{ mb: -1 }}
-                                        InputProps={{
-                                            sx: {
-                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c", // Cambia el color del borde activo
-                                                },
-                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c", // Cambia el color al pasar el mouse
-                                                },
-                                            },
-                                        }}
-                                        InputLabelProps={{
-                                            sx: {
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c", // Cambia el color del texto del label activo
-                                                },
-                                            },
-                                        }}
-                                    />
-
-                                    <TextField
-                                        margin="normal"
-                                        required
-                                        fullWidth
-                                        name="address"
-                                        label="Domicilio"
-                                        type="address"
-                                        id="address"
-                                        autoComplete="address"
-                                        value={values.address}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={touched.address && Boolean(errors.address)}
-                                        helperText={touched.address && errors.address ? errors.address : " "}
-                                        sx={{ mb: -1 }}
-                                        InputProps={{
-                                            sx: {
-                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c", // Cambia el color del borde activo
-                                                },
-                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c", // Cambia el color al pasar el mouse
-                                                },
-                                            },
-                                        }}
-                                        InputLabelProps={{
-                                            sx: {
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c", // Cambia el color del texto del label activo
-                                                },
-                                            },
-                                        }}
-                                    />
-
-                                    <TextField
-                                        margin="normal"
-                                        required
-                                        fullWidth
-                                        name="contactNumber"
-                                        label="Número de Contacto"
-                                        type="contactNumber"
-                                        id="contactNumber"
-                                        autoComplete="contactNumber"
-                                        value={values.contactNumber}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={touched.contactNumber && Boolean(errors.contactNumber)}
-                                        helperText={touched.contactNumber && errors.contactNumber ? errors.contactNumber : " "}
-                                        sx={{ mb: -1 }}
+                                        helperText={touched.email && errors.email}
                                         InputProps={{
                                             sx: {
                                                 "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
@@ -452,11 +272,9 @@ const SignUpForm: React.FC = () => {
                                     />
                                 </Grid>
                                 <Grid size={4} sx={{ mt: 1 }}>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs} >
-                                        <DemoContainer components={['DatePicker']} sx={{ width: '100%' }} >
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <DemoContainer components={['DatePicker']} sx={{ width: '100%' }}>
                                             <DatePicker
-
-                                                format="DD/MM/YYYY"
                                                 sx={{
                                                     width: '100%',
                                                     "& .MuiInputLabel-root": {
@@ -473,7 +291,6 @@ const SignUpForm: React.FC = () => {
                                                         },
                                                     },
                                                 }}
-
                                                 label="Fecha de Nacimiento"
                                                 value={values.birthDate} // This should now be a Dayjs object
                                                 onChange={(newValue) => {
@@ -482,20 +299,120 @@ const SignUpForm: React.FC = () => {
 
                                             />
                                         </DemoContainer>
-                                        {touched.birthDate || errors.birthDate ?
-                                            <Typography color="error" variant="caption" sx={{ mt: 0, fontSize: '0.75rem' }} >
+                                        {touched.birthDate && errors.birthDate && (
+                                            <Typography color="error" variant="caption" sx={{ mt: 1, fontSize: '0.75rem' }}>
                                                 {errors.birthDate as string}
-                                            </Typography> : " "
-                                        }
+                                            </Typography>
+                                        )}
                                     </LocalizationProvider>
+                                </Grid>
+                                <Grid size={4}>
+                                    <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        name="dni"
+                                        label="DNI"
+                                        type="dni"
+                                        id="dni"
+                                        autoComplete="dni"
+                                        value={values.dni}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.dni && Boolean(errors.dni)}
+                                        helperText={touched.dni && errors.dni}
+                                        InputProps={{
+                                            sx: {
+                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color del borde activo
+                                                },
+                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                                },
+                                            },
+                                        }}
+                                        InputLabelProps={{
+                                            sx: {
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c", // Cambia el color del texto del label activo
+                                                },
+                                            },
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid size={4}>
 
-
-
-
-
-
-
-                                    <FormControl fullWidth sx={{ mt: 1 }}>
+                                </Grid>
+                                <Grid size={4}>
+                                    <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        name="address"
+                                        label="Domicilio"
+                                        type="address"
+                                        id="address"
+                                        autoComplete="address"
+                                        value={values.address}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.address && Boolean(errors.address)}
+                                        helperText={touched.address && errors.address}
+                                        InputProps={{
+                                            sx: {
+                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color del borde activo
+                                                },
+                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                                },
+                                            },
+                                        }}
+                                        InputLabelProps={{
+                                            sx: {
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c", // Cambia el color del texto del label activo
+                                                },
+                                            },
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid size={4}>
+                                    <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        name="contactNumber"
+                                        label="Número de Contacto"
+                                        type="contactNumber"
+                                        id="contactNumber"
+                                        autoComplete="contactNumber"
+                                        value={values.contactNumber}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.contactNumber && Boolean(errors.contactNumber)}
+                                        helperText={touched.contactNumber && errors.contactNumber}
+                                        InputProps={{
+                                            sx: {
+                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color del borde activo
+                                                },
+                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                                },
+                                            },
+                                        }}
+                                        InputLabelProps={{
+                                            sx: {
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c", // Cambia el color del texto del label activo
+                                                },
+                                            },
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid size={4} sx={{ mt: 2 }}>
+                                    <FormControl fullWidth>
                                         <InputLabel id="demo-simple-select-label" sx={{
                                             "&.Mui-focused": {
                                                 color: "#b71c1c", // Ensure label color changes when focused
@@ -527,14 +444,17 @@ const SignUpForm: React.FC = () => {
                                             ))}
 
                                         </Select>
-                                        {touched.category || errors.category ?
+                                        {touched.category && errors.category && (
                                             <Typography color="error" variant="caption">
                                                 {errors.category}
-                                            </Typography> : " "
-                                        }
+                                            </Typography>
+                                        )}
                                     </FormControl>
+                                </Grid>
 
-                                    <FormControl fullWidth sx={{ mt: 1 }}>
+
+                                <Grid size={8} sx={{ mt: 2 }}>
+                                    <FormControl fullWidth >
                                         <InputLabel id="demo-multiple-chip-label" sx={{
                                             "&.Mui-focused": {
                                                 color: "#b71c1c", // Ensure label color changes when focused
@@ -574,145 +494,40 @@ const SignUpForm: React.FC = () => {
                                                     <ListItemText primary={name} />
                                                 </MenuItem>
                                             ))}
+                                            {/* {names.map((name) => (
+                                            <MenuItem
+                                                key={name}
+                                                value={name}
+                                                style={getStyles(name, discipline, theme)}
 
+                                            >
+                                                {name}
+                                            </MenuItem>
+                                        ))} */}
                                         </Select>
-                                        {touched.discipline || errors.discipline ?
+                                        {touched.discipline && errors.discipline && (
                                             <Typography color="error" variant="caption" sx={{ mt: 1 }}>
                                                 {errors.discipline}
-                                            </Typography> : " "
-                                        }
+                                            </Typography>
+                                        )}
                                     </FormControl>
-
-                                    <Grid container columnSpacing={2}>
-                                        <Grid size={5} sx={{ mt: 0.8 }}>
-                                            <FormControl fullWidth>
-                                                <InputLabel id="group-head-label" sx={{
-                                                    "&.Mui-focused": {
-                                                        color: "#b71c1c", // Ensure label color changes when focused
-                                                    },
-                                                }}>Cabeza de Grupo</InputLabel>
-                                                <Select
-
-                                                    labelId="group-head-label"
-                                                    id="group-head-select"
-                                                    value={values.category} // Bind Formik value
-                                                    label="Cabeza de Grupo" // Update label to match the field
-                                                    onChange={(event) => {
-                                                        handleChange({ target: { name: 'category', value: event.target.value } }); // Correctly update Formik state
-                                                    }}
-                                                    sx={{
-                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c", // Change border color when focused
-                                                        },
-                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c", // Change border color on hover
-                                                        },
-                                                    }}
-                                                // onBlur={handleBlur} // Optional: Handle blur event if needed
-                                                >
-                                                    {category.map((cat) => (
-                                                        <MenuItem key={cat} value={cat}>
-                                                            {cat}
-                                                        </MenuItem>
-                                                    ))}
-
-                                                </Select>
-                                                {touched.category || errors.category ?
-                                                    <Typography color="error" variant="caption">
-                                                        {errors.category}
-                                                    </Typography> : " "
-                                                }
-                                            </FormControl>
-
-                                        </Grid>
-                                        <Grid size={7} sx={{ mt: 0.8 }}>
-                                            <FormControl fullWidth >
-                                                <InputLabel id="demo-multiple-chip-label" sx={{
-                                                    "&.Mui-focused": {
-                                                        color: "#b71c1c", // Ensure label color changes when focused
-                                                    },
-                                                }}>Lista de Socios</InputLabel>
-                                                <Select
-                                                    labelId="demo-multiple-chip-label"
-                                                    id="demo-multiple-chip"
-                                                    multiple
-                                                    required
-                                                    value={discipline}
-                                                    onChange={(event) => {
-                                                        handleDiscipline(event);
-                                                        handleChange({ target: { name: 'discipline', value: event.target.value } });
-                                                    }}
-                                                    sx={{
-                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c", // Change border color when focused
-                                                        },
-                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c", // Change border color on hover
-                                                        },
-                                                    }}
-                                                    input={<OutlinedInput id="select-multiple-chip" label="Lista de Socios" />}
-                                                    renderValue={(selected) => (
-                                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                                            {selected.map((value) => (
-                                                                <Chip key={value} label={value} />
-                                                            ))}
-                                                        </Box>
-                                                    )}
-                                                    MenuProps={MenuProps}
-                                                >
-                                                    {names.map((name) => (
-                                                        <MenuItem key={name} value={name} style={getStyles(name, discipline, theme)}>
-                                                            <Checkbox checked={discipline.indexOf(name) > -1} />
-                                                            <ListItemText primary={name} />
-                                                        </MenuItem>
-                                                    ))}
-
-                                                </Select>
-                                                {touched.discipline && errors.discipline && (
-                                                    <Typography color="error" variant="caption" sx={{ mt: 1 }}>
-                                                        {errors.discipline}
-                                                    </Typography>
-                                                )}
-                                            </FormControl>
-
-                                        </Grid>
-                                    </Grid>
                                 </Grid>
 
-                                {/* <Grid size={4}>
-                                    <TextField
-                                        margin="normal"
-                                        required
-                                        fullWidth
-                                        name="password"
-                                        label="Contraseña"
-                                        type="password"
-                                        id="password"
-                                        autoComplete="current-password"
-                                        value={values.password}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={touched.password && Boolean(errors.password)}
-                                        helperText={touched.password && errors.password}
-                                        InputProps={{
-                                            sx: {
-                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c", // Cambia el color del borde activo
-                                                },
-                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c", // Cambia el color al pasar el mouse
-                                                },
-                                            },
-                                        }}
-                                        InputLabelProps={{
-                                            sx: {
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c", // Cambia el color del texto del label activo
-                                                },
-                                            },
-                                        }}
-                                    />
-                                </Grid> */}
+                                <Grid size={4}>
+                                    {/* <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={values.familyGroup} // Bind checkbox to Formik value
+                                            onChange={(event) => {
+                                                handleChange({ target: { name: 'familyGroup', value: event.target.checked } }); // Update Formik state
+                                            }}
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Grupo Familiar"
+                                /> */}
+                                </Grid>
+
 
                                 <Grid size={8}>
                                     <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
@@ -737,7 +552,7 @@ const SignUpForm: React.FC = () => {
                                             },
                                         }}
                                     >
-                                        REGISTRAR SOCIO
+                                        EDITAR SOCIO
                                     </Button>
 
                                 </Grid>
@@ -752,5 +567,5 @@ const SignUpForm: React.FC = () => {
     );
 };
 
-export default SignUpForm;
+export default EditUserForm;
 

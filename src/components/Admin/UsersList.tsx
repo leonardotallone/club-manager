@@ -1,9 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid2';
-import { Box, Container, Typography } from "@mui/material";
-
-
-import BlackBanner from '../BlackBanner';
+import { Box, Container, Typography, Button } from "@mui/material";
 
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -11,48 +9,88 @@ import FormControl from '@mui/material/FormControl';
 
 import Avatar from '@mui/material/Avatar';
 
-
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import avatar1 from "../../assets/avatars/1.jpg";
 import avatar2 from "../../assets/avatars/2.jpg";
 import avatar3 from "../../assets/avatars/3.jpg";
+import avatar4 from "../../assets/avatars/4.jpg";
 
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import ManOutlinedIcon from '@mui/icons-material/ManOutlined';
 import FamilyRestroomOutlinedIcon from '@mui/icons-material/FamilyRestroomOutlined';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import Pagination from '@mui/material/Pagination';
 
 
 const UsersList = () => {
 
+    const navigate = useNavigate();
 
     const usuarios = [
         {
-            nombre: "Catalina Tallone Semino, Semino",
+            name: "Catalina",
+            lastName: "Tallone",
+            email: "catalina@gmail.com",
             dni: "56.883.870",
-            categoria: "Activo",
-            grupo: "Familia",
-            estadoCuenta: "Sin Deuda",
-            avatar: avatar1
+            birthdate: "11/02/2018",
+            address: "Alvarez Rodriguez 231",
+            category: "Activo",
+            group: true,
+            groupHead: false,
+            countState: "Sin Deuda",
+            avatar: avatar1,
+            contactNumber: "+54 236 4321985",
+            discipline: "Hockey Femenino",
+            blockade: false,
         },
         {
-            nombre: "Juan Pérez",
-            dni: "45.678.901",
-            categoria: "Pleno",
-            grupo: "Familia",
-            estadoCuenta: "Con Deuda",
-            avatar: avatar2
+            name: "Salvador",
+            lastName: "Tallone",
+            dni: "58.577.896",
+            category: "Activo",
+            group: true,
+            groupHead: false,
+            countState: "Sin Deuda",
+            avatar: avatar2,
+            contactNumber: "+54 236 4321985",
+            address: "Alvarez Rodriguez 231",
+            discipline: "Futbol Escuela",
+            email: "Ssalvador@gmail.com",
+            birthdate: "21/12/2021",
+            blockade: false,
         },
         {
-            nombre: "Juan Pérez",
-            dni: "45.678.901",
-            categoria: "Pleno",
-            grupo: "Familia",
-            estadoCuenta: "Con Deuda",
-            avatar: avatar3
+            name: "Leonardo",
+            lastName: "Tallone",
+            dni: "30.074.389",
+            category: "Activo",
+            group: true,
+            groupHead: true,
+            countState: "Sin Deuda",
+            avatar: avatar3,
+            contactNumber: "+54 236 4321985",
+            address: "Alvarez Rodriguez 231",
+            discipline: "Futbol Senior",
+            email: "leonardo.gabril.tallone@gmail.com",
+            birthdate: "14/04/1083",
+            blockade: false,
+        },
+        {
+            name: "Juan Sebastian",
+            lastName: "Perez Armendiz",
+            dni: "27.072.378",
+            category: "Vitalicio",
+            group: false,
+            groupHead: false,
+            countState: "Con Deuda",
+            avatar: avatar4,
+            contactNumber: "+54 236 4321985",
+            address: "Alvarez Rodriguez 231",
+            discipline: "Futbol Senior",
+            email: "leonardo.gabril.tallone@gmail.com",
+            birthdate: "14/04/1083",
+            blockade: true,
         },
     ];
 
@@ -64,7 +102,7 @@ const UsersList = () => {
     ];
     return (
         <>
-            {/* <BlackBanner /> */}
+
 
             <Box
                 sx={{
@@ -127,7 +165,7 @@ const UsersList = () => {
 
             <Container maxWidth="xl">
                 <Grid container>
-                    {usuarios.map((usuario, index) => (
+                    {usuarios.map((user, index) => (
                         <Grid key={index} size={{ xs: 12, sm: 6, md: 6, lg: 12 }} sx={{ mb: 1.5 }}>
                             <Box
                                 sx={{
@@ -145,14 +183,14 @@ const UsersList = () => {
                             >
                                 <Grid container sx={{ width: '100%' }} >
                                     <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 0.7 }} sx={{ ml: 1 }}>
-                                        <Avatar alt="Avatar" src={usuario.avatar} sx={{ width: 50, height: 50 }} />
+                                        <Avatar alt="Avatar" src={user.avatar} sx={{ width: 50, height: 50 }} />
                                     </Grid>
                                     <Grid size={{ xs: 1.5, sm: 1.5, md: 1.5, lg: 1.5, xl: 2 }} direction="column">
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             NOMBRE Y APELLIDO
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                            {usuario.nombre}
+                                            {user.name} {user.lastName}
                                         </Typography>
                                     </Grid>
 
@@ -161,7 +199,7 @@ const UsersList = () => {
                                             DNI
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                            {usuario.dni}
+                                            {user.dni}
                                         </Typography>
                                     </Grid>
 
@@ -170,7 +208,7 @@ const UsersList = () => {
                                             CATEGORIA
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                            {usuario.categoria}
+                                            {user.category}
                                         </Typography>
                                     </Grid>
 
@@ -178,21 +216,24 @@ const UsersList = () => {
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             BLOQUEAR USUARIO
                                         </Typography>
-                                        <LockOpenIcon sx={{ fontSize: 24, color: "black", ml: 5 }} />
+                                        {user.blockade === false ? <LockOpenIcon sx={{ fontSize: 24, color: 'Green', ml: 5 }} /> :
+                                            <LockOutlinedIcon sx={{ fontSize: 24, color: 'Red', ml: 5 }} />}
                                     </Grid>
 
                                     <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 0.7 }} direction="column">
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             GRUPO
                                         </Typography>
-                                        <FamilyRestroomOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} />
+                                        {user.group === true ?
+                                            <FamilyRestroomOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} /> :
+                                            <ManOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} />}
                                     </Grid>
                                     <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }} direction="column" >
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             ESTADO DE CUENTA
                                         </Typography>
-                                        <Typography sx={{ fontWeight: 600, fontSize: 14, color: usuario.estadoCuenta === "Sin Deuda" ? 'Green' : 'Red', textDecoration: 'none' }}>
-                                            {usuario.estadoCuenta}
+                                        <Typography sx={{ fontWeight: 600, fontSize: 14, color: user.countState === "Sin Deuda" ? 'Green' : 'Red', textDecoration: 'none' }}>
+                                            {user.countState}
                                         </Typography>
                                     </Grid>
                                     <Grid size={{ xs: 1, sm: 6, md: 6, lg: 4 }} direction="column" sx={{
@@ -204,10 +245,14 @@ const UsersList = () => {
                                         color: 'black',
 
                                     }}>
-                                        <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
+                                        <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none', mr: 1 }}>
                                             EDITAR
                                         </Typography>
-                                        <ModeEditOutlineOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} />
+                                        <Button
+                                            startIcon={<ModeEditOutlineOutlinedIcon sx={{ fontSize: 24, color: "black", mr: -3 }} />}
+                                            onClick={() => navigate(`/edit-user/${user}`, { state: user })}
+                                        >
+                                        </Button>
                                     </Grid>
                                 </Grid>
                             </Box>

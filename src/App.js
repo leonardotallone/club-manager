@@ -5,10 +5,12 @@ import LandingScreen from "./screens/LandingScreen";
 import DashboardAdminScreen from "./screens/Admin/DashboardAdminScreen";
 import UsersListScreen from "./screens/Admin/UsersListScreen";
 import SignUpScreen from "./screens/Admin/SignUpScreen";
+import EditUserScreen from "./screens/Admin/EditUserScreen";
 
 import PasswordRecoverScreen from "./screens/PasswordRecoverScreen";
 import EmailRecoverScreen from "./screens/EmailRecoverScreen";
 import DashboardUserScreen from "./screens/DashboardUserScreen";
+
 
 function App() {
   return (
@@ -18,6 +20,7 @@ function App() {
 
         <Route path="/dashboard-admin-screen" element={<DashboardAdminScreen />} />
         <Route path="/admin-users-list" element={<UsersListScreen />} />
+        <Route path="/edit-user/:user" element={<EditUserScreen />} />
         <Route path="/signup" element={<SignUpScreen />} />
 
         <Route path="/password-recover" element={<PasswordRecoverScreen />} />

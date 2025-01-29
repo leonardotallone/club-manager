@@ -1,13 +1,11 @@
 import React, { useEffect, useContext } from 'react';
 
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -26,7 +24,6 @@ const validationSchema = Yup.object({
         .min(6, "La contraseña debe tener como mínimo 6 caracteres")
         .required("El campo es obligatorio"),
 });
-
 
 
 const SignInForm: React.FC = () => {

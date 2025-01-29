@@ -24,21 +24,19 @@ root.render(
   <React.StrictMode>
     <CssBaseline />
     <ThemeProvider theme={theme}>
-
-              <SignInContext>
-      <SignedUserContext>
-        <SignUpContext>
-          <JoinUpContext>
-            <DisplayLandingFormsProvider>
+      <SignInContext>
+        <SignedUserContext>
+          <SignUpContext>
+            <JoinUpContext>
+              <DisplayLandingFormsProvider>
                 <GetAllUsersProvider>
                   <App />
                 </GetAllUsersProvider>
-            </DisplayLandingFormsProvider>
-          </JoinUpContext>
-        </SignUpContext>
-      </SignedUserContext>
-              </SignInContext>
-
+              </DisplayLandingFormsProvider>
+            </JoinUpContext>
+          </SignUpContext>
+        </SignedUserContext>
+      </SignInContext>
     </ThemeProvider>
   </React.StrictMode>
 );
