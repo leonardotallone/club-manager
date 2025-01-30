@@ -133,7 +133,7 @@ const Navbar = () => {
                     </Box>
                     {/*---------------------------------------------------------------------------------  Margen Derecho si hay usuario Conectado  --------------------------------------------------------------- */}
 
-                    {/* <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
+                    <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
                         <Typography sx={{ fontSize: 14, fontWeight: "500", color: "#424242", mr: 1.5 }} >
                             {admin ? "Bienvenido Admin" : "Leonardo Tallone"}
                         </Typography>
@@ -145,7 +145,7 @@ const Navbar = () => {
                                 <Avatar alt="Remy Sharp" src={avatar} />
                             </IconButton>
                         </Tooltip>
-                    </Box> */}
+                    </Box>
 
                 </Toolbar>
             </Container>
