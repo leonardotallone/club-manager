@@ -9,7 +9,7 @@ const JoinUpProvider = ({ children }) => {
   const [joinUpError, setJoinUpError] = useState([])
   const [loading, setLoading] = useState(false)
 
-  console.log(joinUpUser)
+
 
   useEffect(() => {
     setLoading(true);

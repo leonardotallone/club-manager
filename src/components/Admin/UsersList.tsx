@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid2';
 import { Box, Container, Typography, Button } from "@mui/material";
@@ -24,6 +24,7 @@ import Pagination from '@mui/material/Pagination';
 
 
 const UsersList = () => {
+    const [selectedCategory, setSelectedCategory] = React.useState('');
 
     const navigate = useNavigate();
 
@@ -36,8 +37,8 @@ const UsersList = () => {
             birthdate: "11/02/2018",
             address: "Alvarez Rodriguez 231",
             category: "Activo",
-            group: true,
             groupHead: false,
+            group: ["Salvador Tallone", "Leonardo, Tallone", "Victoria, Semino"],
             countState: "Sin Deuda",
             avatar: avatar1,
             contactNumber: "+54 236 4321985",
@@ -49,14 +50,14 @@ const UsersList = () => {
             lastName: "Tallone",
             dni: "58.577.896",
             category: "Activo",
-            group: true,
             groupHead: false,
+            group: ["Catalina Tallone", "Leonardo, Tallone", "Victoria, Semino"],
             countState: "Sin Deuda",
             avatar: avatar2,
             contactNumber: "+54 236 4321985",
             address: "Alvarez Rodriguez 231",
             discipline: "Futbol Escuela",
-            email: "Ssalvador@gmail.com",
+            email: "salvador.tallone@gmail.com",
             birthdate: "21/12/2021",
             blockade: false,
         },
@@ -65,8 +66,8 @@ const UsersList = () => {
             lastName: "Tallone",
             dni: "30.074.389",
             category: "Activo",
-            group: true,
             groupHead: true,
+            group: ["Catalina Tallone", "Salvador, Tallone", "Victoria, Semino"],
             countState: "Sin Deuda",
             avatar: avatar3,
             contactNumber: "+54 236 4321985",
@@ -81,8 +82,8 @@ const UsersList = () => {
             lastName: "Perez Armendiz",
             dni: "27.072.378",
             category: "Vitalicio",
-            group: false,
             groupHead: false,
+            group: [],
             countState: "Con Deuda",
             avatar: avatar4,
             contactNumber: "+54 236 4321985",
@@ -95,10 +96,10 @@ const UsersList = () => {
     ];
 
     const category = [
-        'Activo',
-        'Pleno',
-        'Jubilado',
-        'Vitalício',
+        'Afabetico',
+        'Categoria',
+        'Edad',
+        'Estado de Cuenta',
     ];
     return (
         <>
@@ -135,25 +136,17 @@ const UsersList = () => {
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
-                                    // value={values.category} // Bind Formik value
-                                    label="Categoria" // Update label to match the field
-                                // onChange={(event) => {
-                                //     handleChange({ target: { name: 'category', value: event.target.value } }); // Correctly update Formik state
-                                // }}
-                                // onBlur={handleBlur} // Optional: Handle blur event if needed
+                                    value={selectedCategory}
+                                    onChange={(event) => setSelectedCategory(event.target.value)}
+                                    label="Categoria"
                                 >
                                     {category.map((cat) => (
                                         <MenuItem key={cat} value={cat}>
                                             {cat}
                                         </MenuItem>
                                     ))}
-
                                 </Select>
-                                {/* {touched.category && errors.category && (
-                        <Typography color="error" variant="caption" sx={{ mt: 1 }}>
-                            {errors.category}
-                        </Typography>
-                    )} */}
+
                             </FormControl>
                         </Grid>
                     </Grid>
@@ -224,7 +217,7 @@ const UsersList = () => {
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             GRUPO
                                         </Typography>
-                                        {user.group === true ?
+                                        {user.group.length > 0 ?
                                             <FamilyRestroomOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} /> :
                                             <ManOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} />}
                                     </Grid>

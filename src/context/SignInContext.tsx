@@ -13,7 +13,6 @@ const SignInProvider = ({ children }) => {
   const [signInError, setSignInError] = useState([])
   const [loading, setLoading] = useState(false)
 
-  console.log("SignIn User CONTEXT", signInUser)
 
 
 

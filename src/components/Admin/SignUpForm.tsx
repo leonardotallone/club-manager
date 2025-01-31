@@ -59,6 +59,16 @@ const names = [
     "Gym"
 ];
 
+const sociosList = [
+    "Leonardo Tallone",
+    'Catalina Tallone',
+    'Salvador Tallone',
+    'Victoria Semino',
+    "Federico Palmieri",
+    "Bruno, Barbieri", 
+    "Catalina, Gazola",
+];
+
 
 
 function getStyles(name: string, discipline: readonly string[], theme: Theme) {
@@ -78,8 +88,8 @@ interface SignUpFormValues {
     birthDate: Dayjs
     address: string;
     contactNumber: string;
-    group: boolean;
-    groupHead: boolean;
+    group: string[];
+    groupHead: string;
     countState: string;
     avatar: null;
     category: string;
@@ -98,9 +108,9 @@ const validationSchema = Yup.object({
     email: Yup.string()
         .email("Dirección de correo electrónico inválida")
         .required("El campo es obligatorio"),
-    password: Yup.string()
-        .min(6, "La contraseña debe tener como mínimo 6 caracteres")
-        .required("El campo es obligatorio"),
+    // password: Yup.string()
+    //     .min(6, "La contraseña debe tener como mínimo 6 caracteres")
+    //     .required("El campo es obligatorio"),
     dni: Yup.string()
         .matches(/^\d+$/, "El DNI debe contener solo números")
         .test(
@@ -130,6 +140,7 @@ const validationSchema = Yup.object({
 const SignUpForm: React.FC = () => {
 
     const [discipline, setDiscipline] = React.useState<string[]>([]);
+    const [socios, setSocios] = React.useState<string[]>([]);
 
     const theme = useTheme();
     const navigate = useNavigate();
@@ -139,6 +150,14 @@ const SignUpForm: React.FC = () => {
             target: { value },
         } = event;
         setDiscipline(
+            typeof value === 'string' ? value.split(',') : value,
+        );
+    };
+    const handleSocios = (event: SelectChangeEvent<typeof socios>) => {
+        const {
+            target: { value },
+        } = event;
+        setSocios(
             typeof value === 'string' ? value.split(',') : value,
         );
     };
@@ -157,7 +176,7 @@ const SignUpForm: React.FC = () => {
             address: values.address,
             contactNumber: values.contactNumber,
             group: values.group,
-            groupHead: values.groupHead,
+            groupHead: values.groupHead === "true" ? true : false,
             countState: values.countState,
             avatar: null,
             category: values.category,
@@ -167,13 +186,6 @@ const SignUpForm: React.FC = () => {
         console.log(user);
         // navigate("/home");
     };
-
-
-    // useEffect(() => {
-    //     if (accessToken) {
-    //         navigate("/home");
-    //     }
-    // }, [accessToken])
 
     return (
         <Box
@@ -204,8 +216,8 @@ const SignUpForm: React.FC = () => {
                         birthDate: null,
                         address: "",
                         contactNumber: "",
-                        group: false,
-                        groupHead: false,
+                        group: [],
+                        groupHead: "",
                         countState: "Sin Deuda",
                         avatar: null,
                         category: "",
@@ -220,12 +232,12 @@ const SignUpForm: React.FC = () => {
                             <Grid container columnSpacing={2} direction="row">
                                 <Grid container direction="column" size={4}>
                                     <Grid size={12} >
-{/* AVATAR */}
+                                        {/* AVATAR */}
                                         <Box
                                             component={Card}
                                             elevation={1}
                                             sx={{
-                                                display:"flex",
+                                                display: "flex",
                                                 alignItems: 'center',
                                                 // backgroundColor: 'rgba(245, 186, 206, 1)',
                                                 backgroundColor: 'rgba(71, 71, 71, 0.33)',
@@ -235,9 +247,9 @@ const SignUpForm: React.FC = () => {
                                                 mb: 3,
                                             }}
                                         >
-                                            <Avatar alt="Avatar" src={usuario.avatar} sx={{ width: 120, height: 120, ml:3, boxShadow: 1}} />
+                                            <Avatar alt="Avatar" src={usuario.avatar} sx={{ width: 120, height: 120, ml: 3, boxShadow: 1 }} />
                                         </Box>
-{/* NAME */}
+                                        {/* NAME */}
                                         <TextField
                                             // margin="normal"
                                             // autoFocus
@@ -274,7 +286,7 @@ const SignUpForm: React.FC = () => {
                                                 },
                                             }}
                                         />
-{/* LASTNAME */}
+                                        {/* LASTNAME */}
                                         <TextField
                                             // margin="normal"
                                             required
@@ -313,7 +325,7 @@ const SignUpForm: React.FC = () => {
 
                                 <Grid container direction="column" size={4}>
                                     <Grid size={12} >
-{/* EMAIL */}
+                                        {/* EMAIL */}
                                         <TextField
                                             // autoFocus
                                             // margin="normal"
@@ -347,7 +359,7 @@ const SignUpForm: React.FC = () => {
                                                 },
                                             }}
                                         />
-{/* DNI */}
+                                        {/* DNI */}
                                         <TextField
                                             // margin="none"
                                             required
@@ -381,7 +393,7 @@ const SignUpForm: React.FC = () => {
                                                 },
                                             }}
                                         />
-{/* ADDRESS */}
+                                        {/* ADDRESS */}
                                         <TextField
                                             // margin="none"
                                             required
@@ -415,7 +427,7 @@ const SignUpForm: React.FC = () => {
                                                 },
                                             }}
                                         />
-{/* CONTACT NUMBER */}
+                                        {/* CONTACT NUMBER */}
                                         <TextField
                                             // margin="normal"
                                             required
@@ -496,7 +508,7 @@ const SignUpForm: React.FC = () => {
                                                 </Typography> : <span> &nbsp; </span>
                                             }
                                         </LocalizationProvider>
-{/* DISCIPLINE */}
+                                        {/* DISCIPLINE */}
                                         <FormControl fullWidth sx={{ mb: 0, mt: 1 }}>
                                             <InputLabel id="demo-multiple-chip-label" sx={{
                                                 "&.Mui-focused": {
@@ -545,7 +557,7 @@ const SignUpForm: React.FC = () => {
                                                     {errors.discipline}
                                                 </Typography> : <span> &nbsp; </span>
                                             }
-                                          
+
                                         </FormControl>
 {/* GRUPO Y CATEGORIA */}
                                         <Grid container columnSpacing={2} sx={{ mb: 0, mt: 1 }} size={12}>
@@ -576,9 +588,9 @@ const SignUpForm: React.FC = () => {
                                                     // onBlur={handleBlur} // Optional: Handle blur event if needed
                                                     >
 
-                                                        <MenuItem value={"si"}>Si</MenuItem>
-                                                        <MenuItem value={"no"}>No</MenuItem>
-                                                  
+                                                        <MenuItem value={"true"}>Si</MenuItem>
+                                                        <MenuItem value={"false"}>No</MenuItem>
+
 
                                                     </Select>
                                                     {touched.groupHead || errors.groupHead ?
@@ -631,58 +643,58 @@ const SignUpForm: React.FC = () => {
 
                                             </Grid>
                                         </Grid>
-{/* LISTA DE SOCIOS */}
-                                            <FormControl fullWidth sx={{ mt: 0.9 }}>
-                                                    <InputLabel id="demo-multiple-chip-label" sx={{
-                                                        "&.Mui-focused": {
-                                                            color: "#b71c1c", // Ensure label color changes when focused
-                                                        },
-                                                    }}>Lista de Socios</InputLabel>
-                                                    <Select
-                                                        labelId="demo-multiple-chip-label"
-                                                        id="demo-multiple-chip"
-                                                        multiple
-                                                        required
-                                                        value={discipline}
-                                                        onChange={(event) => {
-                                                            handleDiscipline(event);
-                                                            handleChange({ target: { name: 'discipline', value: event.target.value } });
-                                                        }}
-                                                        sx={{
-                                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c", // Change border color when focused
-                                                            },
-                                                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c", // Change border color on hover
-                                                            },
-                                                            height: '56px',
-                                                        }}
-                                                        input={<OutlinedInput id="select-multiple-chip" label="Lista de Socios" />}
-                                                        renderValue={(selected) => (
-                                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, maxWidth: '100%'}}>
-                                                                {selected.map((value) => (
-                                                                    <Chip key={value} label={value} />
-                                                                ))}
-                                                            </Box>
-                                                        )}
-                                                        MenuProps={MenuProps}
-                                                    >
-                                                        {names.map((name) => (
-                                                            <MenuItem key={name} value={name} style={getStyles(name, discipline, theme)}>
-                                                                <Checkbox checked={discipline.indexOf(name) > -1} />
-                                                                <ListItemText primary={name} />
-                                                            </MenuItem>
+                                        {/* LISTA DE SOCIOS */}
+                                        <FormControl fullWidth sx={{ mt: 0.9 }}>
+                                            <InputLabel id="demo-multiple-chip-label" sx={{
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c", // Ensure label color changes when focused
+                                                },
+                                            }}>Lista de Socios</InputLabel>
+                                            <Select
+                                                labelId="demo-multiple-chip-label"
+                                                id="demo-multiple-chip"
+                                                multiple
+                                                required
+                                                value={socios}
+                                                onChange={(event) => {
+                                                    handleSocios(event);
+                                                    handleChange({ target: { name: 'group', value: event.target.value } });
+                                                }}
+                                                sx={{
+                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c", // Change border color when focused
+                                                    },
+                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c", // Change border color on hover
+                                                    },
+                                                    height: '56px',
+                                                }}
+                                                input={<OutlinedInput id="select-multiple-chip" label="Lista de Socios" />}
+                                                renderValue={(selected) => (
+                                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, maxWidth: '100%' }}>
+                                                        {selected.map((value) => (
+                                                            <Chip key={value} label={value} />
                                                         ))}
+                                                    </Box>
+                                                )}
+                                                MenuProps={MenuProps}
+                                            >
+                                                {sociosList.map((name) => (
+                                                    <MenuItem key={name} value={name} style={getStyles(name, socios, theme)}>
+                                                        <Checkbox checked={socios.indexOf(name) > -1} />
+                                                        <ListItemText primary={name} />
+                                                    </MenuItem>
+                                                ))}
 
-                                                    </Select>
-                                                    {touched.discipline && errors.discipline? 
-                                                        <Typography color="error" variant="caption" >
-                                                            {errors.discipline}
-                                                        </Typography>: <span> &nbsp; </span>
-                                                    }
-                                            </FormControl>
-                                        
-                                    
+                                            </Select>
+                                            {touched.discipline && errors.discipline ?
+                                                <Typography color="error" variant="caption" >
+                                                    {errors.discipline}
+                                                </Typography> : <span> &nbsp; </span>
+                                            }
+                                        </FormControl>
+
+
                                     </Grid>
                                 </Grid>
 
@@ -720,7 +732,7 @@ const SignUpForm: React.FC = () => {
                                         }}
                                     />
                                 </Grid> */}
-{/* BOTONES */}
+                                {/* BOTONES */}
                                 <Grid size={8}>
                                     <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
                                         mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo gris
