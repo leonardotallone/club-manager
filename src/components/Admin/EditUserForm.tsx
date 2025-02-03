@@ -4,16 +4,17 @@ import { useLocation } from 'react-router-dom';
 import { Avatar, Box, Paper, Card, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 
-import avatar1 from "../../assets/avatars/1.jpg";
-
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import dayjs from "dayjs";
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
+
+
 
 
 const ITEM_HEIGHT = 48;
@@ -39,6 +40,13 @@ const names = [
     'Natación',
     "Gym"
 ];
+const socios = [
+    'Catalina, Tallone',
+    'Federico, Palmieri',
+    'Salvador, Tallone',
+    'Victoria, Semino',
+    "Gustavo, Cerati"
+];
 
 function getStyles(name: string, discipline: readonly string[], theme: Theme) {
     return {
@@ -54,7 +62,7 @@ interface SignUpFormValues {
     email: string;
     // password: string;
     dni: string;
-    birthDate: Dayjs
+    birthDate: Dayjs;
     address: string;
     contactNumber: string;
     group: string[];
@@ -109,12 +117,17 @@ const validationSchema = Yup.object({
 const EditUserForm: React.FC = () => {
 
     const [discipline, setDiscipline] = React.useState<string[]>([]);
+    const [group, setGroup] = React.useState<string[]>([]);
+
     const [editMode, setEditMode] = React.useState<boolean>(false);
-    console.log(editMode)
+    const [lockUser, setLockUser] = React.useState<boolean>(false);
 
     const location = useLocation();
     const user = location.state;
-    console.log(user);
+
+
+    dayjs.extend(customParseFormat);
+    console.log(dayjs(user.birthDate, "DD/MM/YYYY"))
 
     const theme = useTheme();
     const navigate = useNavigate();
@@ -122,12 +135,35 @@ const EditUserForm: React.FC = () => {
     const handleEditMode = () => {
         setEditMode(prevEditMode => !prevEditMode);
     }
+    const handleLockUser = (event) => {
+        event.preventDefault();
+        setLockUser(prevEditMode => !prevEditMode);
+    }
+    const handleRemoveUser = () => {
+        console.log("Removing user")
+    }
+    useEffect(() => {
+        if (user && user.discipline) {
+            setDiscipline(user.discipline);
+        }
+        if (user && user.group) {
+            setGroup(user.group);
+        }
+    }, [user]);
 
     const handleDiscipline = (event: SelectChangeEvent<typeof discipline>) => {
         const {
             target: { value },
         } = event;
         setDiscipline(
+            typeof value === 'string' ? value.split(',') : value,
+        );
+    };
+    const handleGroup = (event: SelectChangeEvent<typeof group>) => {
+        const {
+            target: { value },
+        } = event;
+        setGroup(
             typeof value === 'string' ? value.split(',') : value,
         );
     };
@@ -154,9 +190,10 @@ const EditUserForm: React.FC = () => {
             blockade: values.blockade,
         };
         handleEditMode()
-        console.log(user);
+        console.log("SUBMITED USER", user);
         // navigate("/home");
     };
+
 
 
 
@@ -186,15 +223,15 @@ const EditUserForm: React.FC = () => {
                         email: user.email,
                         // password: "",
                         dni: user.dni,
-                        birthDate: user.birthDate,
+                        birthDate: dayjs(user.birthDate, "DD/MM/YYYY"),
                         address: user.address,
                         contactNumber: user.contactNumber,
-                        group: user.group[0],
-                        groupHead: user.groupHead,
+                        group: user.group || [],
+                        groupHead: user.groupHead === true ? "si" : "no",
                         countState: user.countState,
                         avatar: null,
                         category: user.category,
-                        discipline: user.discipline,
+                        discipline: user.discipline || [],
                         blockade: user.blockade
                     }}
                     validationSchema={validationSchema}
@@ -446,7 +483,7 @@ const EditUserForm: React.FC = () => {
 
                                 <Grid container direction="column" size={4} sx={{ mt: -1 }}>
                                     <Grid container size={12} >
-                                        {/* BIRTHDATE */}
+{/* BIRTHDATE */}
                                         <LocalizationProvider dateAdapter={AdapterDayjs} >
                                             <DemoContainer components={['DatePicker']} sx={{ width: '100%' }} >
                                                 <DatePicker
@@ -470,6 +507,7 @@ const EditUserForm: React.FC = () => {
 
                                                     label="Fecha de Nacimiento"
                                                     value={values.birthDate} // This should now be a Dayjs object
+                                                  
                                                     onChange={(newValue) => {
                                                         handleChange({ target: { name: 'birthDate', value: newValue } }); // Update Formik state
                                                     }}
@@ -481,7 +519,7 @@ const EditUserForm: React.FC = () => {
                                                 </Typography> : <span> &nbsp; </span>
                                             }
                                         </LocalizationProvider>
-                                        {/* DISCIPLINE */}
+{/* DISCIPLINE */}
                                         <FormControl fullWidth sx={{ mb: 0, mt: 1 }}>
                                             <InputLabel id="demo-multiple-chip-label" sx={{
                                                 "&.Mui-focused": {
@@ -492,7 +530,7 @@ const EditUserForm: React.FC = () => {
                                                 labelId="demo-multiple-chip-label"
                                                 id="demo-multiple-chip"
                                                 multiple
-                                                required
+                                                // required
                                                 value={discipline}
                                                 onChange={(event) => {
                                                     handleDiscipline(event);
@@ -532,7 +570,7 @@ const EditUserForm: React.FC = () => {
                                             }
 
                                         </FormControl>
-                                        {/* GRUPO Y CATEGORIA */}
+{/* GRUPO Y CATEGORIA */}
                                         <Grid container columnSpacing={2} sx={{ mb: 0, mt: 1 }} size={12}>
                                             <Grid size={6} >
                                                 <FormControl fullWidth sx={{ mb: 0 }}>
@@ -573,6 +611,7 @@ const EditUserForm: React.FC = () => {
                                                     }
                                                 </FormControl>
                                             </Grid>
+
                                             <Grid size={6} >
                                                 <FormControl fullWidth sx={{ mb: 0, mt: 0 }}>
                                                     <InputLabel id="demo-simple-select-label" sx={{
@@ -616,22 +655,23 @@ const EditUserForm: React.FC = () => {
 
                                             </Grid>
                                         </Grid>
-                                        {/* LISTA DE SOCIOS */}
-                                        <FormControl fullWidth sx={{ mt: 0.9 }}>
-                                            <InputLabel id="demo-multiple-chip-label" sx={{
+{/* LISTA DE SOCIOS */}
+                                        <FormControl fullWidth sx={{ mt: 0.9 }} >
+                                            <InputLabel id="demo-multiple-chip-label" disabled sx={{
                                                 "&.Mui-focused": {
                                                     color: "#b71c1c", // Ensure label color changes when focused
                                                 },
                                             }}>Lista de Socios</InputLabel>
                                             <Select
+                                                // disabled
                                                 labelId="demo-multiple-chip-label"
                                                 id="demo-multiple-chip"
                                                 multiple
                                                 required
-                                                value={discipline}
+                                                value={group}
                                                 onChange={(event) => {
-                                                    handleDiscipline(event);
-                                                    handleChange({ target: { name: 'discipline', value: event.target.value } });
+                                                    handleGroup(event);
+                                                    handleChange({ target: { name: 'group', value: event.target.value } });
                                                 }}
                                                 sx={{
                                                     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
@@ -652,17 +692,17 @@ const EditUserForm: React.FC = () => {
                                                 )}
                                                 MenuProps={MenuProps}
                                             >
-                                                {names.map((name) => (
-                                                    <MenuItem key={name} value={name} style={getStyles(name, discipline, theme)}>
-                                                        <Checkbox checked={discipline.indexOf(name) > -1} />
+                                                {socios.map((name) => (
+                                                    <MenuItem key={name} value={name} style={getStyles(name, group, theme)}>
+                                                        <Checkbox checked={group.indexOf(name) > -1} />
                                                         <ListItemText primary={name} />
                                                     </MenuItem>
                                                 ))}
 
                                             </Select>
-                                            {touched.discipline && errors.discipline ?
+                                            {touched.group && errors.group ?
                                                 <Typography color="error" variant="caption" >
-                                                    {errors.discipline}
+                                                    {errors.group}
                                                 </Typography> : <span> &nbsp; </span>
                                             }
                                         </FormControl>
@@ -717,22 +757,29 @@ const EditUserForm: React.FC = () => {
                                     </Button>
                                 </Grid>
                                 <Grid size={2}>
-                                    <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
-                                        mt: 3, mb: 0, backgroundColor: '#b71c1c', // Color de fondo gris
-                                        '&:hover': {
-                                            backgroundColor: 'darkred', // Color al pasar el mouse
-                                        },
-                                    }}>
-                                        BLOQUEAR SOCIO
-                                    </Button>
-                                    <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
-                                        mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo gris
-                                        '&:hover': {
-                                            backgroundColor: 'darkgrey', // Color al pasar el mouse
-                                        },
-                                    }}>
-                                        DESBLOQUEAR SOCIO
-                                    </Button>
+                                    {user.blockade === false ?
+                                        <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
+                                            mt: 3, mb: 0, backgroundColor: '#b71c1c', // Color de fondo gris
+                                            '&:hover': {
+                                                backgroundColor: 'darkred', // Color al pasar el mouse
+                                            },
+                                        }}
+                                            onClick={handleLockUser}
+                                            disabled={!editMode}
+                                        >
+                                            BLOQUEAR SOCIO
+                                        </Button> :
+                                        <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
+                                            mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo gris
+                                            '&:hover': {
+                                                backgroundColor: 'darkgrey', // Color al pasar el mouse
+                                            },
+                                        }}
+                                            onClick={handleLockUser}
+                                            disabled={!editMode}
+                                        >
+                                            DESBLOQUEAR SOCIO
+                                        </Button>}
                                 </Grid>
                                 <Grid size={2}>
                                     <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
@@ -740,38 +787,42 @@ const EditUserForm: React.FC = () => {
                                         '&:hover': {
                                             backgroundColor: 'darkred', // Color al pasar el mouse
                                         },
-                                    }}>
+                                    }}
+                                        onClick={handleRemoveUser}
+                                        disabled={!editMode}
+                                    >
                                         ELIMINAR SOCIO
                                     </Button>
                                 </Grid>
                                 <Grid size={4}>
-                                    <Button
-                                        variant="contained"
-                                        fullWidth
-                                        sx={{
-                                            mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo rojo
-                                            '&:hover': {
-                                                backgroundColor: 'darkgrey', // Color al pasar el mouse
-                                            },
-                                        }}
-                                        onClick={handleEditMode}
+                                    {!editMode ?
+                                        <Button
+                                            variant="contained"
+                                            fullWidth
+                                            sx={{
+                                                mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo rojo
+                                                '&:hover': {
+                                                    backgroundColor: 'darkgrey', // Color al pasar el mouse
+                                                },
+                                            }}
+                                            onClick={handleEditMode}
 
-                                    >
-                                        EDITAR SOCIO
-                                    </Button>
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        fullWidth
-                                        sx={{
-                                            mt: 3, mb: 0, backgroundColor: '#b71c1c', // Color de fondo rojo
-                                            '&:hover': {
-                                                backgroundColor: 'darkred', // Color al pasar el mouse
-                                            },
-                                        }}
-                                    >
-                                        GUARDAR CAMBIOS
-                                    </Button>
+                                        >
+                                            EDITAR SOCIO
+                                        </Button> :
+                                        <Button
+                                            type="submit"
+                                            variant="contained"
+                                            fullWidth
+                                            sx={{
+                                                mt: 3, mb: 0, backgroundColor: '#b71c1c', // Color de fondo rojo
+                                                '&:hover': {
+                                                    backgroundColor: 'darkred', // Color al pasar el mouse
+                                                },
+                                            }}
+                                        >
+                                            GUARDAR CAMBIOS
+                                        </Button>}
                                 </Grid>
 
 
