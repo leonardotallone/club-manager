@@ -18,9 +18,9 @@ const Footer = () => {
               Club Social de Junin
             </Typography>
             <Typography sx={{ fontSize: 14, color: "white", fontWeight: "400" }}>
-              Club Atlético Sarmiento, Asoc. Civil © 2022 Todos los derechos reservados.
-              Av. Arias y Necochea (B6000) Junin, Buenos Aires, Argentina.
-              Contacto: Informes: (54 236) 999-4444 • sarmiento@sarmiento.com.ar
+              Club Social de Junin, Asoc. Civil © 2025 Todos los derechos reservados.
+              Av. Rivadavia (B6000) Junin, Buenos Aires, Argentina.
+              Contacto: Informes: (54 236) 999-4444 • clubsocialdejunin@social.com.ar
             </Typography>
           </Grid>
 

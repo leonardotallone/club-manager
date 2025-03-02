@@ -561,7 +561,7 @@ const SignUpForm: React.FC = () => {
                                         </FormControl>
 {/* GRUPO Y CATEGORIA */}
                                         <Grid container columnSpacing={2} sx={{ mb: 0, mt: 1 }} size={12}>
-                                            <Grid size={6} >
+                                            {/* <Grid size={6} >
                                                 <FormControl fullWidth sx={{ mb: 0 }}>
                                                     <InputLabel id="group-head-label" sx={{
                                                         "&.Mui-focused": {
@@ -599,8 +599,8 @@ const SignUpForm: React.FC = () => {
                                                         </Typography> : <span> &nbsp; </span>
                                                     }
                                                 </FormControl>
-                                            </Grid>
-                                            <Grid size={6} >
+                                            </Grid> */}
+                                            <Grid size={12} >
                                                 <FormControl fullWidth sx={{ mb: 0, mt: 0 }}>
                                                     <InputLabel id="demo-simple-select-label" sx={{
                                                         "&.Mui-focused": {
@@ -643,8 +643,8 @@ const SignUpForm: React.FC = () => {
 
                                             </Grid>
                                         </Grid>
-                                        {/* LISTA DE SOCIOS */}
-                                        <FormControl fullWidth sx={{ mt: 0.9 }}>
+{/* LISTA DE SOCIOS */}
+                                        {/* <FormControl fullWidth sx={{ mt: 0.9 }}>
                                             <InputLabel id="demo-multiple-chip-label" sx={{
                                                 "&.Mui-focused": {
                                                     color: "#b71c1c", // Ensure label color changes when focused
@@ -692,7 +692,7 @@ const SignUpForm: React.FC = () => {
                                                     {errors.discipline}
                                                 </Typography> : <span> &nbsp; </span>
                                             }
-                                        </FormControl>
+                                        </FormControl> */}
 
 
                                     </Grid>

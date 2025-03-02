@@ -25,7 +25,7 @@ function App() {
 
         <Route path="/password-recover" element={<PasswordRecoverScreen />} />
         <Route path="/email-recover" element={<EmailRecoverScreen />} />
-        <Route path="/dashboard-screen" element={<DashboardUserScreen />} />
+        <Route path="/dashboard-user-screen" element={<DashboardUserScreen />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -17,10 +18,13 @@ import ClubSocial from "../assets/svg/ClubSocial.png"
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import avatar from "../assets/backgroundImages/Background.jpg";
 
+import { signInContext } from '../context/SignInContext';
+
 const pageAdmin = [
     { name: 'alta de Socio', href: '/signup' },
     { name: 'usuarios', href: "/admin-users-list" },
-    { name: 'Opcion 2', href: '/blog' },
+    { name: 'Alta Disciplinas', href: '/blog' },
+    { name: 'Documentos', href: '/blog' },
 ];
 const pageUsers = [
     { name: 'Noticias', href: "/noticias" },
@@ -36,7 +40,10 @@ const Navbar = () => {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
+    const { accessToken, setDecodedToken, setSignInError } = useContext(signInContext);
+
     const pagesToMap = admin ? pageAdmin : pageUsers;
+    const navigate = useNavigate();
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
@@ -45,8 +52,19 @@ const Navbar = () => {
         setAnchorElUser(event.currentTarget);
     };
     const handleLogOut = (event: React.MouseEvent<HTMLElement>) => {
-        console.log("log out");
+        setDecodedToken("")
+        // window.localStorage.removeItem('accessToken')
+        // window.localStorage.removeItem('user')
+        navigate("/");
     };
+
+
+
+    // useEffect(() => {
+    //     if (!accessToken) {
+    //         navigate("/");
+    //     }
+    // }, [accessToken])
 
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);

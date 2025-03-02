@@ -28,14 +28,24 @@ const validationSchema = Yup.object({
 
 const SignInForm: React.FC = () => {
 
-    const { setSignInUser, signInSuccess, signInError } = useContext(signInContext);
+    const { setCredentials, decodedToken, signInError } = useContext(signInContext);
     const { setJoin } = useContext(displayLandingFormsContext);
 
     const handleSubmit = (values: { email: string; password: string }) => {
-        const user = { username: values.email, password: values.password };
-        setSignInUser(user);
-        navigate("/dashboard-admin-screen");
+        const user = {
+            username: values.email,
+            password: values.password,
+        };
+        setCredentials(user);
     };
+
+    useEffect(() => {
+        if (decodedToken && decodedToken.role === "admin") {
+            navigate("/dashboard-admin-screen");
+        } else if (decodedToken && decodedToken.role === "socio") {
+            navigate("/dashboard-user-screen");
+        } 
+    }, [decodedToken])
 
     const handleJoin = () => {
         setJoin(prevJoin => !prevJoin);
@@ -94,21 +104,21 @@ const SignInForm: React.FC = () => {
                                 helperText={touched.email && errors.email}
                                 InputProps={{
                                     sx: {
-                                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                        borderColor: "#b71c1c", // Cambia el color del borde activo
-                                      },
-                                      "&:hover .MuiOutlinedInput-notchedOutline": {
-                                        borderColor: "#b71c1c", // Cambia el color al pasar el mouse
-                                      },
+                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                            borderColor: "#b71c1c", // Cambia el color del borde activo
+                                        },
+                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                            borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                        },
                                     },
-                                  }}
-                                  InputLabelProps={{
+                                }}
+                                InputLabelProps={{
                                     sx: {
-                                      "&.Mui-focused": {
-                                        color: "#b71c1c", // Cambia el color del texto del label activo
-                                      },
+                                        "&.Mui-focused": {
+                                            color: "#b71c1c", // Cambia el color del texto del label activo
+                                        },
                                     },
-                                  }}
+                                }}
                             />
                             <TextField
                                 margin="normal"
@@ -126,21 +136,21 @@ const SignInForm: React.FC = () => {
                                 helperText={touched.password && errors.password}
                                 InputProps={{
                                     sx: {
-                                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                        borderColor: "#b71c1c", // Cambia el color del borde activo
-                                      },
-                                      "&:hover .MuiOutlinedInput-notchedOutline": {
-                                        borderColor: "#b71c1c", // Cambia el color al pasar el mouse
-                                      },
+                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                            borderColor: "#b71c1c", // Cambia el color del borde activo
+                                        },
+                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                            borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                        },
                                     },
-                                  }}
-                                  InputLabelProps={{
+                                }}
+                                InputLabelProps={{
                                     sx: {
-                                      "&.Mui-focused": {
-                                        color: "#b71c1c", // Cambia el color del texto del label activo
-                                      },
+                                        "&.Mui-focused": {
+                                            color: "#b71c1c", // Cambia el color del texto del label activo
+                                        },
                                     },
-                                  }}
+                                }}
                             />
                             {/* <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
@@ -181,12 +191,12 @@ const SignInForm: React.FC = () => {
                     )}
                 </Formik>
 
-               
+
 
 
                 <Grid container alignItems="center" justifyContent={{ xs: "center", sm: "space-between", md: "space-between", lg: "space-between", }} spacing={{ xs: 3, sm: 20, md: 30, lg: 30 }} direction={{ xs: "column", sm: "row", md: "row", lg: "row", }}  >
                     <Grid size={{ xs: 12, sm: "auto", md: "auto", lg: "auto" }} sx={{ textAlign: 'center' }}>
-                        <Link href="/password-recover" variant="body2" sx={{color:"#b71c1c", textDecoration: "none"}}>
+                        <Link href="/password-recover" variant="body2" sx={{ color: "#b71c1c", textDecoration: "none" }}>
                             ¿Olvidaste tu contraseña?
                         </Link>
 
@@ -198,7 +208,7 @@ const SignInForm: React.FC = () => {
                     </Grid> */}
                 </Grid>
             </Box>
-            
+
 
 
         </>
