@@ -16,11 +16,11 @@ const SignInProvider = ({ children }) => {
   const [loading, setLoading] = useState(false)
 
   console.log("CREDENTIALS", credentials)
-  console.log("ACCESS TOKEN", accessToken)
+  // console.log("ACCESS TOKEN", accessToken)
   console.log("DECODED TOKEN", decodedToken)
-  console.log("ERROR", signInError)
+  // console.log("ERROR", signInError)
 
-  function decodeJWT(token) {
+  function decodeJWT(token: string) {
     // Split the token into parts
     const tokenParts = token.split('.');
 
@@ -46,6 +46,7 @@ const SignInProvider = ({ children }) => {
         setSignInError("");
 
         setAccessToken(response.data);
+      
 
         // Decodificacion de Token
         const decodedToken = decodeJWT(response.data.accessToken);
