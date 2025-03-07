@@ -28,8 +28,11 @@ const validationSchema = Yup.object({
 
 const SignInForm: React.FC = () => {
 
-    const { setCredentials, decodedToken, signInError } = useContext(signInContext);
+    const { setCredentials, decodedToken, signInError, accessToken } = useContext(signInContext);
     const { setJoin } = useContext(displayLandingFormsContext);
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    
 
     const handleSubmit = (values: { email: string; password: string }) => {
         const user = {
@@ -40,9 +43,9 @@ const SignInForm: React.FC = () => {
     };
 
     useEffect(() => {
-        if (decodedToken && decodedToken.role === "admin") {
+        if (accessToken && decodedToken.role === "admin") {
             navigate("/dashboard-admin-screen");
-        } else if (decodedToken && decodedToken.role === "socio") {
+        } else if (accessToken && decodedToken.role === "socio") {
             navigate("/dashboard-user-screen");
         } 
     }, [decodedToken])

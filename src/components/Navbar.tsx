@@ -40,7 +40,7 @@ const Navbar = () => {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
-    const { accessToken, setDecodedToken, setSignInError } = useContext(signInContext);
+    const { accessToken, setDecodedToken, setAccessToken } = useContext(signInContext);
 
     const pagesToMap = admin ? pageAdmin : pageUsers;
     const navigate = useNavigate();
@@ -53,6 +53,7 @@ const Navbar = () => {
     };
     const handleLogOut = (event: React.MouseEvent<HTMLElement>) => {
         setDecodedToken("")
+        setAccessToken("")
         // window.localStorage.removeItem('accessToken')
         // window.localStorage.removeItem('user')
         navigate("/");

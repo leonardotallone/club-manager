@@ -16,7 +16,7 @@ const SignInProvider = ({ children }) => {
   const [loading, setLoading] = useState(false)
 
   console.log("CREDENTIALS", credentials)
-  // console.log("ACCESS TOKEN", accessToken)
+  console.log("ACCESS TOKEN", accessToken)
   console.log("DECODED TOKEN", decodedToken)
   // console.log("ERROR", signInError)
 
@@ -39,21 +39,20 @@ const SignInProvider = ({ children }) => {
 
 
   useEffect(() => {
+    if(credentials){
     setLoading(true); // Show ActivityIndicator when action starts
     axios
       .post("https://masterclub.com.ar/api/Auth/login", credentials)
       .then((response) => {
         setSignInError("");
-
-        setAccessToken(response.data);
-      
-
+        // setAccessToken(response.data);
         // Decodificacion de Token
         const decodedToken = decodeJWT(response.data.accessToken);
-        setDecodedToken(decodedToken);
+        // setDecodedToken(decodedToken);
 
         // Puedes almacenar el token decodificado en el estado o local storage
-        // localStorage.setItem("decodedToken", JSON.stringify(decodedToken));
+        localStorage.setItem("accessToken", JSON.stringify(response.data));
+        localStorage.setItem("decodedToken", JSON.stringify(decodedToken));
       })
       .catch((error) => {
         setAccessToken("")
@@ -61,7 +60,7 @@ const SignInProvider = ({ children }) => {
       })
       .finally(() => {
         setLoading(false); // Oculta ActivityIndicator cuando la acción termina
-      });
+      });}
   }, [credentials]);
 
   return (

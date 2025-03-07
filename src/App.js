@@ -11,31 +11,36 @@ import PasswordRecoverScreen from "./screens/PasswordRecoverScreen";
 import EmailRecoverScreen from "./screens/EmailRecoverScreen";
 import DashboardUserScreen from "./screens/DashboardUserScreen";
 
-import { signInContext } from "../src/context/SignInContext"
-
+import { signInContext } from "../src/context/SignInContext";
 
 function App() {
-  
-  const { setDecodedToken } = useContext(signInContext);
-  
+  const { setDecodedToken, accessToken } = useContext(signInContext);
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingScreen />} />
-
-       {/* {setDecodedToken.role && setDecodedToken.role === "admin"?    :null} */}
+        {accessToken?
         <>
-        <Route path="/dashboard-admin-screen" element={<DashboardAdminScreen />} />
-        <Route path="/admin-users-list" element={<UsersListScreen />} />
-        <Route path="/edit-user/:user" element={<EditUserScreen />} />
+        
+        {/* {setDecodedToken.role && setDecodedToken.role === "admin"?    :null} */}
+        <>
+          <Route
+            path="/dashboard-admin-screen"
+            element={<DashboardAdminScreen />}
+          />
+          <Route path="/admin-users-list" element={<UsersListScreen />} />
         </>
-     
 
+        <Route path="/edit-user/:user" element={<EditUserScreen />} />
         <Route path="/signup" element={<SignUpScreen />} />
         <Route path="/password-recover" element={<PasswordRecoverScreen />} />
         <Route path="/email-recover" element={<EmailRecoverScreen />} />
-        <Route path="/dashboard-user-screen" element={<DashboardUserScreen />} />
+        <Route
+          path="/dashboard-user-screen"
+          element={<DashboardUserScreen />}
+        />
+        </>:null}
       </Routes>
     </BrowserRouter>
   );
