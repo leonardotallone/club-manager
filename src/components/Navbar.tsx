@@ -52,10 +52,10 @@ const Navbar = () => {
         setAnchorElUser(event.currentTarget);
     };
     const handleLogOut = (event: React.MouseEvent<HTMLElement>) => {
-        setDecodedToken("")
-        setAccessToken("")
-        // window.localStorage.removeItem('accessToken')
-        // window.localStorage.removeItem('user')
+        // setDecodedToken("")
+        // setAccessToken("")
+        window.localStorage.removeItem('accessToken')
+        // window.localStorage.removeItem('userRole')
         navigate("/");
     };
 

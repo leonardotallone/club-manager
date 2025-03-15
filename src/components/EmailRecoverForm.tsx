@@ -61,9 +61,6 @@ const EmailRecoverForm: React.FC = () => {
     //     }
     // }, [accessToken])
 
-
-
-
     return (
         <Box
             component={Paper}

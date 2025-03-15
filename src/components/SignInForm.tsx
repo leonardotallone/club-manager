@@ -6,6 +6,7 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
+
 import Typography from '@mui/material/Typography';
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -14,12 +15,12 @@ import { useNavigate } from "react-router-dom";
 import { signInContext } from '../context/SignInContext';
 import { displayLandingFormsContext } from '../context/DisplayLandingForms';
 
-
+const emailRegex = /^[a-zA-Z0-9\u00E0-\u00FC._%+!#$&'*+/=?^_`{|}~-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 // Validación con Yup
-const validationSchema = Yup.object({
+const validationSchema = Yup.object().shape({
     email: Yup.string()
-        .email("Dirección de correo electrónico inválida")
-        .required("El campo es obligatorio"),
+        .matches(emailRegex, 'Dirección de correo electrónico inválida')
+        .required('El correo electrónico es obligatorio'),
     password: Yup.string()
         .min(6, "La contraseña debe tener como mínimo 6 caracteres")
         .required("El campo es obligatorio"),
@@ -28,11 +29,8 @@ const validationSchema = Yup.object({
 
 const SignInForm: React.FC = () => {
 
-    const { setCredentials, decodedToken, signInError, accessToken } = useContext(signInContext);
+    const { setCredentials, signInError, setSignInError, userRole } = useContext(signInContext);
     const { setJoin } = useContext(displayLandingFormsContext);
-
-    const user = JSON.parse(localStorage.getItem('user'));
-    
 
     const handleSubmit = (values: { email: string; password: string }) => {
         const user = {
@@ -42,28 +40,24 @@ const SignInForm: React.FC = () => {
         setCredentials(user);
     };
 
+    const accessToken = localStorage.getItem('accessToken');
+
     useEffect(() => {
-        if (accessToken && decodedToken.role === "admin") {
+        if (accessToken && userRole && userRole === "admin") {
             navigate("/dashboard-admin-screen");
-        } else if (accessToken && decodedToken.role === "socio") {
+        } else if (accessToken && userRole && userRole === "socio") {
             navigate("/dashboard-user-screen");
-        } 
-    }, [decodedToken])
+        }
+    }, [accessToken, userRole]);
+
+
+
 
     const handleJoin = () => {
-        setJoin(prevJoin => !prevJoin);
+        setJoin((prevJoin: any) => !prevJoin);
     }
 
-
     const navigate = useNavigate();
-
-
-    // useEffect(() => {
-    //     if (accessToken) {
-    //         navigate("/home");
-    //     }
-    // }, [accessToken])
-
 
     return (
         <>
@@ -103,8 +97,20 @@ const SignInForm: React.FC = () => {
                                 value={values.email}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                error={touched.email && Boolean(errors.email)}
-                                helperText={touched.email && errors.email}
+                                onFocus={() => setSignInError("")}
+
+                                error={touched.email && Boolean(errors.email) || signInError} // Evalúa ambos errores
+                                helperText={
+                                    (touched.email && errors.email) && signInError ?
+                                        `${errors.email}. Los datos ingresados son incorrectos` : // Ambos errores
+                                        (touched.email && errors.email) ?
+                                            errors.email :
+                                            signInError ?
+                                                "Los datos ingresados son incorrectos." : // Mostrará este mensaje si signInError es true
+                                                null // No mostrará nada si no hay errores
+                                }
+
+
                                 InputProps={{
                                     sx: {
                                         "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
@@ -135,8 +141,19 @@ const SignInForm: React.FC = () => {
                                 value={values.password}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                error={touched.password && Boolean(errors.password)}
-                                helperText={touched.password && errors.password}
+                                onFocus={() => setSignInError("")}
+                                // error={touched.password && Boolean(errors.password)}
+                                error={touched.password && Boolean(errors.password) || signInError} // Evalúa ambos errores
+                                helperText={
+                                    (touched.password && errors.password) && signInError ?
+                                        `${errors.password}. Los datos ingresados son incorrectos` : // Ambos errores
+                                        (touched.password && errors.password) ?
+                                            errors.password :
+                                            signInError ?
+                                                "Los datos ingresados son incorrectos." : // Mostrará este mensaje si signInError es true
+                                                null // No mostrará nada si no hay errores
+                                }
+                                // helperText={touched.password && errors.password}
                                 InputProps={{
                                     sx: {
                                         "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
@@ -211,8 +228,6 @@ const SignInForm: React.FC = () => {
                     </Grid> */}
                 </Grid>
             </Box>
-
-
 
         </>
 

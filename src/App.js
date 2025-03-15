@@ -20,17 +20,13 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingScreen />} />
-        {accessToken?
-        <>
-        
-        {/* {setDecodedToken.role && setDecodedToken.role === "admin"?    :null} */}
-        <>
+ 
           <Route
             path="/dashboard-admin-screen"
             element={<DashboardAdminScreen />}
           />
           <Route path="/admin-users-list" element={<UsersListScreen />} />
-        </>
+      
 
         <Route path="/edit-user/:user" element={<EditUserScreen />} />
         <Route path="/signup" element={<SignUpScreen />} />
@@ -40,7 +36,7 @@ function App() {
           path="/dashboard-user-screen"
           element={<DashboardUserScreen />}
         />
-        </>:null}
+     
       </Routes>
     </BrowserRouter>
   );
