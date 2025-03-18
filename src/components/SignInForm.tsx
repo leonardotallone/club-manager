@@ -29,8 +29,10 @@ const validationSchema = Yup.object().shape({
 
 const SignInForm: React.FC = () => {
 
-    const { setCredentials, signInError, setSignInError, userRole } = useContext(signInContext);
+    const { setCredentials, signInError, setSignInError, userRole} = useContext(signInContext);
     const { setJoin } = useContext(displayLandingFormsContext);
+
+    const navigate = useNavigate();
 
     const handleSubmit = (values: { email: string; password: string }) => {
         const user = {
@@ -48,16 +50,12 @@ const SignInForm: React.FC = () => {
         } else if (accessToken && userRole && userRole === "socio") {
             navigate("/dashboard-user-screen");
         }
-    }, [accessToken, userRole]);
-
-
+    }, [accessToken, userRole, navigate]);
 
 
     const handleJoin = () => {
         setJoin((prevJoin: any) => !prevJoin);
     }
-
-    const navigate = useNavigate();
 
     return (
         <>
@@ -98,33 +96,30 @@ const SignInForm: React.FC = () => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 onFocus={() => setSignInError("")}
-
-                                error={touched.email && Boolean(errors.email) || signInError} // Evalúa ambos errores
+                                error={Boolean(touched.email && errors.email) || Boolean(signInError)} // Evalúa si hay un error de validación o de inicio de sesión
                                 helperText={
-                                    (touched.email && errors.email) && signInError ?
-                                        `${errors.email}. Los datos ingresados son incorrectos` : // Ambos errores
-                                        (touched.email && errors.email) ?
-                                            errors.email :
-                                            signInError ?
-                                                "Los datos ingresados son incorrectos." : // Mostrará este mensaje si signInError es true
-                                                null // No mostrará nada si no hay errores
+                                    touched.email && errors.email // Muestra el error de validación si existe
+                                        ? errors.email
+                                        : signInError // Si no hay error de validación, muestra el error de inicio de sesión
+                                            ? "Los datos ingresados son incorrectos."
+                                            : null // No muestra nada si no hay errores
                                 }
-
-
-                                InputProps={{
-                                    sx: {
-                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                            borderColor: "#b71c1c", // Cambia el color del borde activo
-                                        },
-                                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                                            borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                slotProps={{
+                                    input: {
+                                        sx: {
+                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                borderColor: "#b71c1c",
+                                            },
+                                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                borderColor: "#b71c1c",
+                                            },
                                         },
                                     },
-                                }}
-                                InputLabelProps={{
-                                    sx: {
-                                        "&.Mui-focused": {
-                                            color: "#b71c1c", // Cambia el color del texto del label activo
+                                    inputLabel: {
+                                        sx: {
+                                            "&.Mui-focused": {
+                                                color: "#b71c1c",
+                                            },
                                         },
                                     },
                                 }}
@@ -142,32 +137,31 @@ const SignInForm: React.FC = () => {
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 onFocus={() => setSignInError("")}
-                                // error={touched.password && Boolean(errors.password)}
-                                error={touched.password && Boolean(errors.password) || signInError} // Evalúa ambos errores
+
+                                error={Boolean(touched.password && errors.password) || Boolean(signInError)} // Evalúa si hay un error de validación o de inicio de sesión
                                 helperText={
-                                    (touched.password && errors.password) && signInError ?
-                                        `${errors.password}. Los datos ingresados son incorrectos` : // Ambos errores
-                                        (touched.password && errors.password) ?
-                                            errors.password :
-                                            signInError ?
-                                                "Los datos ingresados son incorrectos." : // Mostrará este mensaje si signInError es true
-                                                null // No mostrará nada si no hay errores
+                                    touched.password && errors.password // Muestra el error de validación si existe
+                                        ? errors.password
+                                        : signInError // Si no hay error de validación, muestra el error de inicio de sesión
+                                            ? "Los datos ingresados son incorrectos."
+                                            : null // No muestra nada si no hay errores
                                 }
-                                // helperText={touched.password && errors.password}
-                                InputProps={{
-                                    sx: {
-                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                            borderColor: "#b71c1c", // Cambia el color del borde activo
-                                        },
-                                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                                            borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                slotProps={{
+                                    input: {
+                                        sx: {
+                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                borderColor: "#b71c1c",
+                                            },
+                                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                borderColor: "#b71c1c",
+                                            },
                                         },
                                     },
-                                }}
-                                InputLabelProps={{
-                                    sx: {
-                                        "&.Mui-focused": {
-                                            color: "#b71c1c", // Cambia el color del texto del label activo
+                                    inputLabel: {
+                                        sx: {
+                                            "&.Mui-focused": {
+                                                color: "#b71c1c",
+                                            },
                                         },
                                     },
                                 }}

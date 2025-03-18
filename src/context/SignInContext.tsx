@@ -15,10 +15,9 @@ const SignInProvider = ({ children }) => {
   const [signInError, setSignInError] = useState("")
   const [loading, setLoading] = useState(false)
 
-  // console.log("CREDENTIALS", credentials)
-  // console.log("ACCESS TOKEN", accessToken)
-  // console.log("User Role", userRole)
-  // console.log("ERROR", signInError)
+  const [socioID, setSocioID] = useState<Number>();
+  const [socio, setSocio] = useState(JSON.parse(localStorage.getItem('socio')) || null);
+
 
   function decodeJWT(token: string) {
     const tokenParts = token.split('.');// Split the token into parts
@@ -30,29 +29,47 @@ const SignInProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    if(credentials) {
-      
-    setLoading(true); // Show ActivityIndicator when action starts
-    axios
-      .post("https://masterclub.com.ar/api/Auth/login", credentials)
-      .then((response) => {
-
-        const decodedToken = decodeJWT(response.data.accessToken);
-        setUserRole(decodedToken.role);
-
-        localStorage.setItem("accessToken", JSON.stringify(response.data.accessToken));
-        // localStorage.setItem("userRole", JSON.stringify(userRole));
-      })
-      .catch((error) => {
-        setSignInError(error);
-      })
-      .finally(() => {
-        setLoading(false); // Oculta ActivityIndicator cuando la acción termina
-      });}
+    if (credentials) {
+      setLoading(true); // Show ActivityIndicator when action starts
+      axios
+        .post("https://masterclub.com.ar/api/Auth/login", credentials)
+        .then((response) => {
+          setSocioID(response.data.socioId)
+          setAccessToken(response.data.accessToken)
+          const decodedToken = decodeJWT(response.data.accessToken);
+          setUserRole(decodedToken.role);
+          localStorage.setItem("role", decodedToken.role);
+          localStorage.setItem("accessToken", JSON.stringify(response.data.accessToken));
+        })
+        .catch((error) => {
+          setSignInError(error);
+        })
+        .finally(() => {
+          setLoading(false); // Oculta ActivityIndicator cuando la acción termina
+        });
+    }
   }, [credentials]);
 
+  useEffect(() => {
+    if (socioID && accessToken) {
+      axios.get(`https://masterclub.com.ar/api/socio/${socioID}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // Add the Authorization header
+        },
+      })
+        .then((response) => {
+          localStorage.setItem("socio", JSON.stringify(response.data));
+          setSocio(JSON.parse(localStorage.getItem('socio')) || null);
+        })
+        .catch((error) => {
+          console.error("Error fetching socio data:", error);
+        });
+    }
+  }, [socioID, accessToken]);
+
+
   return (
-    <signInContext.Provider value={{ setCredentials, setSignInError, setAccessToken,setUserRole, accessToken, userRole, signInError, loading }}>
+    <signInContext.Provider value={{ setCredentials, setSignInError, setAccessToken, setUserRole, setSocio, accessToken, userRole, signInError, loading, socio }}>
       {children}
     </signInContext.Provider>
   );

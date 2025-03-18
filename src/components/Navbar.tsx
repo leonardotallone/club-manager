@@ -37,12 +37,20 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Navbar = () => {
     const [admin] = useState(true);
+
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
-    const { accessToken, setDecodedToken, setAccessToken } = useContext(signInContext);
+    const { socio } = useContext(signInContext);
 
-    const pagesToMap = admin ? pageAdmin : pageUsers;
+
+
+
+
+
+    const role = localStorage.getItem('role')
+
+    const pagesToMap = role === "admin" ? pageAdmin : pageUsers;
     const navigate = useNavigate();
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -52,25 +60,14 @@ const Navbar = () => {
         setAnchorElUser(event.currentTarget);
     };
     const handleLogOut = (event: React.MouseEvent<HTMLElement>) => {
-        // setDecodedToken("")
-        // setAccessToken("")
         window.localStorage.removeItem('accessToken')
-        // window.localStorage.removeItem('userRole')
+        window.localStorage.removeItem('socio')
+        window.localStorage.removeItem('role')
         navigate("/");
     };
-
-
-
-    // useEffect(() => {
-    //     if (!accessToken) {
-    //         navigate("/");
-    //     }
-    // }, [accessToken])
-
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
     };
-
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
@@ -151,20 +148,20 @@ const Navbar = () => {
                         ))}
                     </Box>
                     {/*---------------------------------------------------------------------------------  Margen Derecho si hay usuario Conectado  --------------------------------------------------------------- */}
-
-                    <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
-                        <Typography sx={{ fontSize: 14, fontWeight: "500", color: "#424242", mr: 1.5 }} >
-                            {admin ? "Bienvenido Admin" : "Leonardo Tallone"}
-                        </Typography>
-                        <IconButton onClick={handleLogOut} >
-                            <LogoutOutlinedIcon sx={{ display: { xs: 'flex', md: 'flex', color: '#424242' }, mr: 1.5 }} />
-                        </IconButton>
-                        <Tooltip title="leonardo.gabriel.tallone@gmail.com">
-                            <IconButton onClick={handleOpenUserMenu} >
-                                <Avatar alt="Remy Sharp" src={avatar} />
+                    {role ?
+                        <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
+                            <Typography sx={{ fontSize: 14, fontWeight: "500", color: "#424242", mr: 1.5 }} >
+                                {role === "socio" && socio ? `${socio.nombre} ${socio.apellido}` : role === "admin" ? "Bienvenido Admin" : null}
+                            </Typography>
+                            <IconButton onClick={handleLogOut} >
+                                <LogoutOutlinedIcon sx={{ display: { xs: 'flex', md: 'flex', color: '#424242' }, mr: 1.5 }} />
                             </IconButton>
-                        </Tooltip>
-                    </Box>
+                            <Tooltip title={socio?.email}>
+                                <IconButton onClick={handleOpenUserMenu} >
+                                    <Avatar alt="Remy Sharp" src={avatar} />
+                                </IconButton>
+                            </Tooltip>
+                        </Box> : null}
 
                 </Toolbar>
             </Container>
