@@ -10,13 +10,14 @@ interface SignIn {
 const SignInProvider = ({ children }) => {
 
   const [credentials, setCredentials] = useState<SignIn>();
-  const [accessToken, setAccessToken] = useState("");
+  const [accessToken, setAccessToken] = useState(localStorage.getItem('accessToken'));
   const [userRole, setUserRole] = useState("");
   const [signInError, setSignInError] = useState("")
   const [loading, setLoading] = useState(false)
 
   const [socioID, setSocioID] = useState<Number>();
   const [socio, setSocio] = useState(JSON.parse(localStorage.getItem('socio')) || null);
+
 
 
   function decodeJWT(token: string) {

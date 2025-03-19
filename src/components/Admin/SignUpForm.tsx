@@ -65,7 +65,7 @@ const sociosList = [
     'Salvador Tallone',
     'Victoria Semino',
     "Federico Palmieri",
-    "Bruno, Barbieri", 
+    "Bruno, Barbieri",
     "Catalina, Gazola",
 ];
 
@@ -267,21 +267,22 @@ const SignUpForm: React.FC = () => {
                                             // helperText={touched.name && errors.name}
                                             helperText={touched.name && errors.name ? errors.name : " "} // 
                                             sx={{ mt: 1 }}
-                                            InputProps={{
-
-                                                sx: {
-                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color del borde activo
-                                                    },
-                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                            slotProps={{
+                                                input: {
+                                                    sx: {
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
                                                     },
                                                 },
-                                            }}
-                                            InputLabelProps={{
-                                                sx: {
-                                                    "&.Mui-focused": {
-                                                        color: "#b71c1c", // Cambia el color del texto del label activo
+                                                inputLabel: {
+                                                    sx: {
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c",
+                                                        },
                                                     },
                                                 },
                                             }}
@@ -302,20 +303,22 @@ const SignUpForm: React.FC = () => {
                                             error={touched.lastName && Boolean(errors.lastName)}
                                             helperText={touched.lastName && errors.lastName ? errors.lastName : " "} // 
                                             sx={{ mt: 1 }}
-                                            InputProps={{
-                                                sx: {
-                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color del borde activo
-                                                    },
-                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                            slotProps={{
+                                                input: {
+                                                    sx: {
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
                                                     },
                                                 },
-                                            }}
-                                            InputLabelProps={{
-                                                sx: {
-                                                    "&.Mui-focused": {
-                                                        color: "#b71c1c", // Cambia el color del texto del label activo
+                                                inputLabel: {
+                                                    sx: {
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c",
+                                                        },
                                                     },
                                                 },
                                             }}
@@ -341,20 +344,22 @@ const SignUpForm: React.FC = () => {
                                             error={touched.email && Boolean(errors.email)}
                                             helperText={touched.email && errors.email ? errors.email : " "} // 
                                             // sx={{ mb: -1 }}
-                                            InputProps={{
-                                                sx: {
-                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color del borde activo
-                                                    },
-                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                            slotProps={{
+                                                input: {
+                                                    sx: {
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
                                                     },
                                                 },
-                                            }}
-                                            InputLabelProps={{
-                                                sx: {
-                                                    "&.Mui-focused": {
-                                                        color: "#b71c1c", // Cambia el color del texto del label activo
+                                                inputLabel: {
+                                                    sx: {
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c",
+                                                        },
                                                     },
                                                 },
                                             }}
@@ -375,20 +380,22 @@ const SignUpForm: React.FC = () => {
                                             error={touched.dni && Boolean(errors.dni)}
                                             helperText={touched.dni && errors.dni ? errors.dni : " "}
                                             sx={{ mt: 1 }}
-                                            InputProps={{
-                                                sx: {
-                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color del borde activo
-                                                    },
-                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                            slotProps={{
+                                                input: {
+                                                    sx: {
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
                                                     },
                                                 },
-                                            }}
-                                            InputLabelProps={{
-                                                sx: {
-                                                    "&.Mui-focused": {
-                                                        color: "#b71c1c", // Cambia el color del texto del label activo
+                                                inputLabel: {
+                                                    sx: {
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c",
+                                                        },
                                                     },
                                                 },
                                             }}
@@ -409,20 +416,22 @@ const SignUpForm: React.FC = () => {
                                             error={touched.address && Boolean(errors.address)}
                                             helperText={touched.address && errors.address ? errors.address : " "}
                                             sx={{ mt: 1 }}
-                                            InputProps={{
-                                                sx: {
-                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color del borde activo
-                                                    },
-                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                            slotProps={{
+                                                input: {
+                                                    sx: {
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
                                                     },
                                                 },
-                                            }}
-                                            InputLabelProps={{
-                                                sx: {
-                                                    "&.Mui-focused": {
-                                                        color: "#b71c1c", // Cambia el color del texto del label activo
+                                                inputLabel: {
+                                                    sx: {
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c",
+                                                        },
                                                     },
                                                 },
                                             }}
@@ -443,20 +452,22 @@ const SignUpForm: React.FC = () => {
                                             error={touched.contactNumber && Boolean(errors.contactNumber)}
                                             helperText={touched.contactNumber && errors.contactNumber ? errors.contactNumber : " "}
                                             sx={{ mt: 1 }}
-                                            InputProps={{
-                                                sx: {
-                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color del borde activo
-                                                    },
-                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                            slotProps={{
+                                                input: {
+                                                    sx: {
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
                                                     },
                                                 },
-                                            }}
-                                            InputLabelProps={{
-                                                sx: {
-                                                    "&.Mui-focused": {
-                                                        color: "#b71c1c", // Cambia el color del texto del label activo
+                                                inputLabel: {
+                                                    sx: {
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c",
+                                                        },
                                                     },
                                                 },
                                             }}
@@ -559,9 +570,9 @@ const SignUpForm: React.FC = () => {
                                             }
 
                                         </FormControl>
-{/* GRUPO Y CATEGORIA */}
+                                        {/* GRUPO Y CATEGORIA */}
                                         <Grid container columnSpacing={2} sx={{ mb: 0, mt: 1 }} size={12}>
-                                            {/* <Grid size={6} >
+                                            <Grid size={6} >
                                                 <FormControl fullWidth sx={{ mb: 0 }}>
                                                     <InputLabel id="group-head-label" sx={{
                                                         "&.Mui-focused": {
@@ -599,8 +610,11 @@ const SignUpForm: React.FC = () => {
                                                         </Typography> : <span> &nbsp; </span>
                                                     }
                                                 </FormControl>
-                                            </Grid> */}
-                                            <Grid size={12} >
+                                            </Grid>
+                                            <Grid size={6} >
+
+
+
                                                 <FormControl fullWidth sx={{ mb: 0, mt: 0 }}>
                                                     <InputLabel id="demo-simple-select-label" sx={{
                                                         "&.Mui-focused": {
@@ -639,12 +653,12 @@ const SignUpForm: React.FC = () => {
                                                         </Typography> : <span> &nbsp; </span>
                                                     }
                                                 </FormControl>
-
-
                                             </Grid>
+
+
                                         </Grid>
-{/* LISTA DE SOCIOS */}
-                                        {/* <FormControl fullWidth sx={{ mt: 0.9 }}>
+                                        {/* LISTA DE SOCIOS */}
+                                        <FormControl fullWidth sx={{ mt: 0.9 }}>
                                             <InputLabel id="demo-multiple-chip-label" sx={{
                                                 "&.Mui-focused": {
                                                     color: "#b71c1c", // Ensure label color changes when focused
@@ -692,46 +706,13 @@ const SignUpForm: React.FC = () => {
                                                     {errors.discipline}
                                                 </Typography> : <span> &nbsp; </span>
                                             }
-                                        </FormControl> */}
+                                        </FormControl>
 
 
                                     </Grid>
                                 </Grid>
 
-                                {/* <Grid size={4}>
-                                    <TextField
-                                        margin="normal"
-                                        required
-                                        fullWidth
-                                        name="password"
-                                        label="Contraseña"
-                                        type="password"
-                                        id="password"
-                                        autoComplete="current-password"
-                                        value={values.password}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={touched.password && Boolean(errors.password)}
-                                        helperText={touched.password && errors.password}
-                                        InputProps={{
-                                            sx: {
-                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c", // Cambia el color del borde activo
-                                                },
-                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c", // Cambia el color al pasar el mouse
-                                                },
-                                            },
-                                        }}
-                                        InputLabelProps={{
-                                            sx: {
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c", // Cambia el color del texto del label activo
-                                                },
-                                            },
-                                        }}
-                                    />
-                                </Grid> */}
+                                
                                 {/* BOTONES */}
                                 <Grid size={8}>
                                     <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{

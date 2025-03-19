@@ -64,6 +64,7 @@ const Navbar = () => {
         window.localStorage.removeItem('socio')
         window.localStorage.removeItem('role')
         navigate("/");
+        window.location.reload();
     };
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);

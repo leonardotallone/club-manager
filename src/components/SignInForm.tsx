@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
-import { useNavigate } from "react-router-dom";
+
 import { signInContext } from '../context/SignInContext';
 import { displayLandingFormsContext } from '../context/DisplayLandingForms';
 
@@ -29,10 +29,8 @@ const validationSchema = Yup.object().shape({
 
 const SignInForm: React.FC = () => {
 
-    const { setCredentials, signInError, setSignInError, userRole} = useContext(signInContext);
+    const { setCredentials, signInError, setSignInError } = useContext(signInContext);
     const { setJoin } = useContext(displayLandingFormsContext);
-
-    const navigate = useNavigate();
 
     const handleSubmit = (values: { email: string; password: string }) => {
         const user = {
@@ -40,18 +38,8 @@ const SignInForm: React.FC = () => {
             password: values.password,
         };
         setCredentials(user);
+        // Navigation to ADMIN page or USER page is in LandingScreen Component
     };
-
-    const accessToken = localStorage.getItem('accessToken');
-
-    useEffect(() => {
-        if (accessToken && userRole && userRole === "admin") {
-            navigate("/dashboard-admin-screen");
-        } else if (accessToken && userRole && userRole === "socio") {
-            navigate("/dashboard-user-screen");
-        }
-    }, [accessToken, userRole, navigate]);
-
 
     const handleJoin = () => {
         setJoin((prevJoin: any) => !prevJoin);

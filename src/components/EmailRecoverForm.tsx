@@ -100,20 +100,22 @@ const EmailRecoverForm: React.FC = () => {
                             onBlur={handleBlur}
                             error={touched.dni && Boolean(errors.dni)}
                             helperText={touched.dni && errors.dni}
-                            InputProps={{
-                                sx: {
-                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                        borderColor: "#b71c1c", // Cambia el color del borde activo
-                                    },
-                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                        borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                            slotProps={{
+                                input: {
+                                    sx: {
+                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                            borderColor: "#b71c1c",
+                                        },
+                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                            borderColor: "#b71c1c",
+                                        },
                                     },
                                 },
-                            }}
-                            InputLabelProps={{
-                                sx: {
-                                    "&.Mui-focused": {
-                                        color: "#b71c1c", // Cambia el color del texto del label activo
+                                inputLabel: {
+                                    sx: {
+                                        "&.Mui-focused": {
+                                            color: "#b71c1c",
+                                        },
                                     },
                                 },
                             }}

@@ -83,23 +83,25 @@ const PasswordRecoverForm: React.FC = () => {
                             onBlur={handleBlur}
                             error={touched.email && Boolean(errors.email)}
                             helperText={touched.email && errors.email}
-                            InputProps={{
-                                sx: {
-                                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                    borderColor: "#b71c1c", // Cambia el color del borde activo
-                                  },
-                                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                                    borderColor: "#b71c1c", // Cambia el color al pasar el mouse
-                                  },
+                            slotProps={{
+                                input: {
+                                    sx: {
+                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                            borderColor: "#b71c1c",
+                                        },
+                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                            borderColor: "#b71c1c",
+                                        },
+                                    },
                                 },
-                              }}
-                              InputLabelProps={{
-                                sx: {
-                                  "&.Mui-focused": {
-                                    color: "#b71c1c", // Cambia el color del texto del label activo
-                                  },
+                                inputLabel: {
+                                    sx: {
+                                        "&.Mui-focused": {
+                                            color: "#b71c1c",
+                                        },
+                                    },
                                 },
-                              }}
+                            }}
                         />
                         <Grid
                             container

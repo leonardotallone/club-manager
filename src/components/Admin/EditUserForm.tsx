@@ -277,21 +277,22 @@ const EditUserForm: React.FC = () => {
                                             // helperText={touched.name && errors.name}
                                             helperText={touched.name && errors.name ? errors.name : " "} // 
                                             sx={{ mt: 1 }}
-                                            InputProps={{
-
-                                                sx: {
-                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color del borde activo
-                                                    },
-                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                            slotProps={{
+                                                input: {
+                                                    sx: {
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
                                                     },
                                                 },
-                                            }}
-                                            InputLabelProps={{
-                                                sx: {
-                                                    "&.Mui-focused": {
-                                                        color: "#b71c1c", // Cambia el color del texto del label activo
+                                                inputLabel: {
+                                                    sx: {
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c",
+                                                        },
                                                     },
                                                 },
                                             }}
@@ -312,20 +313,22 @@ const EditUserForm: React.FC = () => {
                                             error={touched.lastName && Boolean(errors.lastName)}
                                             helperText={touched.lastName && errors.lastName ? errors.lastName : " "} // 
                                             sx={{ mt: 1 }}
-                                            InputProps={{
-                                                sx: {
-                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color del borde activo
-                                                    },
-                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                            slotProps={{
+                                                input: {
+                                                    sx: {
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
                                                     },
                                                 },
-                                            }}
-                                            InputLabelProps={{
-                                                sx: {
-                                                    "&.Mui-focused": {
-                                                        color: "#b71c1c", // Cambia el color del texto del label activo
+                                                inputLabel: {
+                                                    sx: {
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c",
+                                                        },
                                                     },
                                                 },
                                             }}
@@ -351,20 +354,22 @@ const EditUserForm: React.FC = () => {
                                             error={touched.email && Boolean(errors.email)}
                                             helperText={touched.email && errors.email ? errors.email : " "} // 
                                             // sx={{ mb: -1 }}
-                                            InputProps={{
-                                                sx: {
-                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color del borde activo
-                                                    },
-                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                            slotProps={{
+                                                input: {
+                                                    sx: {
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
                                                     },
                                                 },
-                                            }}
-                                            InputLabelProps={{
-                                                sx: {
-                                                    "&.Mui-focused": {
-                                                        color: "#b71c1c", // Cambia el color del texto del label activo
+                                                inputLabel: {
+                                                    sx: {
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c",
+                                                        },
                                                     },
                                                 },
                                             }}
@@ -385,20 +390,22 @@ const EditUserForm: React.FC = () => {
                                             error={touched.dni && Boolean(errors.dni)}
                                             helperText={touched.dni && errors.dni ? errors.dni : " "}
                                             sx={{ mt: 1 }}
-                                            InputProps={{
-                                                sx: {
-                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color del borde activo
-                                                    },
-                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                            slotProps={{
+                                                input: {
+                                                    sx: {
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
                                                     },
                                                 },
-                                            }}
-                                            InputLabelProps={{
-                                                sx: {
-                                                    "&.Mui-focused": {
-                                                        color: "#b71c1c", // Cambia el color del texto del label activo
+                                                inputLabel: {
+                                                    sx: {
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c",
+                                                        },
                                                     },
                                                 },
                                             }}
@@ -419,20 +426,22 @@ const EditUserForm: React.FC = () => {
                                             error={touched.address && Boolean(errors.address)}
                                             helperText={touched.address && errors.address ? errors.address : " "}
                                             sx={{ mt: 1 }}
-                                            InputProps={{
-                                                sx: {
-                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color del borde activo
-                                                    },
-                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                            slotProps={{
+                                                input: {
+                                                    sx: {
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
                                                     },
                                                 },
-                                            }}
-                                            InputLabelProps={{
-                                                sx: {
-                                                    "&.Mui-focused": {
-                                                        color: "#b71c1c", // Cambia el color del texto del label activo
+                                                inputLabel: {
+                                                    sx: {
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c",
+                                                        },
                                                     },
                                                 },
                                             }}
@@ -453,20 +462,22 @@ const EditUserForm: React.FC = () => {
                                             error={touched.contactNumber && Boolean(errors.contactNumber)}
                                             helperText={touched.contactNumber && errors.contactNumber ? errors.contactNumber : " "}
                                             sx={{ mt: 1 }}
-                                            InputProps={{
-                                                sx: {
-                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color del borde activo
-                                                    },
-                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                            slotProps={{
+                                                input: {
+                                                    sx: {
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
                                                     },
                                                 },
-                                            }}
-                                            InputLabelProps={{
-                                                sx: {
-                                                    "&.Mui-focused": {
-                                                        color: "#b71c1c", // Cambia el color del texto del label activo
+                                                inputLabel: {
+                                                    sx: {
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c",
+                                                        },
                                                     },
                                                 },
                                             }}
