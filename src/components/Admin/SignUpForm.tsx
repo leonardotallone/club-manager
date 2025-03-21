@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Avatar, Box, Paper, Card, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
+import { FormControlLabel,Avatar, Box, Paper, Card, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 
 import avatar1 from "../../assets/avatars/1.jpg";
@@ -141,6 +141,21 @@ const SignUpForm: React.FC = () => {
 
     const [discipline, setDiscipline] = React.useState<string[]>([]);
     const [socios, setSocios] = React.useState<string[]>([]);
+    const [email, setEmail] = useState("");
+    const [isGroupHeadActive, setIsGroupHeadActive] = useState(false);
+
+    const handleGroupHeadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIsGroupHeadActive(event.target.checked);
+    };
+
+    //   Limpiar campos cuando se desactiva el checkbox
+
+      useEffect(() => {
+        if (!isGroupHeadActive) {
+            setSocios([]); // Limpia la lista de socios
+            setEmail("");  // Limpia el campo de correo
+        }
+    }, [isGroupHeadActive]);
 
     const theme = useTheme();
     const navigate = useNavigate();
@@ -332,7 +347,8 @@ const SignUpForm: React.FC = () => {
                                         <TextField
                                             // autoFocus
                                             // margin="normal"
-                                            required
+                                            required={isGroupHeadActive}
+                                            disabled={!isGroupHeadActive}
                                             fullWidth
                                             id="email"
                                             label="Dirección de correo"
@@ -511,7 +527,8 @@ const SignUpForm: React.FC = () => {
                                                     onChange={(newValue) => {
                                                         handleChange({ target: { name: 'birthDate', value: newValue } }); // Update Formik state
                                                     }}
-                                                />
+                                                    
+                                                    />
                                             </DemoContainer>
                                             {touched.birthDate && errors.birthDate ?
                                                 <Typography color="error" variant="caption" sx={{ fontSize: '0.75rem' }} >
@@ -573,7 +590,17 @@ const SignUpForm: React.FC = () => {
                                         {/* GRUPO Y CATEGORIA */}
                                         <Grid container columnSpacing={2} sx={{ mb: 0, mt: 1 }} size={12}>
                                             <Grid size={6} >
-                                                <FormControl fullWidth sx={{ mb: 0 }}>
+                                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={isGroupHeadActive}
+                                        onChange={handleGroupHeadChange}
+                                    />
+                                }
+                                label="Cabeza de Grupo"
+                            />
+                   
+                                                {/* <FormControl fullWidth sx={{ mb: 0 }}>
                                                     <InputLabel id="group-head-label" sx={{
                                                         "&.Mui-focused": {
                                                             color: "#b71c1c", // Ensure label color changes when focused
@@ -609,7 +636,7 @@ const SignUpForm: React.FC = () => {
                                                             {errors.groupHead}
                                                         </Typography> : <span> &nbsp; </span>
                                                     }
-                                                </FormControl>
+                                                </FormControl> */}
                                             </Grid>
                                             <Grid size={6} >
 
@@ -668,7 +695,8 @@ const SignUpForm: React.FC = () => {
                                                 labelId="demo-multiple-chip-label"
                                                 id="demo-multiple-chip"
                                                 multiple
-                                                required
+                                                required={isGroupHeadActive}
+                                                disabled={!isGroupHeadActive}
                                                 value={socios}
                                                 onChange={(event) => {
                                                     handleSocios(event);

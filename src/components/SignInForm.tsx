@@ -13,7 +13,7 @@ import * as Yup from "yup";
 
 
 import { signInContext } from '../context/SignInContext';
-import { displayLandingFormsContext } from '../context/DisplayLandingForms';
+import { displayLandingFormsContext } from '../context/DisplayLandingFormsContext';
 
 const emailRegex = /^[a-zA-Z0-9\u00E0-\u00FC._%+!#$&'*+/=?^_`{|}~-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 // Validación con Yup

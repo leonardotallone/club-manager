@@ -18,7 +18,7 @@ import * as Yup from "yup";
 
 import { useNavigate } from "react-router-dom";
 import { joinUpContext } from '../context/JoinUpContext';
-import { displayLandingFormsContext } from '../context/DisplayLandingForms';
+import { displayLandingFormsContext } from '../context/DisplayLandingFormsContext';
 
 // Componente Copyright
 
@@ -122,20 +122,22 @@ const JoinUpForm: React.FC = () => {
                                     onBlur={handleBlur}
                                     error={touched.name && Boolean(errors.name)}
                                     helperText={touched.name && errors.name}
-                                    InputProps={{
-                                        sx: {
-                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                borderColor: "#b71c1c", // Cambia el color del borde activo
-                                            },
-                                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                    slotProps={{
+                                        input: {
+                                            sx: {
+                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c",
+                                                },
+                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c",
+                                                },
                                             },
                                         },
-                                    }}
-                                    InputLabelProps={{
-                                        sx: {
-                                            "&.Mui-focused": {
-                                                color: "#b71c1c", // Cambia el color del texto del label activo
+                                        inputLabel: {
+                                            sx: {
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c",
+                                                },
                                             },
                                         },
                                     }} />
@@ -158,20 +160,22 @@ const JoinUpForm: React.FC = () => {
                                     onBlur={handleBlur}
                                     error={touched.lastName && Boolean(errors.lastName)}
                                     helperText={touched.lastName && errors.lastName}
-                                    InputProps={{
-                                        sx: {
-                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                borderColor: "#b71c1c", // Cambia el color del borde activo
-                                            },
-                                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                    slotProps={{
+                                        input: {
+                                            sx: {
+                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c",
+                                                },
+                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c",
+                                                },
                                             },
                                         },
-                                    }}
-                                    InputLabelProps={{
-                                        sx: {
-                                            "&.Mui-focused": {
-                                                color: "#b71c1c", // Cambia el color del texto del label activo
+                                        inputLabel: {
+                                            sx: {
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c",
+                                                },
                                             },
                                         },
                                     }}
@@ -193,20 +197,22 @@ const JoinUpForm: React.FC = () => {
                                     onBlur={handleBlur}
                                     error={touched.email && Boolean(errors.email)}
                                     helperText={touched.email && errors.email}
-                                    InputProps={{
-                                        sx: {
-                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                borderColor: "#b71c1c", // Cambia el color del borde activo
-                                            },
-                                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                    slotProps={{
+                                        input: {
+                                            sx: {
+                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c",
+                                                },
+                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c",
+                                                },
                                             },
                                         },
-                                    }}
-                                    InputLabelProps={{
-                                        sx: {
-                                            "&.Mui-focused": {
-                                                color: "#b71c1c", // Cambia el color del texto del label activo
+                                        inputLabel: {
+                                            sx: {
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c",
+                                                },
                                             },
                                         },
                                     }}
@@ -228,20 +234,22 @@ const JoinUpForm: React.FC = () => {
                                     onBlur={handleBlur}
                                     error={touched.dni && Boolean(errors.dni)}
                                     helperText={touched.dni && errors.dni}
-                                    InputProps={{
-                                        sx: {
-                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                borderColor: "#b71c1c", // Cambia el color del borde activo
-                                            },
-                                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                borderColor: "#b71c1c", // Cambia el color al pasar el mouse
+                                    slotProps={{
+                                        input: {
+                                            sx: {
+                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c",
+                                                },
+                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c",
+                                                },
                                             },
                                         },
-                                    }}
-                                    InputLabelProps={{
-                                        sx: {
-                                            "&.Mui-focused": {
-                                                color: "#b71c1c", // Cambia el color del texto del label activo
+                                        inputLabel: {
+                                            sx: {
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c",
+                                                },
                                             },
                                         },
                                     }}

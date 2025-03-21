@@ -4,12 +4,14 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 // Context
-import SignInContext from "./context/SignInContext";
-import JoinUpContext from "./context/JoinUpContext";
-import SignUpContext from "./context/SignUpContext";
+import SignInProvider from "./context/SignInContext";
+import JoinUpProvider from "./context/JoinUpContext";
+import SignUpProvider from "./context/SignUpContext";
 import GetAllUsersProvider from "./context/GetAllUsersContext";
-import DisplayLandingFormsProvider from "./context/DisplayLandingForms";
-import SignedUserContext from "./context/SignedUserContext";
+import DisplayLandingFormsProvider from "./context/DisplayLandingFormsContext";
+import SignedUserProvider from "./context/SignedUserContext";
+import RecoverPasswordProvider from "./context/RecoverPasswordContext";
+import RecoverUserProvider from "./context/RecoverUserContext";
 
 import App from "./App";
 
@@ -24,19 +26,23 @@ root.render(
   <React.StrictMode>
     <CssBaseline />
     <ThemeProvider theme={theme}>
-      <SignInContext>
-        <SignedUserContext>
-          <SignUpContext>
-            <JoinUpContext>
-              <DisplayLandingFormsProvider>
-                <GetAllUsersProvider>
-                  <App />
-                </GetAllUsersProvider>
-              </DisplayLandingFormsProvider>
-            </JoinUpContext>
-          </SignUpContext>
-        </SignedUserContext>
-      </SignInContext>
+      <RecoverPasswordProvider>
+        <RecoverUserProvider>
+          <SignInProvider>
+            <SignedUserProvider>
+              <SignUpProvider>
+                <JoinUpProvider>
+                  <DisplayLandingFormsProvider>
+                    <GetAllUsersProvider>
+                      <App />
+                    </GetAllUsersProvider>
+                  </DisplayLandingFormsProvider>
+                </JoinUpProvider>
+              </SignUpProvider>
+            </SignedUserProvider>
+          </SignInProvider>
+        </RecoverUserProvider>
+      </RecoverPasswordProvider>
     </ThemeProvider>
   </React.StrictMode>
 );
