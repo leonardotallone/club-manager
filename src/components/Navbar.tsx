@@ -19,6 +19,7 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import avatar from "../assets/backgroundImages/Background.jpg";
 
 import { signInContext } from '../context/SignInContext';
+import { logOutContext } from '../context/LogOutContext';
 
 const pageAdmin = [
     { name: 'alta de Socio', href: '/signup' },
@@ -42,10 +43,8 @@ const Navbar = () => {
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
     const { socio } = useContext(signInContext);
-
-
-
-
+    // console.log("SOCIO", socio.id)
+    const { setUserID } = useContext(logOutContext);
 
 
     const role = localStorage.getItem('role')
@@ -60,9 +59,15 @@ const Navbar = () => {
         setAnchorElUser(event.currentTarget);
     };
     const handleLogOut = (event: React.MouseEvent<HTMLElement>) => {
+        if (socio) {
+            setUserID(socio.id);
+        } else {
+            setUserID(null);
+        }
         window.localStorage.removeItem('accessToken')
         window.localStorage.removeItem('socio')
         window.localStorage.removeItem('role')
+
         navigate("/");
         window.location.reload();
     };
