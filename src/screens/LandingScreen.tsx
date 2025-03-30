@@ -11,21 +11,24 @@ import Advertising from "../components/Advertising";
 import Footer from "../components/Footer";
 import { signInContext } from '../context/SignInContext';
 import { displayLandingFormsContext } from '../context/DisplayLandingFormsContext';
+import { joinUpContext } from '../context/JoinUpContext';
 
 const LandingScreen = () => {
 
-  const { loading, accessToken,userRole } = useContext(signInContext);
+  const { loading, accessToken, userRole } = useContext(signInContext);
   const { join } = useContext(displayLandingFormsContext);
+  const { loadingJU } = useContext(joinUpContext);
 
-    const navigate = useNavigate();
 
-      useEffect(() => {
-          if (accessToken && userRole && userRole === "admin") {
-              navigate("/dashboard-admin-screen");
-          } else if (accessToken && userRole && userRole === "socio") {
-              navigate("/dashboard-user-screen");
-          }
-      }, [accessToken, userRole, navigate]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (accessToken && userRole && userRole === "admin") {
+      navigate("/dashboard-admin-screen");
+    } else if (accessToken && userRole && userRole === "socio") {
+      navigate("/dashboard-user-screen");
+    }
+  }, [accessToken, userRole, navigate]);
 
   return (
     <>
@@ -75,7 +78,7 @@ const LandingScreen = () => {
               justifyContent: 'flex-end', // Alinea el formulario a la derecha
               alignItems: 'center',
             }}>
-              {!accessToken? (!join ? <SignInForm /> : <JoinUpForm />) : null}
+              {!accessToken ? (!join ? <SignInForm /> : <JoinUpForm />) : null}
               {/* {!join ? <SignInForm /> : <JoinUpForm />} */}
             </Grid>
           </Container>
@@ -87,7 +90,7 @@ const LandingScreen = () => {
             <Footer />
           </Grid>
 
-          {loading ? (
+          {loading || loadingJU ? (
             <Box sx={{
               position: 'absolute',
               top: 0,

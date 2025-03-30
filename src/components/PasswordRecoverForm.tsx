@@ -60,7 +60,7 @@ const PasswordRecoverForm: React.FC = () => {
             }}
         >
 
-            <Typography component="h1" variant="h5">Ingrese su Email</Typography>
+            <Typography component="h1" variant="h5">Recuperacion de Contraseña</Typography>
 
             <Formik
                 initialValues={{ email: "" }}

@@ -55,13 +55,17 @@ const validationSchema = Yup.object({
 
 const JoinUpForm: React.FC = () => {
 
-    const { setJoinUpUser, joinUpSuccess, joinUpError } = useContext(joinUpContext);
+    const { setJoinUpUser, joinUpSuccess, joinUpError, setJoinUpError } = useContext(joinUpContext);
     const { setJoin } = useContext(displayLandingFormsContext);
 
-    const [open, setOpen] = React.useState(true);
-    const handleOpen = () => {
-        setOpen(true);
-    };
+    const [open, setOpen] = React.useState(false);
+    
+    useEffect(() => {
+        if (joinUpSuccess) {
+            setOpen(true);
+        }
+    }, [joinUpSuccess])
+
     const handleClose = () => {
         setOpen(false);
     };
@@ -108,7 +112,7 @@ const JoinUpForm: React.FC = () => {
                     <Form>
                         <Grid container spacing={2}>
                             <Grid size={6}>
-                            <TextField
+                                <TextField
                                     margin="normal"
                                     required
                                     fullWidth
@@ -141,12 +145,12 @@ const JoinUpForm: React.FC = () => {
                                             },
                                         },
                                     }} />
-                               
+
                             </Grid>
 
 
                             <Grid size={6}>
-                            <TextField
+                                <TextField
                                     margin="normal"
                                     required
                                     fullWidth
@@ -180,10 +184,10 @@ const JoinUpForm: React.FC = () => {
                                         },
                                     }}
                                 />
-                              
+
                             </Grid>
                             <Grid size={6}>
-                            <TextField
+                                <TextField
                                     margin="normal"
                                     required
                                     fullWidth
@@ -217,7 +221,7 @@ const JoinUpForm: React.FC = () => {
                                         },
                                     }}
                                 />
-                                
+
                             </Grid>
                             <Grid size={6}>
                                 <TextField

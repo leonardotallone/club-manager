@@ -9,11 +9,11 @@ import Navbar from '../components/Navbar';
 import EmailRecoverForm from '../components/EmailRecoverForm';
 import Advertising from "../components/Advertising";
 import Footer from "../components/Footer";
-import { signInContext } from '../context/SignInContext';
+import { recoverUserContext } from '../context/RecoverUserContext';
 
 const EmailRecoverScreen = () => {
 
-  const { loading } = useContext(signInContext);
+  const { loading } = useContext(recoverUserContext);
 
   return (
     <>

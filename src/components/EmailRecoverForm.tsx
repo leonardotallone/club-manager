@@ -47,24 +47,27 @@ const validationSchema = Yup.object({
 
 const EmailRecoverForm: React.FC = () => {
 
-    const { setDni, recoverUserError, recoverUserSuccess } = useContext(recoverUserContext);
+    const { setDni, recoverUserError, setRecoverUserError, recoverUserSuccess } = useContext(recoverUserContext);
 
-    const [open, setOpen] = React.useState(true);
-    
-        const handleOpenModal = () => {
-            setOpen(true);
-        };
-        const handleCloseModal = () => {
-            setOpen(false);
-        };
+    const [open, setOpen] = React.useState(false);
+
+    useEffect(() => {
+        if (recoverUserSuccess) {
+            setOpen(true)
+        }
+    }, [recoverUserSuccess])
+
+    const handleCloseModal = () => {
+        setOpen(false);
+         navigate("/");
+    };
 
     const navigate = useNavigate();
 
     const handleSubmit = (values: { dni: string; }) => {
         const user = { dni: values.dni };
-   
         setDni(user)
-        // navigate("/");
+
     };
 
 
@@ -105,8 +108,16 @@ const EmailRecoverForm: React.FC = () => {
                             value={values.dni}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            error={touched.dni && Boolean(errors.dni)}
-                            helperText={touched.dni && errors.dni}
+
+                            onFocus={() => setRecoverUserError("")}
+                            error={Boolean(touched.dni && errors.dni) || Boolean(recoverUserError)} // Evalúa si hay un error de validación o de inicio de sesión
+                            helperText={
+                                touched.dni && errors.dni // Muestra el error de validación si existe
+                                    ? errors.dni
+                                    : recoverUserError // Si no hay error de validación, muestra el error de inicio de sesión
+                                        ? recoverUserError
+                                        : null // No muestra nada si no hay errores
+                            }
                             slotProps={{
                                 input: {
                                     sx: {
@@ -179,94 +190,95 @@ const EmailRecoverForm: React.FC = () => {
 
 
             <Modal
-                            open={open}
-                            onClose={handleCloseModal}
-                            aria-labelledby="child-modal-title"
-                            aria-describedby="child-modal-description"
+                open={open}
+                onClose={handleCloseModal}
+                aria-labelledby="child-modal-title"
+                aria-describedby="child-modal-description"
+            >
+                <Box sx={{
+                    maxWidth: 300,
+                    // maxHeight: 200,
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    bgcolor: 'rgba(29, 29, 29, 0.75)', // Fondo oscuro semitransparente
+                    borderRadius: '20px', // Esquinas redondeadas
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', // Sombra sutil
+                    display: 'flex', // Usar flexbox para centrar
+                    flexDirection: 'column', // Colocar elementos en columna
+                    alignItems: 'center', // Centrar horizontalmente
+                    textAlign: 'center' // Centrar texto
+                }}>
+                    <Typography id="child-modal-title"
+                        sx={{ fontSize: 17, color: "white", fontWeight: "700", display: 'flex', fontFamily: 'San Francisco, -apple-system, BlinkMacSystemFont', pt: 3, mr: 2, ml: 2 }} >
+                        {recoverUserSuccess}
+                    </Typography>
+
+                    <Typography id="child-modal-description"
+                        sx={{ fontSize: 13, color: "white", fontWeight: "400", display: 'flex', fontFamily: 'San Francisco, -apple-system, BlinkMacSystemFont', pt: 1, pb: 3, mr: 2, ml: 2 }} >
+                      Muchas gracias.
+                    </Typography>
+
+                    {/* Línea divisoria horizontal */}
+                    <Box sx={{
+                        width: '100%', // Ancho completo
+                        height: '1px', // Altura de la línea horizontal
+                        backgroundColor: 'rgba(255, 255, 255, 0.15)', // Color blanco suave
+                    }} />
+
+                    {/* Contenedor para los botones y la línea vertical */}
+                    <Box sx={{
+                        display: 'flex',
+                        alignItems: 'center', // Alinear verticalmente
+                         justifyContent: 'center',
+                        height: 50,
+                        // backgroundColor: "red",
+                        width: '100%', // Ancho completo para alinear correctamente
+                        
+                    }}>
+                        {/* Botón Izquierdo */}
+                        {/* <Button
+                            onClick={handleCloseModal}
+                            sx={{
+
+                                backgroundColor: 'transparent', // Sin fondo
+                                color: '#007aff', // Color azul predeterminado de iOS
+                                ml: 4,
+                                textTransform: 'none', // Sin mayúsculas
+                                fontSize: 17,
+                                fontWeight: "400",
+                            }}
                         >
-                            <Box sx={{
-                                maxWidth: 300,
-                                // maxHeight: 200,
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                                bgcolor: 'rgba(29, 29, 29, 0.75)', // Fondo oscuro semitransparente
-                                borderRadius: '20px', // Esquinas redondeadas
-                                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', // Sombra sutil
-                                display: 'flex', // Usar flexbox para centrar
-                                flexDirection: 'column', // Colocar elementos en columna
-                                alignItems: 'center', // Centrar horizontalmente
-                                textAlign: 'center' // Centrar texto
-                            }}>
-                                <Typography id="child-modal-title"
-                                    sx={{ fontSize: 17, color: "white", fontWeight: "700", display: 'flex', fontFamily: 'San Francisco, -apple-system, BlinkMacSystemFont', pt: 3, mr: 2, ml: 2 }} >
-                                    Solicitud Enviada Exitosamente
-                                </Typography>
-            
-                                <Typography id="child-modal-description"
-                                    sx={{ fontSize: 13, color: "white", fontWeight: "400", display: 'flex', fontFamily: 'San Francisco, -apple-system, BlinkMacSystemFont', pt: 1, pb: 3, mr: 2, ml: 2 }} >
-                                    Te contactaremos a la brevedad! Muchas gracias.
-                                </Typography>
-            
-                                {/* Línea divisoria horizontal */}
-                                <Box sx={{
-                                    width: '100%', // Ancho completo
-                                    height: '1px', // Altura de la línea horizontal
-                                    backgroundColor: 'rgba(255, 255, 255, 0.15)', // Color blanco suave
-                                }} />
-            
-                                {/* Contenedor para los botones y la línea vertical */}
-                                <Box sx={{
-                                    display: 'flex',
-                                    alignItems: 'center', // Alinear verticalmente
-                                    height: 50,
-                                    // backgroundColor: "red",
-                                    width: '100%', // Ancho completo para alinear correctamente
-                                    justifyContent: 'space-between' // Espacio entre los botones y la línea vertical
-                                }}>
-                                    {/* Botón Izquierdo */}
-                                    <Button
-                                        onClick={handleCloseModal}
-                                        sx={{
-            
-                                            backgroundColor: 'transparent', // Sin fondo
-                                            color: '#007aff', // Color azul predeterminado de iOS
-                                            ml: 4,
-                                            textTransform: 'none', // Sin mayúsculas
-                                            fontSize: 17,
-                                            fontWeight: "400",
-                                        }}
-                                    >
-                                        Cancelar
-                                    </Button>
-            
-                                    {/* Línea divisoria vertical */}
-                                    <Box sx={{
-                                        width: '1px', // Ancho de la línea vertical
-                                        height: '50px', // Altura de la línea vertical
-                                        backgroundColor: 'rgba(255, 255, 255, 0.15)', // Color blanco suave
-            
-                                    }} />
-            
-                                    {/* Botón Derecho */}
-                                    <Button
-                                        onClick={handleCloseModal}
-                                        sx={{
-            
-                                            backgroundColor: 'transparent', // Sin fondo
-                                            color: '#007aff', // Color azul predeterminado de iOS
-                                            mr: 5,
-                                            textTransform: 'none', // Sin mayúsculas
-                                            fontSize: 17,
-                                            fontWeight: "400",
-                                        }}
-                                    >
-                                        Aceptar
-                                    </Button>
-                                </Box>
-                            </Box>
-                        </Modal>
+                            Cancelar
+                        </Button> */}
+
+                        {/* Línea divisoria vertical */}
+                        {/* <Box sx={{
+                            width: '1px', // Ancho de la línea vertical
+                            height: '50px', // Altura de la línea vertical
+                            backgroundColor: 'rgba(255, 255, 255, 0.15)', // Color blanco suave
+
+                        }} /> */}
+
+                        {/* Botón Derecho */}
+                        <Button
+                            onClick={handleCloseModal}
+                            sx={{
+
+                                backgroundColor: 'transparent', // Sin fondo
+                                color: '#007aff', // Color azul predeterminado de iOS
+                                // mr: 5,
+                                textTransform: 'none', // Sin mayúsculas
+                                fontSize: 17,
+                                fontWeight: "400",
+                            }}
+                        >
+                            Aceptar
+                        </Button>
+                    </Box>
+                </Box>
+            </Modal>
 
         </Box>
     );

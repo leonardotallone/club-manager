@@ -15,8 +15,6 @@ const NewPasswordProvider = ({ children }) => {
     const [newPasswordError, setNewPasswordError] = useState("")
     const [loadingNp, setLoadingNp] = useState(false)
 
-    console.log("PASSWORD OBJECT", resetPasswordObject)
-
     useEffect(() => {
         if (resetPasswordObject) {
             setLoadingNp(true);

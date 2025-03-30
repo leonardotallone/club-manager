@@ -20,11 +20,11 @@ const RecoverUserProvider = ({ children }) => {
             axios
                 .post("https://masterclub.com.ar/api/Auth/recover-username", dni)
                 .then((response) => {
-                    setRecoverUserSuccess(response.data)
-                    // console.log("Response", response.data)
+                    setRecoverUserSuccess(response.data.message)
+                    console.log("Response", response.data.message)
                 })
                 .catch((error) => {
-                    setRecoverUserError(error.response.data);
+                    setRecoverUserError(error.response.data.message);
                 })
                 .finally(() => {
                     setLoading(false);
@@ -33,7 +33,7 @@ const RecoverUserProvider = ({ children }) => {
     }, [dni]);
 
     return (
-        <recoverUserContext.Provider value={{ dni, setDni, recoverUserError, recoverUserSuccess, loading }}>
+        <recoverUserContext.Provider value={{ dni, setDni, recoverUserError,setRecoverUserError, recoverUserSuccess, loading }}>
             {children}
         </recoverUserContext.Provider>
     );
