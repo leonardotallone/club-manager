@@ -20,23 +20,22 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingScreen />} />
- 
-          <Route
-            path="/dashboard-admin-screen"
-            element={<DashboardAdminScreen />}
-          />
-          <Route path="/admin-users-list" element={<UsersListScreen />} />
-      
+
+        <Route
+          path="/dashboard-admin-screen"
+          element={<DashboardAdminScreen />}
+        />
+        <Route path="/admin-users-list" element={<UsersListScreen />} />
 
         <Route path="/edit-user/:user" element={<EditUserScreen />} />
         <Route path="/signup" element={<SignUpScreen />} />
         <Route path="/password-recover" element={<PasswordRecoverScreen />} />
+        <Route path="/reset-password" element={<PasswordRecoverScreen />} />
         <Route path="/email-recover" element={<EmailRecoverScreen />} />
         <Route
           path="/dashboard-user-screen"
           element={<DashboardUserScreen />}
         />
-     
       </Routes>
     </BrowserRouter>
   );

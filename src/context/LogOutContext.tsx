@@ -13,8 +13,6 @@ const LogOutProvider = ({ children }) => {
     const [logOutError, setLogOutError] = useState("")
     const [loading, setLoading] = useState(false)
 
-    console.log("USER ID",userID)
-
     useEffect(() => {
         if (userID) {
             setLoading(true); // Show ActivityIndicator when action starts

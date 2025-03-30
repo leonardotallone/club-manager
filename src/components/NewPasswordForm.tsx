@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -11,26 +12,43 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 import { useNavigate } from "react-router-dom";
-import { recoverPasswordContext } from '../context/RecoverPasswordContext';
+import { newPasswordContext } from '../context/NewPasswordContext';
 
 // Validación con Yup
 const validationSchema = Yup.object({
-    email: Yup.string()
-        .email("Dirección de correo electrónico inválida")
+    password_1: Yup.string()
+        .min(6, "La contraseña debe tener al menos 6 caracteres")
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).*$/,
+            "Debe contener al menos una minúscula, una mayúscula y un carácter especial"
+        )
         .required("El campo es obligatorio"),
+    password_2: Yup.string()
+        .min(6, "La contraseña debe tener al menos 6 caracteres")
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).*$/,
+            "Debe contener al menos una minúscula, una mayúscula y un carácter especial"
+        )
+        .required("El campo es obligatorio")
+        .oneOf([Yup.ref('password_1')], 'Las contraseñas deben coincidir'),
 });
 
-const PasswordRecoverForm: React.FC = () => {
+const NewPasswordForm: React.FC = () => {
 
-    const { setEmail, recoverPasswordError, recoverPasswordSuccess, setRecoverPasswordError } = useContext(recoverPasswordContext);
+    const { setResetPassworObject, newPasswordError, newPasswordSuccess, setNewPasswordError } = useContext(newPasswordContext);
     const [open, setOpen] = React.useState(false);
-    // const [recoverPasswordToken, setRecoverPasswordToken] = React.useState("");
+
+    const [searchParams] = useSearchParams();
+
+    const token = searchParams.get("token");
+    const email = searchParams.get("email");
+    console.log(token)
 
     useEffect(() => {
-        if (recoverPasswordSuccess) {
+        if (newPasswordSuccess) {
             setOpen(true)
         }
-    }, [recoverPasswordSuccess])
+    }, [newPasswordSuccess])
 
     const handleCloseModal = () => {
         setOpen(false);
@@ -38,9 +56,9 @@ const PasswordRecoverForm: React.FC = () => {
     };
     const navigate = useNavigate();
 
-    const handleSubmit = (values: { email: string; }) => {
-        const user = { email: values.email };
-        setEmail(user)
+    const handleSubmit = (values: { password_1: string; password_2: string; }) => {
+        const PasswordObject = { newPassword: values.password_1, token: token, email: email };
+        setResetPassworObject(PasswordObject)
     };
 
     return (
@@ -60,10 +78,10 @@ const PasswordRecoverForm: React.FC = () => {
             }}
         >
 
-            <Typography component="h1" variant="h5">Ingrese su Email</Typography>
+            <Typography component="h1" variant="h5">Ingrese su nueva Contraseña</Typography>
 
             <Formik
-                initialValues={{ email: "" }}
+                initialValues={{ password_1: "", password_2: "" }}
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
             >
@@ -72,22 +90,23 @@ const PasswordRecoverForm: React.FC = () => {
                         <TextField
                             margin="normal"
                             required
+                            type="password"
                             fullWidth
-                            id="email"
-                            label="Dirección de correo"
-                            name="email"
-                            autoComplete="email"
+                            id="password_1"
+                            label="Ingrese su contraseña"
+                            name="password_1"
+                            autoComplete="password_1"
                             autoFocus
-                            value={values.email}
+                            value={values.password_1}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            onFocus={() => setRecoverPasswordError("")}
-                            error={Boolean(touched.email && errors.email) || Boolean(recoverPasswordError)} // Evalúa si hay un error de validación o de inicio de sesión
+                            onFocus={() => setNewPasswordError("")}
+                            error={Boolean(touched.password_1 && errors.password_1) || Boolean(newPasswordError)} // Evalúa si hay un error de validación o de inicio de sesión
                             helperText={
-                                touched.email && errors.email // Muestra el error de validación si existe
-                                    ? errors.email
-                                    : recoverPasswordError // Si no hay error de validación, muestra el error de inicio de sesión
-                                        ? recoverPasswordError
+                                touched.password_1 && errors.password_1 // Muestra el error de validación si existe
+                                    ? errors.password_1
+                                    : newPasswordError // Si no hay error de validación, muestra el error de inicio de sesión
+                                        ? newPasswordError
                                         : null // No muestra nada si no hay errores
                             }
                             slotProps={{
@@ -110,6 +129,53 @@ const PasswordRecoverForm: React.FC = () => {
                                 },
                             }}
                         />
+
+                        <TextField
+                            margin="normal"
+                            required
+                            type="password"
+                            fullWidth
+                            id="password_2"
+                            label="Reingrese su contraseña"
+                            name="password_2"
+                            autoComplete="password_2"
+                            autoFocus
+                            value={values.password_2}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            onFocus={() => setNewPasswordError("")}
+                            error={Boolean(touched.password_2 && errors.password_2) || Boolean(newPasswordError)} // Evalúa si hay un error de validación o de inicio de sesión
+                            helperText={
+                                touched.password_2 && errors.password_2 // Muestra el error de validación si existe
+                                    ? errors.password_2
+                                    : newPasswordError // Si no hay error de validación, muestra el error de inicio de sesión
+                                        ? newPasswordError
+                                        : null // No muestra nada si no hay errores
+                            }
+                            slotProps={{
+                                input: {
+                                    sx: {
+                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                            borderColor: "#b71c1c",
+                                        },
+                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                            borderColor: "#b71c1c",
+                                        },
+                                    },
+                                },
+                                inputLabel: {
+                                    sx: {
+                                        "&.Mui-focused": {
+                                            color: "#b71c1c",
+                                        },
+                                    },
+                                },
+                            }}
+                        />
+
+
+
+
                         <Grid
                             container
                             spacing={2}
@@ -177,12 +243,12 @@ const PasswordRecoverForm: React.FC = () => {
                 }}>
                     <Typography id="child-modal-title"
                         sx={{ fontSize: 17, color: "white", fontWeight: "700", display: 'flex', fontFamily: 'San Francisco, -apple-system, BlinkMacSystemFont', pt: 3, mr: 2, ml: 2 }} >
-                        Solicitud Enviada Exitosamente
+                       Contraseña restablecida exitosamente.
                     </Typography>
 
                     <Typography id="child-modal-description"
                         sx={{ fontSize: 13, color: "white", fontWeight: "400", display: 'flex', fontFamily: 'San Francisco, -apple-system, BlinkMacSystemFont', pt: 1, pb: 3, mr: 2, ml: 2 }} >
-                        {recoverPasswordSuccess}
+                    Mucha gracias!
                     </Typography>
 
                     {/* Línea divisoria horizontal */}
@@ -250,5 +316,5 @@ const PasswordRecoverForm: React.FC = () => {
     );
 };
 
-export default PasswordRecoverForm;
+export default NewPasswordForm;
 

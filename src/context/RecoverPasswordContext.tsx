@@ -13,6 +13,8 @@ const RecoverPasswordProvider = ({ children }) => {
     const [recoverPasswordError, setRecoverPasswordError] = useState("")
     const [loading, setLoading] = useState(false)
 
+
+
     useEffect(() => {
         if (email) {
             setLoading(true); // Show ActivityIndicator when action starts
@@ -32,7 +34,7 @@ const RecoverPasswordProvider = ({ children }) => {
         }
     }, [email]);
     return (
-        <recoverPasswordContext.Provider value={{ email, setEmail, recoverPasswordError, recoverPasswordSuccess, loading }}>
+        <recoverPasswordContext.Provider value={{ email, setEmail,setRecoverPasswordError, recoverPasswordError, recoverPasswordSuccess, loading }}>
             {children}
         </recoverPasswordContext.Provider>
     );

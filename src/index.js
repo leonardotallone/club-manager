@@ -11,6 +11,7 @@ import GetAllUsersProvider from "./context/GetAllUsersContext";
 import DisplayLandingFormsProvider from "./context/DisplayLandingFormsContext";
 import SignedUserProvider from "./context/SignedUserContext";
 import RecoverPasswordProvider from "./context/RecoverPasswordContext";
+import NewPasswordProvider from "./context/NewPasswordContext";
 import RecoverUserProvider from "./context/RecoverUserContext";
 import LogOutProvider from "./context/LogOutContext";
 
@@ -27,27 +28,29 @@ root.render(
   <React.StrictMode>
     <CssBaseline />
     <ThemeProvider theme={theme}>
-      
+
       <LogOutProvider>
         <RecoverPasswordProvider>
-          <RecoverUserProvider>
-            <SignInProvider>
-              <SignedUserProvider>
-                <SignUpProvider>
-                  <JoinUpProvider>
-                    <DisplayLandingFormsProvider>
-                      <GetAllUsersProvider>
-                        <App />
-                      </GetAllUsersProvider>
-                    </DisplayLandingFormsProvider>
-                  </JoinUpProvider>
-                </SignUpProvider>
-              </SignedUserProvider>
-            </SignInProvider>
-          </RecoverUserProvider>
+          <NewPasswordProvider>
+            <RecoverUserProvider>
+              <SignInProvider>
+                <SignedUserProvider>
+                  <SignUpProvider>
+                    <JoinUpProvider>
+                      <DisplayLandingFormsProvider>
+                        <GetAllUsersProvider>
+                          <App />
+                        </GetAllUsersProvider>
+                      </DisplayLandingFormsProvider>
+                    </JoinUpProvider>
+                  </SignUpProvider>
+                </SignedUserProvider>
+              </SignInProvider>
+            </RecoverUserProvider>
+          </NewPasswordProvider>
         </RecoverPasswordProvider>
       </LogOutProvider>
-
+      
     </ThemeProvider>
   </React.StrictMode>
 );

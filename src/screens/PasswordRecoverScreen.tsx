@@ -1,17 +1,25 @@
 import React, { useContext } from 'react';
+// import { useNavigate } from "react-router-dom";
+
+import { useLocation } from "react-router-dom";
 import Grid from '@mui/material/Grid2';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Box, Container, Typography } from "@mui/material";
 import Background from "../assets/backgroundImages/Background.jpg"
 import Navbar from '../components/Navbar';
 import PasswordRecoverForm from '../components/PasswordRecoverForm';
+import NewPasswordForm from '../components/NewPasswordForm';
 import Advertising from "../components/Advertising";
 import Footer from "../components/Footer";
-import { signInContext } from '../context/SignInContext';
+import { recoverPasswordContext } from '../context/RecoverPasswordContext';
+import { newPasswordContext } from '../context/NewPasswordContext';
 
 const PasswordRecoverScreen = () => {
 
-  const { loading } = useContext(signInContext);
+  const { loading } = useContext(recoverPasswordContext);
+  const { loadingNp } = useContext(newPasswordContext);
+
+  const location = useLocation(); // Get current location
 
   return (
     <>
@@ -61,7 +69,13 @@ const PasswordRecoverScreen = () => {
               justifyContent: 'flex-end', // Alinea el formulario a la derecha
               alignItems: 'center',
             }}>
-              <PasswordRecoverForm />
+
+              {location.pathname === '/password-recover' ? (
+                <PasswordRecoverForm />
+              ) : (
+                <NewPasswordForm />
+              )}
+
             </Grid>
           </Container>
 
@@ -72,7 +86,7 @@ const PasswordRecoverScreen = () => {
             <Footer />
           </Grid>
 
-          {loading ? (
+          {loading || loadingNp ? (
             <Box sx={{
               position: 'absolute',
               top: 0,
