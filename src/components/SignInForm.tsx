@@ -12,8 +12,8 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 
-import { signInContext } from '../context/SignInContext';
-import { displayLandingFormsContext } from '../context/DisplayLandingFormsContext';
+import { signInContext } from '../Context/SignInContext';
+import { displayLandingFormsContext } from '../Context/DisplayLandingFormsContext';
 
 const emailRegex = /^[a-zA-Z0-9\u00E0-\u00FC._%+!#$&'*+/=?^_`{|}~-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 // Validación con Yup

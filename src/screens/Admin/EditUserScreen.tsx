@@ -4,7 +4,7 @@ import EditUserForm from '../../components/Admin/EditUserForm';
 import Navbar from '../../components/Navbar';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Box, Container } from "@mui/material";
-import { signUpContext } from '../../context/SignUpContext';
+import { signUpContext } from '../../Context/SignUpContext';
 import BlackBanner from '../../components/BlackBanner';
 import Footer from '../../components/Footer';
 import Advertising from '../../components/Advertising';

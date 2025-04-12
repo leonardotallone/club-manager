@@ -17,8 +17,8 @@ import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 
 import { useNavigate } from "react-router-dom";
-import { joinUpContext } from '../context/JoinUpContext';
-import { displayLandingFormsContext } from '../context/DisplayLandingFormsContext';
+import { joinUpContext } from '../Context/JoinUpContext';
+import { displayLandingFormsContext } from '../Context/DisplayLandingFormsContext';
 
 // Componente Copyright
 
@@ -27,6 +27,7 @@ interface JoinUpFormValues {
     name: string;
     lastName: string;
     dni: string;
+    phone: string;
 }
 
 // Validación con Yup
@@ -49,7 +50,12 @@ const validationSchema = Yup.object({
             (value) => value && value.length >= 7 && value.length <= 8
         )
         .required("El campo es obligatorio"),
-
+    phone: Yup.string()
+        .matches(
+            /^\d{10}$/,
+            "El número de teléfono inválido"
+        )
+        .required("El campo es obligatorio"),
 });
 
 
@@ -59,7 +65,7 @@ const JoinUpForm: React.FC = () => {
     const { setJoin } = useContext(displayLandingFormsContext);
 
     const [open, setOpen] = React.useState(false);
-    
+
     useEffect(() => {
         if (joinUpSuccess) {
             setOpen(true);
@@ -75,9 +81,11 @@ const JoinUpForm: React.FC = () => {
         values: JoinUpFormValues,
         formikHelpers: FormikHelpers<JoinUpFormValues>
     ) => {
-        const user = { username: values.email, password: values.name, lastName: values.lastName, dni: values.dni };
+        const user = { email: values.email, name: values.name, lastName: values.lastName, dni: values.dni, phone: values.phone };
+        setOpen(true)
         setJoinUpUser(user);
-        setJoin(false)
+        // setJoin(false)
+ 
     };
 
     const navigate = useNavigate();
@@ -104,7 +112,7 @@ const JoinUpForm: React.FC = () => {
             <Typography component="h1" variant="h5">Solicitud de Nuevo Socio</Typography>
 
             <Formik<JoinUpFormValues>
-                initialValues={{ email: "", name: "", lastName: "", dni: "" }}
+                initialValues={{ email: "", name: "", lastName: "", dni: "", phone: "" }}
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
             >
@@ -120,6 +128,7 @@ const JoinUpForm: React.FC = () => {
                                     label="Nombre"
                                     type="name"
                                     id="name"
+                                    autoFocus
                                     autoComplete="current-name"
                                     value={values.name}
                                     onChange={handleChange}
@@ -195,7 +204,7 @@ const JoinUpForm: React.FC = () => {
                                     label="Dirección de correo"
                                     name="email"
                                     autoComplete="email"
-                                    autoFocus
+                                    // autoFocus
                                     value={values.email}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -223,7 +232,45 @@ const JoinUpForm: React.FC = () => {
                                 />
 
                             </Grid>
-                            <Grid size={6}>
+
+                            <Grid size={3}>
+                                <TextField
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    name="phone"
+                                    label="Telefono"
+                                    type="phone"
+                                    id="phone"
+                                    autoComplete="phone"
+                                    value={values.phone}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={touched.phone && Boolean(errors.phone)}
+                                    helperText={touched.phone && errors.phone}
+                                    slotProps={{
+                                        input: {
+                                            sx: {
+                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c",
+                                                },
+                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                    borderColor: "#b71c1c",
+                                                },
+                                            },
+                                        },
+                                        inputLabel: {
+                                            sx: {
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c",
+                                                },
+                                            },
+                                        },
+                                    }} />
+
+                            </Grid>
+
+                            <Grid size={3}>
                                 <TextField
                                     margin="normal"
                                     required
@@ -351,10 +398,10 @@ const JoinUpForm: React.FC = () => {
                         height: 50,
                         // backgroundColor: "red",
                         width: '100%', // Ancho completo para alinear correctamente
-                        justifyContent: 'space-between' // Espacio entre los botones y la línea vertical
+                        justifyContent: 'center' // Espacio entre los botones y la línea vertical
                     }}>
                         {/* Botón Izquierdo */}
-                        <Button
+                        {/* <Button
                             onClick={handleClose}
                             sx={{
 
@@ -367,15 +414,15 @@ const JoinUpForm: React.FC = () => {
                             }}
                         >
                             Cancelar
-                        </Button>
+                        </Button> */}
 
                         {/* Línea divisoria vertical */}
-                        <Box sx={{
+                        {/* <Box sx={{
                             width: '1px', // Ancho de la línea vertical
                             height: '50px', // Altura de la línea vertical
                             backgroundColor: 'rgba(255, 255, 255, 0.15)', // Color blanco suave
 
-                        }} />
+                        }} /> */}
 
                         {/* Botón Derecho */}
                         <Button
@@ -384,7 +431,7 @@ const JoinUpForm: React.FC = () => {
 
                                 backgroundColor: 'transparent', // Sin fondo
                                 color: '#007aff', // Color azul predeterminado de iOS
-                                mr: 5,
+                                // mr: 5,
                                 textTransform: 'none', // Sin mayúsculas
                                 fontSize: 17,
                                 fontWeight: "400",

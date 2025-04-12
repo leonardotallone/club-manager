@@ -11,7 +11,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 import { useNavigate } from "react-router-dom";
-import { recoverPasswordContext } from '../context/RecoverPasswordContext';
+import { recoverPasswordContext } from '../Context/RecoverPasswordContext';
 
 // Validación con Yup
 const validationSchema = Yup.object({

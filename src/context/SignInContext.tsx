@@ -17,7 +17,8 @@ const SignInProvider = ({ children }) => {
 
   const [socioID, setSocioID] = useState<Number>();
   const [socio, setSocio] = useState(JSON.parse(localStorage.getItem('socio')) || null);
-
+ 
+  console.log("ACCESS TOKEN", accessToken)
 
 
   function decodeJWT(token: string) {

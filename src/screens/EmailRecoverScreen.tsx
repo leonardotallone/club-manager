@@ -9,7 +9,7 @@ import Navbar from '../components/Navbar';
 import EmailRecoverForm from '../components/EmailRecoverForm';
 import Advertising from "../components/Advertising";
 import Footer from "../components/Footer";
-import { recoverUserContext } from '../context/RecoverUserContext';
+import { recoverUserContext } from '../Context/RecoverUserContext';
 
 const EmailRecoverScreen = () => {
 

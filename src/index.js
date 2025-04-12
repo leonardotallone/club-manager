@@ -4,16 +4,17 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 // Context
-import SignInProvider from "./context/SignInContext";
-import JoinUpProvider from "./context/JoinUpContext";
-import SignUpProvider from "./context/SignUpContext";
-import GetAllUsersProvider from "./context/GetAllUsersContext";
-import DisplayLandingFormsProvider from "./context/DisplayLandingFormsContext";
-import SignedUserProvider from "./context/SignedUserContext";
-import RecoverPasswordProvider from "./context/RecoverPasswordContext";
-import NewPasswordProvider from "./context/NewPasswordContext";
-import RecoverUserProvider from "./context/RecoverUserContext";
-import LogOutProvider from "./context/LogOutContext";
+import SignInProvider from "./Context/SignInContext";
+import JoinUpProvider from "./Context/JoinUpContext";
+import SignUpProvider from "./Context/SignUpContext";
+import GetAllUsersProvider from "./Context/GetAllUsersContext";
+import GetAllCategoriesContext from "./Context/GetAllCategoriesContext";
+import DisplayLandingFormsProvider from "./Context/DisplayLandingFormsContext";
+import SignedUserProvider from "./Context/SignedUserContext";
+import RecoverPasswordProvider from "./Context/RecoverPasswordContext";
+import NewPasswordProvider from "./Context/NewPasswordContext";
+import RecoverUserProvider from "./Context/RecoverUserContext";
+import LogOutProvider from "./Context/LogOutContext";
 
 import App from "./App";
 
@@ -28,29 +29,29 @@ root.render(
   <React.StrictMode>
     <CssBaseline />
     <ThemeProvider theme={theme}>
-
-      <LogOutProvider>
-        <RecoverPasswordProvider>
-          <NewPasswordProvider>
-            <RecoverUserProvider>
-              <SignInProvider>
+      <SignInProvider>
+        <LogOutProvider>
+          <RecoverPasswordProvider>
+            <NewPasswordProvider>
+              <RecoverUserProvider>
                 <SignedUserProvider>
                   <SignUpProvider>
                     <JoinUpProvider>
                       <DisplayLandingFormsProvider>
                         <GetAllUsersProvider>
-                          <App />
+                          <GetAllCategoriesContext>
+                            <App />
+                          </GetAllCategoriesContext>
                         </GetAllUsersProvider>
                       </DisplayLandingFormsProvider>
                     </JoinUpProvider>
                   </SignUpProvider>
                 </SignedUserProvider>
-              </SignInProvider>
-            </RecoverUserProvider>
-          </NewPasswordProvider>
-        </RecoverPasswordProvider>
-      </LogOutProvider>
-      
+              </RecoverUserProvider>
+            </NewPasswordProvider>
+          </RecoverPasswordProvider>
+        </LogOutProvider>
+      </SignInProvider>
     </ThemeProvider>
   </React.StrictMode>
 );

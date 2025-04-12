@@ -11,8 +11,8 @@ import PasswordRecoverForm from '../components/PasswordRecoverForm';
 import NewPasswordForm from '../components/NewPasswordForm';
 import Advertising from "../components/Advertising";
 import Footer from "../components/Footer";
-import { recoverPasswordContext } from '../context/RecoverPasswordContext';
-import { newPasswordContext } from '../context/NewPasswordContext';
+import { recoverPasswordContext } from '../Context/RecoverPasswordContext';
+import { newPasswordContext } from '../Context/NewPasswordContext';
 
 const PasswordRecoverScreen = () => {
 

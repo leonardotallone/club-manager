@@ -12,7 +12,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 import { useNavigate } from "react-router-dom";
-import { newPasswordContext } from '../context/NewPasswordContext';
+import { newPasswordContext } from '../Context/NewPasswordContext';
 
 // Validación con Yup
 const validationSchema = Yup.object({

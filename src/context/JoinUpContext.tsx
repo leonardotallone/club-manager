@@ -9,7 +9,7 @@ const JoinUpProvider = ({ children }) => {
   const [joinUpError, setJoinUpError] = useState("")
   const [loadingJU, setLoadingJU] = useState(false)
 
-  console.log("JoinUp", joinUpUser)
+  // console.log("JoinUp", joinUpUser)
 
   // useEffect(() => {
   //   if (joinUpUser) {

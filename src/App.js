@@ -11,7 +11,7 @@ import PasswordRecoverScreen from "./screens/PasswordRecoverScreen";
 import EmailRecoverScreen from "./screens/EmailRecoverScreen";
 import DashboardUserScreen from "./screens/DashboardUserScreen";
 
-import { signInContext } from "../src/context/SignInContext";
+import { signInContext } from "./Context/SignInContext";
 
 function App() {
   const { setDecodedToken, accessToken } = useContext(signInContext);

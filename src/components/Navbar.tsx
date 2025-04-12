@@ -18,8 +18,8 @@ import ClubSocial from "../assets/svg/ClubSocial.png"
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import avatar from "../assets/backgroundImages/Background.jpg";
 
-import { signInContext } from '../context/SignInContext';
-import { logOutContext } from '../context/LogOutContext';
+import { signInContext } from '../Context/SignInContext';
+import { logOutContext } from '../Context/LogOutContext';
 
 const pageAdmin = [
     { name: 'alta de Socio', href: '/signup' },
@@ -66,6 +66,7 @@ const Navbar = () => {
         }
         window.localStorage.removeItem('accessToken')
         window.localStorage.removeItem('socio')
+        window.localStorage.removeItem('socios')
         window.localStorage.removeItem('role')
 
         navigate("/");

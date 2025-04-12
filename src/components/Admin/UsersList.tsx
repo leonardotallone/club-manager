@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid2';
 import { Box, Container, Typography, Button } from "@mui/material";
@@ -22,78 +22,15 @@ import ManOutlinedIcon from '@mui/icons-material/ManOutlined';
 import FamilyRestroomOutlinedIcon from '@mui/icons-material/FamilyRestroomOutlined';
 import Pagination from '@mui/material/Pagination';
 
+import { getAllUsersContext } from '../../Context/GetAllUsersContext';
+
 
 const UsersList = () => {
     const [selectedCategory, setSelectedCategory] = React.useState('');
+    const { sociosEnContext } = useContext(getAllUsersContext);
+    console.log(sociosEnContext)
 
     const navigate = useNavigate();
-
-    const usuarios = [
-        {
-            name: "Catalina",
-            lastName: "Tallone",
-            email: "catalina@gmail.com",
-            dni: "56.883.870",
-            birthDate: "11/02/2018",
-            address: "Alvarez Rodriguez 231",
-            category: "Activo",
-            groupHead: false,
-            group: ["Salvador Tallone", "Leonardo, Tallone", "Victoria, Semino"],
-            countState: "Sin Deuda",
-            avatar: avatar1,
-            contactNumber: "+54 236 4321985",
-            discipline: "Hockey Femenino",
-            blockade: false,
-        },
-        {
-            name: "Salvador",
-            lastName: "Tallone",
-            dni: "58.577.896",
-            category: "Activo",
-            groupHead: false,
-            group: ["Catalina Tallone", "Leonardo, Tallone", "Victoria, Semino"],
-            countState: "Sin Deuda",
-            avatar: avatar2,
-            contactNumber: "+54 236 4321985",
-            address: "Alvarez Rodriguez 231",
-            discipline: "Futbol Escuela",
-            email: "salvador.tallone@gmail.com",
-            birthDate: "21/12/2021",
-            blockade: false,
-        },
-        {
-            name: "Leonardo",
-            lastName: "Tallone",
-            dni: "30074389",
-            category: "Activo",
-            groupHead: true,
-            group: ["Catalina,Tallone", "Salvador, Tallone", "Victoria, Semino"],
-            countState: "Sin Deuda",
-            avatar: avatar3,
-            contactNumber: "+54 236 4321985",
-            address: "Alvarez Rodriguez 231",
-            discipline: ["Fútbol", "Tenis"],
-            email: "leonardo.gabriel.tallone@gmail.com",
-            birthDate: "14/05/1983",
-            blockade: false,
-        },
-        {
-            name: "Juan Sebastian",
-            lastName: "Perez Armendiz",
-            dni: "27.072.378",
-            category: "Vitalicio",
-            groupHead: false,
-            group: [],
-            countState: "Con Deuda",
-            avatar: avatar4,
-            contactNumber: "+54 236 4321985",
-            address: "Alvarez Rodriguez 231",
-            discipline: "Futbol Senior",
-            email: "leonardo.gabriel.tallone@gmail.com",
-            birthDate: "14/04/1083",
-            blockade: true,
-        },
-    ];
 
     const category = [
         'Afabetico',
@@ -101,6 +38,7 @@ const UsersList = () => {
         'Edad',
         'Estado de Cuenta',
     ];
+
     return (
         <>
 
@@ -158,7 +96,7 @@ const UsersList = () => {
 
             <Container maxWidth="xl">
                 <Grid container>
-                    {usuarios.map((user, index) => (
+                    {sociosEnContext?.map((socio, index) => (
                         <Grid key={index} size={{ xs: 12, sm: 6, md: 6, lg: 12 }} sx={{ mb: 1.5 }}>
                             <Box
                                 sx={{
@@ -176,14 +114,14 @@ const UsersList = () => {
                             >
                                 <Grid container sx={{ width: '100%' }} >
                                     <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 0.7 }} sx={{ ml: 1 }}>
-                                        <Avatar alt="Avatar" src={user.avatar} sx={{ width: 50, height: 50 }} />
+                                        <Avatar alt="Avatar" src={socio.avatar} sx={{ width: 50, height: 50 }} />
                                     </Grid>
                                     <Grid size={{ xs: 1.5, sm: 1.5, md: 1.5, lg: 1.5, xl: 2 }} direction="column">
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             NOMBRE Y APELLIDO
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                            {user.name} {user.lastName}
+                                        {socio.apellido} {socio.nombre} 
                                         </Typography>
                                     </Grid>
 
@@ -192,7 +130,7 @@ const UsersList = () => {
                                             DNI
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                            {user.dni}
+                                            {socio.dni}
                                         </Typography>
                                     </Grid>
 
@@ -201,7 +139,7 @@ const UsersList = () => {
                                             CATEGORIA
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                            {user.category}
+                                            {socio.categoria.nombre}
                                         </Typography>
                                     </Grid>
 
@@ -209,7 +147,7 @@ const UsersList = () => {
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             BLOQUEAR USUARIO
                                         </Typography>
-                                        {user.blockade === false ? <LockOpenIcon sx={{ fontSize: 24, color: 'Green', ml: 5 }} /> :
+                                        {socio.blockade === false ? <LockOpenIcon sx={{ fontSize: 24, color: 'Green', ml: 5 }} /> :
                                             <LockOutlinedIcon sx={{ fontSize: 24, color: 'Red', ml: 5 }} />}
                                     </Grid>
 
@@ -217,7 +155,7 @@ const UsersList = () => {
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             GRUPO
                                         </Typography>
-                                        {user.group.length > 0 ?
+                                        {socio.cabezaGrupo ?
                                             <FamilyRestroomOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} /> :
                                             <ManOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} />}
                                     </Grid>
@@ -225,9 +163,9 @@ const UsersList = () => {
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             ESTADO DE CUENTA
                                         </Typography>
-                                        <Typography sx={{ fontWeight: 600, fontSize: 14, color: user.countState === "Sin Deuda" ? 'Green' : 'Red', textDecoration: 'none' }}>
-                                            {user.countState}
-                                        </Typography>
+                                        {/* <Typography sx={{ fontWeight: 600, fontSize: 14, color: socio.countState === "Sin Deuda" ? 'Green' : 'Red', textDecoration: 'none' }}>
+                                            {socio.countState}
+                                        </Typography> */}
                                     </Grid>
                                     <Grid size={{ xs: 1, sm: 6, md: 6, lg: 4 }} direction="column" sx={{
                                         display: 'flex',
@@ -241,11 +179,11 @@ const UsersList = () => {
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none', mr: 1 }}>
                                             EDITAR
                                         </Typography>
-                                        <Button
+                                        {/* <Button
                                             startIcon={<ModeEditOutlineOutlinedIcon sx={{ fontSize: 24, color: "black", mr: -3 }} />}
                                             onClick={() => navigate(`/edit-user/${user}`, { state: user })}
                                         >
-                                        </Button>
+                                        </Button> */}
                                     </Grid>
                                 </Grid>
                             </Box>

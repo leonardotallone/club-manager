@@ -9,6 +9,8 @@ const SignUpProvider = ({ children }) => {
   const [signUpError, setSignUpError] = useState([])
   const [loading, setLoading] = useState(false)
 
+  console.log("SIGNUP EN CONTEXT",signUpUser)
+
   useEffect(() => {
     setLoading(true);
     axios

@@ -9,7 +9,7 @@ import Dashboard from '../../components/Admin/Dashboard';
 import Footer from '../../components/Footer';
 import Advertising from '../../components/Advertising';
 
-import { getAllUsersContext } from '../../context/GetAllUsersContext';
+import { getAllUsersContext } from '../../Context/GetAllUsersContext';
 
 const DashboardAdminScreen = () => {
 

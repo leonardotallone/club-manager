@@ -9,9 +9,9 @@ import SignInForm from "../components/SignInForm";
 import JoinUpForm from '../components/JoinUpForm';
 import Advertising from "../components/Advertising";
 import Footer from "../components/Footer";
-import { signInContext } from '../context/SignInContext';
-import { displayLandingFormsContext } from '../context/DisplayLandingFormsContext';
-import { joinUpContext } from '../context/JoinUpContext';
+import { signInContext } from '../Context/SignInContext';
+import { displayLandingFormsContext } from '../Context/DisplayLandingFormsContext';
+import { joinUpContext } from '../Context/JoinUpContext';
 
 const LandingScreen = () => {
 

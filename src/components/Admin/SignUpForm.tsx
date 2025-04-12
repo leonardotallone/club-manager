@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
-import { FormControlLabel,Avatar, Box, Paper, Card, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
+import { FormControlLabel, Avatar, Box, Paper, Card, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 
 import avatar1 from "../../assets/avatars/1.jpg";
-
-
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -15,6 +13,8 @@ import { Dayjs } from 'dayjs';
 import dayjs from "dayjs";
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
+
+import { getAllCategoriesContext } from "../../Context/GetAllCategoriesContext"
 
 
 const ITEM_HEIGHT = 48;
@@ -45,12 +45,6 @@ const usuario =
     blockade: false,
 }
 
-const category = [
-    'Activo',
-    'Pleno',
-    'Jubilado',
-    'Vitalício',
-];
 const names = [
     'Fútbol',
     'Tenis',
@@ -68,8 +62,6 @@ const sociosList = [
     "Bruno, Barbieri",
     "Catalina, Gazola",
 ];
-
-
 
 function getStyles(name: string, discipline: readonly string[], theme: Theme) {
     return {
@@ -139,10 +131,14 @@ const validationSchema = Yup.object({
 
 const SignUpForm: React.FC = () => {
 
+    const { categorias } = useContext(getAllCategoriesContext)
+
     const [discipline, setDiscipline] = React.useState<string[]>([]);
     const [socios, setSocios] = React.useState<string[]>([]);
     const [email, setEmail] = useState("");
     const [isGroupHeadActive, setIsGroupHeadActive] = useState(false);
+
+ 
 
     const handleGroupHeadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsGroupHeadActive(event.target.checked);
@@ -150,7 +146,7 @@ const SignUpForm: React.FC = () => {
 
     //   Limpiar campos cuando se desactiva el checkbox
 
-      useEffect(() => {
+    useEffect(() => {
         if (!isGroupHeadActive) {
             setSocios([]); // Limpia la lista de socios
             setEmail("");  // Limpia el campo de correo
@@ -223,6 +219,7 @@ const SignUpForm: React.FC = () => {
 
                 <Formik<SignUpFormValues>
                     initialValues={{
+                        // id:"",
                         name: "",
                         lastName: "",
                         email: "",
@@ -527,8 +524,8 @@ const SignUpForm: React.FC = () => {
                                                     onChange={(newValue) => {
                                                         handleChange({ target: { name: 'birthDate', value: newValue } }); // Update Formik state
                                                     }}
-                                                    
-                                                    />
+
+                                                />
                                             </DemoContainer>
                                             {touched.birthDate && errors.birthDate ?
                                                 <Typography color="error" variant="caption" sx={{ fontSize: '0.75rem' }} >
@@ -590,16 +587,16 @@ const SignUpForm: React.FC = () => {
                                         {/* GRUPO Y CATEGORIA */}
                                         <Grid container columnSpacing={2} sx={{ mb: 0, mt: 1 }} size={12}>
                                             <Grid size={6} >
-                                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={isGroupHeadActive}
-                                        onChange={handleGroupHeadChange}
-                                    />
-                                }
-                                label="Cabeza de Grupo"
-                            />
-                   
+                                                <FormControlLabel
+                                                    control={
+                                                        <Checkbox
+                                                            checked={isGroupHeadActive}
+                                                            onChange={handleGroupHeadChange}
+                                                        />
+                                                    }
+                                                    label="Cabeza de Grupo"
+                                                />
+
                                                 {/* <FormControl fullWidth sx={{ mb: 0 }}>
                                                     <InputLabel id="group-head-label" sx={{
                                                         "&.Mui-focused": {
@@ -667,11 +664,16 @@ const SignUpForm: React.FC = () => {
                                                         }}
                                                     // onBlur={handleBlur} // Optional: Handle blur event if needed
                                                     >
-                                                        {category.map((cat) => (
-                                                            <MenuItem key={cat} value={cat}>
-                                                                {cat}
-                                                            </MenuItem>
-                                                        ))}
+
+                                                        {categorias?.length > 0 ? (
+                                                            categorias.map(({ id, descripcion }) => (
+                                                                <MenuItem key={id} value={id}>
+                                                                    {descripcion}
+                                                                </MenuItem>
+                                                            ))
+                                                        ) : (
+                                                            <p>Cargando Categorias...</p>
+                                                        )}
 
                                                     </Select>
                                                     {touched.category && errors.category ?
@@ -740,7 +742,7 @@ const SignUpForm: React.FC = () => {
                                     </Grid>
                                 </Grid>
 
-                                
+
                                 {/* BOTONES */}
                                 <Grid size={8}>
                                     <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{

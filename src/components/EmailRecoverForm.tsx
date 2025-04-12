@@ -16,7 +16,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 import { useNavigate } from "react-router-dom";
-import { recoverUserContext } from '../context/RecoverUserContext';
+import { recoverUserContext } from '../Context/RecoverUserContext';
 
 // Componente Copyright
 // function Copyright(props: React.HTMLAttributes<HTMLDivElement>) {

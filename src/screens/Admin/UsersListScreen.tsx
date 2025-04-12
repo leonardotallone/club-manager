@@ -7,7 +7,7 @@ import Navbar from '../../components/Navbar';
 import BlackBanner from '../../components/BlackBanner';
 import UsersList from '../../components/Admin/UsersList';
 
-import { getAllUsersContext } from '../../context/GetAllUsersContext';
+import { getAllUsersContext } from '../../Context/GetAllUsersContext';
 
 const UserListScreen = () => {
 
