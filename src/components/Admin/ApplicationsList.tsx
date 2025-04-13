@@ -12,10 +12,7 @@ import Advertising from '../../components/Advertising';
 import Avatar from '@mui/material/Avatar';
 
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import avatar1 from "../../assets/avatars/1.jpg";
-import avatar2 from "../../assets/avatars/2.jpg";
-import avatar3 from "../../assets/avatars/3.jpg";
-import avatar4 from "../../assets/avatars/4.jpg";
+
 
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -27,30 +24,25 @@ import Pagination from '@mui/material/Pagination';
 import { getAllUsersContext } from '../../Context/GetAllUsersContext';
 
 
-const UsersList = () => {
+const ApplicationsList = () => {
     const [selectedCategory, setSelectedCategory] = React.useState('');
     const { sociosEnContext } = useContext(getAllUsersContext);
-    console.log(sociosEnContext)
+
 
     const navigate = useNavigate();
 
     const category = [
-        'Afabetico',
-        'Categoria',
-        'Edad',
-        'Estado de Cuenta',
+        'Fecha',
+        'Apellido',
     ];
 
     return (
         <>
-
-
             <Box
                 sx={{
                     mb: 3,
                     // position: "fixed", // Asegura que ocupe toda la pantalla
                     width: '100%', // Asegura que tome todo el ancho del viewport
-
                 }}
             >
                 <Container maxWidth="xl">
@@ -66,19 +58,19 @@ const UsersList = () => {
                                     textDecoration: 'none',
                                 }}
                             >
-                                Ordenar Usuarios
+                                Ordenar Solicitudes
                             </Typography>
 
                         </Grid>
                         <Grid size={{ xs: 6, sm: 6, md: 6, lg: 2 }} >
                             <FormControl fullWidth sx={{ mt: 2 }}>
-                                <InputLabel id="demo-simple-select-label">Categoria</InputLabel>
+                                <InputLabel id="demo-simple-select-label">Ordenar Solicitudes</InputLabel>
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
                                     value={selectedCategory}
                                     onChange={(event) => setSelectedCategory(event.target.value)}
-                                    label="Categoria"
+                                    label="Ordenar Solicitudes"
                                 >
                                     {category.map((cat) => (
                                         <MenuItem key={cat} value={cat}>
@@ -88,6 +80,7 @@ const UsersList = () => {
                                 </Select>
 
                             </FormControl>
+
                         </Grid>
                     </Grid>
 
@@ -138,37 +131,48 @@ const UsersList = () => {
 
                                     <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }} direction="column">
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
+                                            TELEFONO
+                                        </Typography>
+                                        <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
+                                            236 4321985
+                                        </Typography>
+                                    </Grid>
+
+                                    {/* <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }} direction="column">
+                                        <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             CATEGORIA
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
                                             {socio.categoria.nombre}
                                         </Typography>
-                                    </Grid>
+                                    </Grid> */}
 
-                                    <Grid size={{ xs: 1.5, sm: 1.5, md: 1.5, lg: 1.5, xl: 1.2 }} direction="column">
+                                    {/* <Grid size={{ xs: 1.5, sm: 1.5, md: 1.5, lg: 1.5, xl: 1.2 }} direction="column">
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             BLOQUEAR USUARIO
                                         </Typography>
                                         {socio.blockade === false ? <LockOpenIcon sx={{ fontSize: 24, color: 'Green', ml: 5 }} /> :
                                             <LockOutlinedIcon sx={{ fontSize: 24, color: 'Red', ml: 5 }} />}
-                                    </Grid>
+                                    </Grid> */}
 
-                                    <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 0.7 }} direction="column">
+                                    {/* <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 0.7 }} direction="column">
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             GRUPO
                                         </Typography>
                                         {socio.cabezaGrupo ?
                                             <FamilyRestroomOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} /> :
                                             <ManOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} />}
-                                    </Grid>
-                                    <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }} direction="column" >
+                                    </Grid> */}
+
+                                    {/* <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }} direction="column" >
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             ESTADO DE CUENTA
                                         </Typography>
-                                        {/* <Typography sx={{ fontWeight: 600, fontSize: 14, color: socio.countState === "Sin Deuda" ? 'Green' : 'Red', textDecoration: 'none' }}>
+                                        <Typography sx={{ fontWeight: 600, fontSize: 14, color: socio.countState === "Sin Deuda" ? 'Green' : 'Red', textDecoration: 'none' }}>
                                             {socio.countState}
-                                        </Typography> */}
-                                    </Grid>
+                                        </Typography>
+                                    </Grid> */}
+
                                     <Grid size={{ xs: 1, sm: 6, md: 6, lg: 4 }} direction="column" sx={{
                                         display: 'flex',
                                         flexDirection: 'column',
@@ -179,7 +183,7 @@ const UsersList = () => {
 
                                     }}>
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none', mr: 1 }}>
-                                            EDITAR
+                                            ELIMINAR SOLICITUD
                                         </Typography>
                                         {/* <Button
                                             startIcon={<ModeEditOutlineOutlinedIcon sx={{ fontSize: 24, color: "black", mr: -3 }} />}
@@ -191,10 +195,12 @@ const UsersList = () => {
                             </Box>
                         </Grid>
                     ))}
+
+
+
                 </Grid>
                 <Pagination count={10} variant="outlined" sx={{ mt: 1, display: 'flex', justifyContent: 'center' }} />
             </Container>
-
             <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12 }} sx={{ mt: 2 }}>
                 <Advertising />
             </Grid>
@@ -205,4 +211,4 @@ const UsersList = () => {
     );
 };
 
-export default UsersList;
+export default ApplicationsList;

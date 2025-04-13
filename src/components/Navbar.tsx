@@ -22,10 +22,11 @@ import { signInContext } from '../Context/SignInContext';
 import { logOutContext } from '../Context/LogOutContext';
 
 const pageAdmin = [
+    { name: 'solicitudes', href: "/admin-applications" },
     { name: 'alta de Socio', href: '/signup' },
     { name: 'usuarios', href: "/admin-users-list" },
-    { name: 'Alta Disciplinas', href: '/blog' },
-    { name: 'Documentos', href: '/blog' },
+    // { name: 'Alta Disciplinas', href: '/blog' },
+    // { name: 'Documentos', href: '/blog' },
 ];
 const pageUsers = [
     { name: 'Noticias', href: "/noticias" },

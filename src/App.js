@@ -4,6 +4,8 @@ import LandingScreen from "./screens/LandingScreen";
 
 import DashboardAdminScreen from "./screens/Admin/DashboardAdminScreen";
 import UsersListScreen from "./screens/Admin/UsersListScreen";
+import ApplicationsListScreen from "./screens/Admin/ApplicationsListScreen";
+
 import SignUpScreen from "./screens/Admin/SignUpScreen";
 import EditUserScreen from "./screens/Admin/EditUserScreen";
 
@@ -26,6 +28,7 @@ function App() {
           element={<DashboardAdminScreen />}
         />
         <Route path="/admin-users-list" element={<UsersListScreen />} />
+        <Route path="/admin-applications" element={<ApplicationsListScreen />} />
 
         <Route path="/edit-user/:user" element={<EditUserScreen />} />
         <Route path="/signup" element={<SignUpScreen />} />

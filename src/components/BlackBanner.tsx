@@ -16,6 +16,12 @@ const titles = [
         path: "/admin-users-list"
     },
     {
+        title: "Listado de Solicitudes",
+        subtitle: "Subtitulo Listado de Solicitudes",
+        path: "/admin-applications"
+    },
+
+    {
         title: "Alta de nuevo Socio",
         subtitle: "Subtitulo Nuevo Socio",
         path: "/signup"
@@ -28,6 +34,7 @@ const titles = [
         subtitle: "Subtitulo Dashboard Socio",
         path: "/dashboard-screen"
     },
+   
 ];
 
 const BlackBanner = () => {
