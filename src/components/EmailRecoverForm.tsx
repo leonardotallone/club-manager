@@ -59,7 +59,7 @@ const EmailRecoverForm: React.FC = () => {
 
     const handleCloseModal = () => {
         setOpen(false);
-         navigate("/");
+        navigate("/");
     };
 
     const navigate = useNavigate();
@@ -176,16 +176,24 @@ const EmailRecoverForm: React.FC = () => {
 
 
             <Grid container alignItems="center" justifyContent={{ xs: "center", sm: "space-between", md: "space-between", lg: "space-between", }} spacing={{ xs: 3, sm: 20, md: 30, lg: 30 }} direction={{ xs: "column", sm: "row", md: "row", lg: "row", }}  >
-                <Grid size={{ xs: 12, sm: "auto", md: "auto", lg: "auto" }} sx={{ textAlign: 'center' }}>
-                    <Link href="/password-recover" variant="body2" sx={{ color: "#b71c1c", textDecoration: "none" }}>
-                        ¿Olvidaste tu contraseña?
-                    </Link>
-                </Grid>
-                {/* <Grid size={{ xs: 12, sm:"auto", md: "auto", lg: "auto" }} sx={{ textAlign: 'center' }}>
-                    <Link href="#" variant="body2">
-                        ¿Aún no sos socio?
-                    </Link>
-                </Grid> */}
+
+                <Button
+                    type="button"
+                    onClick={(e) => {
+                        e.preventDefault(); // Prevenir el envío del formulario
+                        navigate("/password-recover")
+                    }}
+                    sx={{
+                        color: "#b71c1c", textDecoration: "none", textTransform: "lowercase", fontWeight: "normal", '&:hover': {
+                            backgroundColor: 'transparent', // Remove any hover background color
+                            color: "#b71c1c", // Keep the text color same on hover
+                            textDecoration: "none" // Remove underline or other decorations on hover
+                        }
+                    }}
+                >
+                    ¿Olvidaste tu contraseña?
+                </Button>
+
             </Grid>
 
 
@@ -217,7 +225,7 @@ const EmailRecoverForm: React.FC = () => {
 
                     <Typography id="child-modal-description"
                         sx={{ fontSize: 13, color: "white", fontWeight: "400", display: 'flex', fontFamily: 'San Francisco, -apple-system, BlinkMacSystemFont', pt: 1, pb: 3, mr: 2, ml: 2 }} >
-                      Muchas gracias.
+                        Muchas gracias.
                     </Typography>
 
                     {/* Línea divisoria horizontal */}
@@ -231,11 +239,11 @@ const EmailRecoverForm: React.FC = () => {
                     <Box sx={{
                         display: 'flex',
                         alignItems: 'center', // Alinear verticalmente
-                         justifyContent: 'center',
+                        justifyContent: 'center',
                         height: 50,
                         // backgroundColor: "red",
                         width: '100%', // Ancho completo para alinear correctamente
-                        
+
                     }}>
                         {/* Botón Izquierdo */}
                         {/* <Button

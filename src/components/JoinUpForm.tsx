@@ -18,7 +18,7 @@ import * as Yup from "yup";
 
 import { useNavigate } from "react-router-dom";
 import { joinUpContext } from '../Context/JoinUpContext';
-import { displayLandingFormsContext } from '../Context/DisplayLandingFormsContext';
+
 
 // Componente Copyright
 
@@ -62,8 +62,6 @@ const validationSchema = Yup.object({
 const JoinUpForm: React.FC = () => {
 
     const { setJoinUpUser, joinUpSuccess, joinUpError, setJoinUpError } = useContext(joinUpContext);
-    const { setJoin } = useContext(displayLandingFormsContext);
-
     const [open, setOpen] = React.useState(false);
 
     useEffect(() => {
@@ -85,7 +83,7 @@ const JoinUpForm: React.FC = () => {
         setOpen(true)
         setJoinUpUser(user);
         // setJoin(false)
- 
+
     };
 
     const navigate = useNavigate();
@@ -308,7 +306,11 @@ const JoinUpForm: React.FC = () => {
                             </Grid>
                             <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
                                 <Button
-                                    type="button" href='/'
+                                    type="button"
+                                    onClick={(e) => {
+                                        e.preventDefault(); // Prevenir el envío del formulario
+                                        navigate('/')
+                                    }}
                                     fullWidth variant="contained" sx={{
                                         mt: 3,
                                         mb: 2,

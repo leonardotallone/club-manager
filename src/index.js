@@ -8,8 +8,8 @@ import SignInProvider from "./Context/SignInContext";
 import JoinUpProvider from "./Context/JoinUpContext";
 import SignUpProvider from "./Context/SignUpContext";
 import GetAllUsersProvider from "./Context/GetAllUsersContext";
-import GetAllCategoriesContext from "./Context/GetAllCategoriesContext";
-import DisplayLandingFormsProvider from "./Context/DisplayLandingFormsContext";
+import GetAllCategoriesProvider from "./Context/GetAllCategoriesContext";
+
 import SignedUserProvider from "./Context/SignedUserContext";
 import RecoverPasswordProvider from "./Context/RecoverPasswordContext";
 import NewPasswordProvider from "./Context/NewPasswordContext";
@@ -37,13 +37,11 @@ root.render(
                 <SignedUserProvider>
                   <SignUpProvider>
                     <JoinUpProvider>
-                      <DisplayLandingFormsProvider>
-                        <GetAllUsersProvider>
-                          <GetAllCategoriesContext>
-                            <App />
-                          </GetAllCategoriesContext>
-                        </GetAllUsersProvider>
-                      </DisplayLandingFormsProvider>
+                      <GetAllUsersProvider>
+                        <GetAllCategoriesProvider>
+                          <App />
+                        </GetAllCategoriesProvider>
+                      </GetAllUsersProvider>
                     </JoinUpProvider>
                   </SignUpProvider>
                 </SignedUserProvider>

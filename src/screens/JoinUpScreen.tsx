@@ -13,7 +13,7 @@ import { signInContext } from '../Context/SignInContext';
 
 import { joinUpContext } from '../Context/JoinUpContext';
 
-const LandingScreen = () => {
+const JoinUpScreen = () => {
 
   const { loading, accessToken, userRole } = useContext(signInContext);
 
@@ -78,8 +78,9 @@ const LandingScreen = () => {
               justifyContent: 'flex-end', // Alinea el formulario a la derecha
               alignItems: 'center',
             }}>
-              {!accessToken ? <SignInForm /> : null}
-
+              {/* {!accessToken ? (!join ? <SignInForm /> : null) : null} */}
+              {!accessToken ? <JoinUpForm /> : null}
+              {/* {!join ? <SignInForm /> : <JoinUpForm />} */}
             </Grid>
           </Container>
 
@@ -114,4 +115,4 @@ const LandingScreen = () => {
   );
 };
 
-export default LandingScreen;
+export default JoinUpScreen;

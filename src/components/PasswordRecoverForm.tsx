@@ -147,11 +147,25 @@ const PasswordRecoverForm: React.FC = () => {
             </Formik>
 
             <Grid container alignItems="center" justifyContent={{ xs: "center", sm: "space-between", md: "space-between", lg: "space-between", }} spacing={{ xs: 3, sm: 20, md: 30, lg: 30 }} direction={{ xs: "column", sm: "row", md: "row", lg: "row", }}  >
-                <Grid size={{ xs: 12, sm: "auto", md: "auto", lg: "auto" }} sx={{ textAlign: 'center' }}>
-                    <Link href="/email-recover" variant="body2" sx={{ color: "#b71c1c", textDecoration: "none" }}>
-                        ¿Olvidaste el correo?
-                    </Link>
-                </Grid>
+        
+                <Button
+                    type="button"
+                    onClick={(e) => {
+                        e.preventDefault(); // Prevenir el envío del formulario
+                        navigate("/email-recover")
+                    }}
+                    sx={{
+                        color: "#b71c1c", textDecoration: "none", textTransform: "lowercase", fontWeight: "normal", '&:hover': {
+                            backgroundColor: 'transparent', // Remove any hover background color
+                            color: "#b71c1c", // Keep the text color same on hover
+                            textDecoration: "none" // Remove underline or other decorations on hover
+                        }
+                    }}
+                >
+                    ¿Olvidaste el correo?
+                </Button>
+
+
             </Grid>
 
             <Modal

@@ -1,6 +1,7 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { useContext } from "react";
 import LandingScreen from "./screens/LandingScreen";
+import JoinUpForm from "./screens/JoinUpScreen";
 
 import DashboardAdminScreen from "./screens/Admin/DashboardAdminScreen";
 import UsersListScreen from "./screens/Admin/UsersListScreen";
@@ -22,6 +23,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingScreen />} />
+        <Route path="/join" element={<JoinUpForm />} />
 
         <Route
           path="/dashboard-admin-screen"
