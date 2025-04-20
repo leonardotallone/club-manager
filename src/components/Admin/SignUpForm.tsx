@@ -15,6 +15,7 @@ import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 
 import { getAllCategoriesContext } from "../../Context/GetAllCategoriesContext"
+import { signUpContext } from "../../Context/SignUpContext"
 
 
 const ITEM_HEIGHT = 48;
@@ -132,13 +133,14 @@ const validationSchema = Yup.object({
 const SignUpForm: React.FC = () => {
 
     const { categorias } = useContext(getAllCategoriesContext)
+    const { setSignUpUser } = useContext(signUpContext)
 
     const [discipline, setDiscipline] = React.useState<string[]>([]);
     const [socios, setSocios] = React.useState<string[]>([]);
     const [email, setEmail] = useState("");
     const [isGroupHeadActive, setIsGroupHeadActive] = useState(false);
 
- 
+
 
     const handleGroupHeadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsGroupHeadActive(event.target.checked);
@@ -178,25 +180,39 @@ const SignUpForm: React.FC = () => {
         formikHelpers: FormikHelpers<SignUpFormValues>
     ) => {
         const user = {
-            name: values.name,
-            lastName: values.lastName,
-            email: values.email,
-            password: values.password,
-            dni: values.dni,
-            birthDate: values.birthDate ? dayjs(values.birthDate).toDate() : null,
-            address: values.address,
-            contactNumber: values.contactNumber,
-            group: values.group,
-            groupHead: values.groupHead === "true" ? true : false,
-            countState: values.countState,
-            avatar: null,
-            category: values.category,
-            discipline: values.discipline,
-            blockade: values.blockade,
+
+            email: "leonardo.gariel.tallone@gmail.com",
+            password: "123456"
+
         };
-        console.log(user);
+        setSignUpUser(user);
         // navigate("/home");
     };
+
+    // const handleSubmit = (
+    //     values: SignUpFormValues,
+    //     formikHelpers: FormikHelpers<SignUpFormValues>
+    // ) => {
+    //     const user = {
+    //         name: values.name,
+    //         lastName: values.lastName,
+    //         email: values.email,
+    //         password: values.password,
+    //         dni: values.dni,
+    //         birthDate: values.birthDate ? dayjs(values.birthDate).toDate() : null,
+    //         address: values.address,
+    //         contactNumber: values.contactNumber,
+    //         group: values.group,
+    //         groupHead: values.groupHead === "true" ? true : false,
+    //         countState: values.countState,
+    //         avatar: null,
+    //         category: values.category,
+    //         discipline: values.discipline,
+    //         blockade: values.blockade,
+    //     };
+    //     console.log(user);
+    //     // navigate("/home");
+    // };
 
     return (
         <Box
@@ -236,7 +252,7 @@ const SignUpForm: React.FC = () => {
                         discipline: [],
                         blockade: false
                     }}
-                    validationSchema={validationSchema}
+                    // validationSchema={validationSchema}
                     onSubmit={handleSubmit}
                 >
                     {({ handleChange, handleBlur, values, errors, touched, }) => (

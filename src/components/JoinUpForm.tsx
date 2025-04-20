@@ -18,12 +18,14 @@ import * as Yup from "yup";
 
 import { useNavigate } from "react-router-dom";
 import { joinUpContext } from '../Context/JoinUpContext';
+import { Password } from '@mui/icons-material';
 
 
 // Componente Copyright
 
 interface JoinUpFormValues {
     email: string;
+    password: string;
     name: string;
     lastName: string;
     dni: string;
@@ -75,6 +77,8 @@ const JoinUpForm: React.FC = () => {
     };
 
 
+
+
     const handleSubmit = (
         values: JoinUpFormValues,
         formikHelpers: FormikHelpers<JoinUpFormValues>
@@ -85,6 +89,7 @@ const JoinUpForm: React.FC = () => {
         // setJoin(false)
 
     };
+
 
     const navigate = useNavigate();
 
@@ -110,7 +115,7 @@ const JoinUpForm: React.FC = () => {
             <Typography component="h1" variant="h5">Solicitud de Nuevo Socio</Typography>
 
             <Formik<JoinUpFormValues>
-                initialValues={{ email: "", name: "", lastName: "", dni: "", phone: "" }}
+                initialValues={{ email: "", password: "", name: "", lastName: "", dni: "", phone: "" }}
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
             >
