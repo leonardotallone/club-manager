@@ -22,13 +22,16 @@ import FamilyRestroomOutlinedIcon from '@mui/icons-material/FamilyRestroomOutlin
 import Pagination from '@mui/material/Pagination';
 
 import { getAllUsersContext } from '../../Context/GetAllUsersContext';
+import { getAllJoinUpContext } from '../../Context/GetAllJoinUpContext';
 
 
 const ApplicationsList = () => {
     const [selectedCategory, setSelectedCategory] = React.useState('');
     const { sociosEnContext } = useContext(getAllUsersContext);
+    const { allJoinUp } = useContext(getAllJoinUpContext);
 
-
+    console.log("Solicitudes", allJoinUp)
+    
     const navigate = useNavigate();
 
     const category = [
@@ -108,7 +111,7 @@ const ApplicationsList = () => {
                                 }}
                             >
                                 <Grid container sx={{ width: '100%' }} >
-                                    <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 0.7}} sx={{ ml: 1 }}>
+                                    <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 0.7 }} sx={{ ml: 1 }}>
                                         <Avatar alt="Avatar" src={socio.avatar} sx={{ width: 50, height: 50 }} />
                                     </Grid>
                                     <Grid size={{ xs: 1.5, sm: 1.5, md: 1.5, lg: 1.5, xl: 1.5 }} direction="column">
@@ -173,7 +176,7 @@ const ApplicationsList = () => {
                                         </Typography>
                                     </Grid> */}
 
-                                    <Grid size={{ xs: 1, sm: 6, md: 6, lg: 7.7, xl:7.7}} direction="column" sx={{
+                                    <Grid size={{ xs: 1, sm: 6, md: 6, lg: 7.7, xl: 7.7 }} direction="column" sx={{
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'flex-end',

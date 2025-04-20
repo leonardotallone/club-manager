@@ -10,6 +10,8 @@ import SignUpProvider from "./Context/SignUpContext";
 import GetAllUsersProvider from "./Context/GetAllUsersContext";
 import GetAllCategoriesProvider from "./Context/GetAllCategoriesContext";
 
+import GetAllJoinUpProvideer from "./Context/GetAllJoinUpContext";
+
 import SignedUserProvider from "./Context/SignedUserContext";
 import RecoverPasswordProvider from "./Context/RecoverPasswordContext";
 import NewPasswordProvider from "./Context/NewPasswordContext";
@@ -30,25 +32,27 @@ root.render(
     <CssBaseline />
     <ThemeProvider theme={theme}>
       <SignInProvider>
-        <LogOutProvider>
-          <RecoverPasswordProvider>
-            <NewPasswordProvider>
-              <RecoverUserProvider>
-                <SignedUserProvider>
-                  <SignUpProvider>
-                    <JoinUpProvider>
-                      <GetAllUsersProvider>
-                        <GetAllCategoriesProvider>
-                          <App />
-                        </GetAllCategoriesProvider>
-                      </GetAllUsersProvider>
-                    </JoinUpProvider>
-                  </SignUpProvider>
-                </SignedUserProvider>
-              </RecoverUserProvider>
-            </NewPasswordProvider>
-          </RecoverPasswordProvider>
-        </LogOutProvider>
+        <GetAllJoinUpProvideer>
+          <LogOutProvider>
+            <RecoverPasswordProvider>
+              <NewPasswordProvider>
+                <RecoverUserProvider>
+                  <SignedUserProvider>
+                    <SignUpProvider>
+                      <JoinUpProvider>
+                        <GetAllUsersProvider>
+                          <GetAllCategoriesProvider>
+                            <App />
+                          </GetAllCategoriesProvider>
+                        </GetAllUsersProvider>
+                      </JoinUpProvider>
+                    </SignUpProvider>
+                  </SignedUserProvider>
+                </RecoverUserProvider>
+              </NewPasswordProvider>
+            </RecoverPasswordProvider>
+          </LogOutProvider>
+        </GetAllJoinUpProvideer>
       </SignInProvider>
     </ThemeProvider>
   </React.StrictMode>
