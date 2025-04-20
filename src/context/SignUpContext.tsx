@@ -36,23 +36,32 @@
 import { useState, createContext, useEffect } from "react";
 import { FIREBASE_AUTH } from "../Firebase/Firebase"
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import {FIREBASE_APP} from "../Firebase/Firebase";
+import { FIREBASE_APP } from "../Firebase/Firebase";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 
 export const signUpContext = createContext(null);
 
 interface User {
-  email: string;
-  password: string;
   name: string;
   lastName: string;
-  birthday: string;
+  address: string;
+  birthDate: Date,
+  dni: string,
+  contactNumber: string;
+  avatarURL: string,
   gender: string;
-  location: string;
-  geometryLocation: object;
-  phone: string;
-  motorcycle: { make: string };
-  avatarURL: string;
+
+  email: string;
+  id: string,
+  admin: boolean,
+  password: string;
+
+  disciplines: object,
+  category: object,
+  blockade: boolean,
+  groupHead: boolean,
+  familyGroup: object,
+
 }
 
 const SignUpProvider = ({ children }) => {
@@ -64,7 +73,7 @@ const SignUpProvider = ({ children }) => {
   const auth = FIREBASE_AUTH;
   const db = getFirestore(FIREBASE_APP);
 
-console.log("USER",signUpUser)
+  console.log("USER", signUpUser)
 
   useEffect(() => {
     const createUserAndAddDoc = async () => {
@@ -80,24 +89,31 @@ console.log("USER",signUpUser)
           // If user creation is successful
           setSignUpSuccess("User created successfully");
 
-          // const userData = {
-          //   email: signUpUser.email,
-          //   name: signUpUser.name,
-          //   lastName: signUpUser.lastName,
-          //   birthday: signUpUser.birthday,
-          //   gender: signUpUser.gender,
-          //   location: signUpUser.location,
-          //   geometryLocation: signUpUser.geometryLocation,
-          //   realTimeLocation:"",
-          //   admin: false,
-          //   phone: signUpUser.phone,
-          //   motorcycle:{make:"Harley-Davidson"},
-          //   avatarURL:"",
-          // };
+          const userData = {
+            name: signUpUser.name,
+            lastName: signUpUser.lastName,
+            address: signUpUser.address,
+            birthDate: signUpUser.birthDate,
+            dni: signUpUser.dni,
+            contactNumber: signUpUser.contactNumber,
+            avatarURL: "",
+            gender: "",
 
-          // // Add user data to Firestore only if user creation is successful
-          // const docRef = await addDoc(collection(db, "users"), userData);
-          // // console.log("Document written with ID: ", docRef.id);
+            email: signUpUser.email,
+            id: "",
+            admin: false,
+
+            disciplines: [],
+            category: [],
+            blockade: false,
+            groupHead: false,
+            familyGroup: [],
+
+          };
+
+          // Add user data to Firestore only if user creation is successful
+          const docRef = await addDoc(collection(db, "users"), userData);
+          // console.log("Document written with ID: ", docRef.id);
         }
       } catch (error) {
         // If user creation is not successful

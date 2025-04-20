@@ -75,19 +75,23 @@ function getStyles(name: string, discipline: readonly string[], theme: Theme) {
 interface SignUpFormValues {
     name: string;
     lastName: string;
-    email: string;
-    password: string;
-    dni: string;
-    birthDate: Dayjs
     address: string;
+    birthDate: Dayjs
+    dni: string;
     contactNumber: string;
-    group: string[];
-    groupHead: string;
-    countState: string;
-    avatar: null;
-    category: string;
-    discipline: string[];
-    blockade: boolean;
+    avatarURL: string,
+    gender: string;
+  
+    email: string;
+    id: string,
+    admin: boolean,
+    password: string;
+  
+    disciplines: object,
+    category: object,
+    blockade: boolean,
+    groupHead: boolean,
+    familyGroup: object,
 }
 
 // Validación con Yup
@@ -180,39 +184,30 @@ const SignUpForm: React.FC = () => {
         formikHelpers: FormikHelpers<SignUpFormValues>
     ) => {
         const user = {
+            name: values.name,
+            lastName: values.lastName,
+            address: values.address,
+            birthDate: values.birthDate ? dayjs(values.birthDate).toDate() : null,
+            dni: values.dni,
+            contactNumber: values.contactNumber,
+            avatarURL: "",
+            gender: "",
 
-            email: "leonardo.gariel.tallone@gmail.com",
-            password: "123456"
+            email: values.email,
+            password: values.password,
+            admin:false,
 
+            group: values.group,
+            groupHead: values.groupHead === "true" ? true : false,
+            countState: values.countState,
+            avatar: null,
+            category: values.category,
+            disciplines: values.disciplines,
+            blockade: values.blockade,
         };
-        setSignUpUser(user);
+        console.log(user);
         // navigate("/home");
     };
-
-    // const handleSubmit = (
-    //     values: SignUpFormValues,
-    //     formikHelpers: FormikHelpers<SignUpFormValues>
-    // ) => {
-    //     const user = {
-    //         name: values.name,
-    //         lastName: values.lastName,
-    //         email: values.email,
-    //         password: values.password,
-    //         dni: values.dni,
-    //         birthDate: values.birthDate ? dayjs(values.birthDate).toDate() : null,
-    //         address: values.address,
-    //         contactNumber: values.contactNumber,
-    //         group: values.group,
-    //         groupHead: values.groupHead === "true" ? true : false,
-    //         countState: values.countState,
-    //         avatar: null,
-    //         category: values.category,
-    //         discipline: values.discipline,
-    //         blockade: values.blockade,
-    //     };
-    //     console.log(user);
-    //     // navigate("/home");
-    // };
 
     return (
         <Box
@@ -252,7 +247,7 @@ const SignUpForm: React.FC = () => {
                         discipline: [],
                         blockade: false
                     }}
-                    // validationSchema={validationSchema}
+                    validationSchema={validationSchema}
                     onSubmit={handleSubmit}
                 >
                     {({ handleChange, handleBlur, values, errors, touched, }) => (
