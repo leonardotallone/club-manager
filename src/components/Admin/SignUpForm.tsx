@@ -81,14 +81,14 @@ interface SignUpFormValues {
     contactNumber: string;
     avatarURL: string,
     gender: string;
-  
+
     email: string;
     id: string,
     admin: boolean,
-    password: string;
-  
+   
+
     disciplines: object,
-    category: object,
+    category: string,
     blockade: boolean,
     groupHead: boolean,
     familyGroup: object,
@@ -144,8 +144,6 @@ const SignUpForm: React.FC = () => {
     const [email, setEmail] = useState("");
     const [isGroupHeadActive, setIsGroupHeadActive] = useState(false);
 
-
-
     const handleGroupHeadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsGroupHeadActive(event.target.checked);
     };
@@ -194,16 +192,14 @@ const SignUpForm: React.FC = () => {
             gender: "",
 
             email: values.email,
-            password: values.password,
-            admin:false,
+            admin: false,
 
-            group: values.group,
-            groupHead: values.groupHead === "true" ? true : false,
-            countState: values.countState,
-            avatar: null,
-            category: values.category,
             disciplines: values.disciplines,
-            blockade: values.blockade,
+            category: values.category,
+            blockade: false,
+            groupHead: false,
+            familyGroup: [],
+
         };
         console.log(user);
         // navigate("/home");
@@ -230,22 +226,28 @@ const SignUpForm: React.FC = () => {
 
                 <Formik<SignUpFormValues>
                     initialValues={{
-                        // id:"",
+                    
                         name: "",
                         lastName: "",
-                        email: "",
-                        password: "",
-                        dni: "",
-                        birthDate: null,
                         address: "",
+                        birthDate: null,
+                        dni: "",
                         contactNumber: "",
-                        group: [],
-                        groupHead: "",
-                        countState: "Sin Deuda",
-                        avatar: null,
+                        avatarURL: "",
+                        gender: "",
+
+
+                        email: "",
+                        id: "",
+                        admin: false,
+                       
+                        
+                        
+                        disciplines: [],
                         category: "",
-                        discipline: [],
-                        blockade: false
+                        blockade: false,
+                        groupHead: false,
+                        familyGroup: [],
                     }}
                     validationSchema={validationSchema}
                     onSubmit={handleSubmit}
@@ -588,9 +590,9 @@ const SignUpForm: React.FC = () => {
                                                 ))}
 
                                             </Select>
-                                            {touched.discipline && errors.discipline ?
+                                            {touched.disciplines && errors.disciplines ?
                                                 <Typography color="error" variant="caption" >
-                                                    {errors.discipline}
+                                                    {/* {errors.disciplines} */}
                                                 </Typography> : <span> &nbsp; </span>
                                             }
 
@@ -742,9 +744,9 @@ const SignUpForm: React.FC = () => {
                                                 ))}
 
                                             </Select>
-                                            {touched.discipline && errors.discipline ?
+                                            {touched.disciplines && errors.disciplines ?
                                                 <Typography color="error" variant="caption" >
-                                                    {errors.discipline}
+                                                    {/* {errors.disciplines} */}
                                                 </Typography> : <span> &nbsp; </span>
                                             }
                                         </FormControl>

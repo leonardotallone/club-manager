@@ -38,6 +38,7 @@ import { FIREBASE_AUTH } from "../Firebase/Firebase"
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_APP } from "../Firebase/Firebase";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { Password } from "@mui/icons-material";
 
 export const signUpContext = createContext(null);
 
@@ -54,7 +55,7 @@ interface User {
   email: string;
   id: string,
   admin: boolean,
-  password: string;
+  // password: string;
 
   disciplines: object,
   category: object,
@@ -83,7 +84,7 @@ const SignUpProvider = ({ children }) => {
           const userCredential = await createUserWithEmailAndPassword(
             auth,
             signUpUser.email,
-            signUpUser.password,
+            signUpUser.dni,
           );
 
           // If user creation is successful
@@ -102,9 +103,10 @@ const SignUpProvider = ({ children }) => {
             email: signUpUser.email,
             id: "",
             admin: false,
+      
 
             disciplines: [],
-            category: [],
+            category: "",
             blockade: false,
             groupHead: false,
             familyGroup: [],
@@ -116,7 +118,7 @@ const SignUpProvider = ({ children }) => {
           // console.log("Document written with ID: ", docRef.id);
         }
       } catch (error) {
-        // If user creation is not successful
+        console.log(error)
         setSignUpError(error.message);
       } finally {
         setLoading(false); // Hide ActivityIndicator when action finishes
