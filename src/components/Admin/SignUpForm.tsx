@@ -15,6 +15,7 @@ import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 
 import { getAllCategoriesContext } from "../../Context/GetAllCategoriesContext"
+import { getAllDisciplinesContext } from "../../Context/GetAllDisciplinesContext"
 import { signUpContext } from "../../Context/SignUpContext"
 
 
@@ -85,7 +86,6 @@ interface SignUpFormValues {
     email: string;
     id: string,
     admin: boolean,
-   
 
     disciplines: object,
     category: string,
@@ -136,7 +136,8 @@ const validationSchema = Yup.object({
 
 const SignUpForm: React.FC = () => {
 
-    const { categorias } = useContext(getAllCategoriesContext)
+    const { categories } = useContext(getAllCategoriesContext)
+    const { disciplines } = useContext(getAllDisciplinesContext)
     const { setSignUpUser } = useContext(signUpContext)
 
     const [discipline, setDiscipline] = React.useState<string[]>([]);
@@ -201,7 +202,8 @@ const SignUpForm: React.FC = () => {
             familyGroup: [],
 
         };
-        console.log(user);
+
+        setSignUpUser(user)
         // navigate("/home");
     };
 
@@ -226,7 +228,7 @@ const SignUpForm: React.FC = () => {
 
                 <Formik<SignUpFormValues>
                     initialValues={{
-                    
+
                         name: "",
                         lastName: "",
                         address: "",
@@ -240,9 +242,9 @@ const SignUpForm: React.FC = () => {
                         email: "",
                         id: "",
                         admin: false,
-                       
-                        
-                        
+
+
+
                         disciplines: [],
                         category: "",
                         blockade: false,
@@ -582,12 +584,20 @@ const SignUpForm: React.FC = () => {
                                                 )}
                                                 MenuProps={MenuProps}
                                             >
-                                                {names.map((name) => (
-                                                    <MenuItem key={name} value={name} style={getStyles(name, discipline, theme)}>
-                                                        <Checkbox checked={discipline.indexOf(name) > -1} />
-                                                        <ListItemText primary={name} />
-                                                    </MenuItem>
-                                                ))}
+                                                {disciplines?.length > 0 ? (
+                                                    disciplines.map((item) => (
+                                                        <MenuItem
+                                                            key={item.id}
+                                                            value={item.name}
+                                                            style={getStyles(item.name, discipline, theme)}
+                                                        >
+                                                            <Checkbox checked={discipline.indexOf(item.name) > -1} />
+                                                            <ListItemText primary={item.name.charAt(0).toUpperCase() + item.name.slice(1).toLowerCase()} />
+                                                        </MenuItem>
+                                                    ))
+                                                ) : (
+                                                    <p>Cargando disciplinas...</p>
+                                                )}
 
                                             </Select>
                                             {touched.disciplines && errors.disciplines ?
@@ -678,10 +688,19 @@ const SignUpForm: React.FC = () => {
                                                     // onBlur={handleBlur} // Optional: Handle blur event if needed
                                                     >
 
-                                                        {categorias?.length > 0 ? (
-                                                            categorias.map(({ id, descripcion }) => (
+                                                        {/* {categories?.length > 0 ? (
+                                                            categories.map(({ id, descripcion }) => (
                                                                 <MenuItem key={id} value={id}>
                                                                     {descripcion}
+                                                                </MenuItem>
+                                                            ))
+                                                        ) : (
+                                                            <p>Cargando Categorias...</p>
+                                                        )} */}
+                                                        {categories?.length > 0 ? (
+                                                            categories.map(({ id, name }) => (
+                                                                <MenuItem key={id} value={name}>
+                                                                    {name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()}
                                                                 </MenuItem>
                                                             ))
                                                         ) : (
