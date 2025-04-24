@@ -1,42 +1,74 @@
-import { useState, createContext, useEffect } from "react";
-import axios from "axios";
+import React, { useState, createContext, useEffect, useContext } from "react";
+import {
+  collection,
+  getDocs,
+  getFirestore,
+  onSnapshot,
+} from "firebase/firestore";
+import { FIREBASE_APP } from "../Firebase/Firebase";
+import { signInContext } from "./SignInContext"
 
 export const getAllUsersContext = createContext(null);
 
 const GetAllUsersProvider = ({ children }) => {
 
-  const [accessToken] = useState(JSON.parse(localStorage.getItem('accessToken')));
-  const [sociosEnContext, setSociosEnContext] = useState();
+  const { loguedUser } = useContext(signInContext);
+  const [allUsers, setAllUsers] = useState([]);
+  const [loguedUserInformation, setLoguedUserInformation] = useState();
+
   const [loading, setLoading] = useState(false)
 
-  // console.log("SOCIOS EN CONTEXT", sociosEnContext)
+  // console.log("ALL USERS", allUsers)
+  const db = getFirestore(FIREBASE_APP);
 
   useEffect(() => {
-    if (accessToken) {
+    const fetchDocuments = async () => {
       setLoading(true);
-      axios.get(`https://masterclub.com.ar/api/socios`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`, // Add the Authorization header
-        },
-      })
-        .then((response) => {
-          setSociosEnContext(response.data)
-          // localStorage.setItem("socios", JSON.stringify(response.data));
-        })
-        .catch((error) => {
-          console.error("Error fetching socio data:", error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      try {
+        const collectionRef = collection(db, "users");
+        const querySnapshot = await getDocs(collectionRef);
+
+        const documentsData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setAllUsers(documentsData);
+      } catch (error) {
+        console.error("Error fetching documents:", error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDocuments();
+
+    const unsubscribe = onSnapshot(
+      collection(db, "users"),
+      (snapshot) => {
+        const documentsData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setAllUsers(documentsData);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [db]);
+
+  useEffect(() => {
+    if (loguedUser && allUsers.length > 0) {
+      setLoguedUserInformation(
+        allUsers.find((user) => user.email === loguedUser.email) //Consider use "some" insted find
+      );
     }
-  }, [accessToken]);
+  }, [allUsers, loguedUser]);
 
 
   return (
-    <getAllUsersContext.Provider value={{ loading, sociosEnContext }}>
+    <getAllUsersContext.Provider value={{ loading, allUsers, loguedUserInformation, setLoguedUserInformation }}>
       {children}
     </getAllUsersContext.Provider>
   );
 };
 export default GetAllUsersProvider;
+

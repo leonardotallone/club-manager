@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid2';
-import { Box, Container, Typography, Button } from "@mui/material";
+import { Box, Container, Typography, Button, useRadioGroup } from "@mui/material";
 
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -29,8 +29,9 @@ import { getAllUsersContext } from '../../Context/GetAllUsersContext';
 
 const UsersList = () => {
     const [selectedCategory, setSelectedCategory] = React.useState('');
-    const { sociosEnContext } = useContext(getAllUsersContext);
-    console.log(sociosEnContext)
+    const { allUsers } = useContext(getAllUsersContext);
+
+    console.log(allUsers)
 
     const navigate = useNavigate();
 
@@ -98,7 +99,7 @@ const UsersList = () => {
 
             <Container maxWidth="xl">
                 <Grid container>
-                    {sociosEnContext?.map((socio, index) => (
+                    {allUsers?.map((user, index) => (
                         <Grid key={index} size={{ xs: 12, sm: 6, md: 6, lg: 12 }} sx={{ mb: 1.5 }}>
                             <Box
                                 sx={{
@@ -116,14 +117,14 @@ const UsersList = () => {
                             >
                                 <Grid container sx={{ width: '100%' }} >
                                     <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 0.7 }} sx={{ ml: 1 }}>
-                                        <Avatar alt="Avatar" src={socio.avatar} sx={{ width: 50, height: 50 }} />
+                                        <Avatar alt="Avatar" src={user.avatarURL} sx={{ width: 50, height: 50 }} />
                                     </Grid>
                                     <Grid size={{ xs: 1.5, sm: 1.5, md: 1.5, lg: 1.5, xl: 2 }} direction="column">
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             NOMBRE Y APELLIDO
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                            {socio.apellido} {socio.nombre}
+                                            {user.lastName} {user.name}
                                         </Typography>
                                     </Grid>
 
@@ -132,7 +133,7 @@ const UsersList = () => {
                                             DNI
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                            {socio.dni}
+                                            {user.dni}
                                         </Typography>
                                     </Grid>
 
@@ -141,7 +142,7 @@ const UsersList = () => {
                                             CATEGORIA
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                            {socio.categoria.nombre}
+                                            {user.category}
                                         </Typography>
                                     </Grid>
 
@@ -149,7 +150,7 @@ const UsersList = () => {
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             BLOQUEAR USUARIO
                                         </Typography>
-                                        {socio.blockade === false ? <LockOpenIcon sx={{ fontSize: 24, color: 'Green', ml: 5 }} /> :
+                                        {user.blockade === false ? <LockOpenIcon sx={{ fontSize: 24, color: 'Green', ml: 5 }} /> :
                                             <LockOutlinedIcon sx={{ fontSize: 24, color: 'Red', ml: 5 }} />}
                                     </Grid>
 
@@ -157,7 +158,7 @@ const UsersList = () => {
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             GRUPO
                                         </Typography>
-                                        {socio.cabezaGrupo ?
+                                        {user.groupHead ?
                                             <FamilyRestroomOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} /> :
                                             <ManOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} />}
                                     </Grid>

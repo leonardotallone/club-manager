@@ -11,13 +11,13 @@ import GetAllUsersProvider from "./Context/GetAllUsersContext";
 import GetAllCategoriesProvider from "./Context/GetAllCategoriesContext";
 import GetAllDisciplinesProvider from "./Context/GetAllDisciplinesContext";
 
-import GetAllJoinUpProvideer from "./Context/GetAllJoinUpContext";
+import GetAllJoinUpProvider from "./Context/GetAllJoinUpContext";
 
 import SignedUserProvider from "./Context/SignedUserContext";
 import RecoverPasswordProvider from "./Context/RecoverPasswordContext";
 import NewPasswordProvider from "./Context/NewPasswordContext";
 import RecoverUserProvider from "./Context/RecoverUserContext";
-import LogOutProvider from "./Context/LogOutContext";
+
 
 import App from "./App";
 
@@ -33,8 +33,8 @@ root.render(
     <CssBaseline />
     <ThemeProvider theme={theme}>
       <SignInProvider>
-        <GetAllJoinUpProvideer>
-          <LogOutProvider>
+        <GetAllJoinUpProvider>
+
             <RecoverPasswordProvider>
               <NewPasswordProvider>
                 <RecoverUserProvider>
@@ -54,8 +54,8 @@ root.render(
                 </RecoverUserProvider>
               </NewPasswordProvider>
             </RecoverPasswordProvider>
-          </LogOutProvider>
-        </GetAllJoinUpProvideer>
+         
+        </GetAllJoinUpProvider>
       </SignInProvider>
     </ThemeProvider>
   </React.StrictMode>

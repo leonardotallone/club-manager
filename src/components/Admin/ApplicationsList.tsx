@@ -21,16 +21,14 @@ import ManOutlinedIcon from '@mui/icons-material/ManOutlined';
 import FamilyRestroomOutlinedIcon from '@mui/icons-material/FamilyRestroomOutlined';
 import Pagination from '@mui/material/Pagination';
 
-import { getAllUsersContext } from '../../Context/GetAllUsersContext';
 import { getAllJoinUpContext } from '../../Context/GetAllJoinUpContext';
 
 
 const ApplicationsList = () => {
     const [selectedCategory, setSelectedCategory] = React.useState('');
-    const { sociosEnContext } = useContext(getAllUsersContext);
-    const { allJoinUp } = useContext(getAllJoinUpContext);
+    const { allApplications } = useContext(getAllJoinUpContext);
 
-    console.log("Solicitudes", allJoinUp)
+    console.log("Solicitudes UI", allApplications)
     
     const navigate = useNavigate();
 
@@ -94,7 +92,7 @@ const ApplicationsList = () => {
 
             <Container maxWidth="xl">
                 <Grid container>
-                    {sociosEnContext?.map((socio, index) => (
+                    {allApplications?.map((application, index) => (
                         <Grid key={index} size={{ xs: 12, sm: 6, md: 6, lg: 12 }} sx={{ mb: 1.5 }}>
                             <Box
                                 sx={{
@@ -112,14 +110,14 @@ const ApplicationsList = () => {
                             >
                                 <Grid container sx={{ width: '100%' }} >
                                     <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 0.7 }} sx={{ ml: 1 }}>
-                                        <Avatar alt="Avatar" src={socio.avatar} sx={{ width: 50, height: 50 }} />
+                                        <Avatar alt="Avatar" src={application.avatar} sx={{ width: 50, height: 50 }} />
                                     </Grid>
                                     <Grid size={{ xs: 1.5, sm: 1.5, md: 1.5, lg: 1.5, xl: 1.5 }} direction="column">
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             NOMBRE Y APELLIDO
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                            {socio.apellido} {socio.nombre}
+                                            {application.lastName} {application.name}
                                         </Typography>
                                     </Grid>
 
@@ -128,7 +126,7 @@ const ApplicationsList = () => {
                                             DNI
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                            {socio.dni}
+                                            {application.dni}
                                         </Typography>
                                     </Grid>
 
@@ -137,7 +135,7 @@ const ApplicationsList = () => {
                                             TELEFONO
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                            236 4321985
+                                        {application.phone}
                                         </Typography>
                                     </Grid>
 

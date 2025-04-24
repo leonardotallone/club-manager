@@ -10,10 +10,8 @@ import { FIREBASE_APP } from "../Firebase/Firebase";
 export const getAllJoinUpContext = createContext(null);
 
 const GetAllJoinUpProvider = ({ children }) => {
-    const [allJoinUp, setAllJoinUp] = useState([]);
-    const [loadingJoinUp, setLoadingJoinUp] = useState(false);
-
-
+    const [allApplications, setAllApplications] = useState<{} | undefined>(undefined);
+    const [loadingApplications, setLoadingApplications] = useState(false);
 
     const db = getFirestore(FIREBASE_APP);
 
@@ -27,7 +25,7 @@ const GetAllJoinUpProvider = ({ children }) => {
                     id: doc.id,
                     ...doc.data(),
                 }));
-                setAllJoinUp(documentsData);
+                setAllApplications(documentsData);
             } catch (error) {
                 console.error("Error fetching documents:", error.message);
             }
@@ -39,7 +37,7 @@ const GetAllJoinUpProvider = ({ children }) => {
                 id: doc.id,
                 ...doc.data(),
             }));
-            setAllJoinUp(documentsData);
+            setAllApplications(documentsData);
         });
 
         return () => unsubscribe();
@@ -52,8 +50,8 @@ const GetAllJoinUpProvider = ({ children }) => {
     return (
         <getAllJoinUpContext.Provider
             value={{
-                allJoinUp,
-                loadingJoinUp
+                allApplications,
+                loadingApplications
             }}
         >
             {children}

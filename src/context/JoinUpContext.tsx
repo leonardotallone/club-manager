@@ -39,7 +39,7 @@ const JoinUpProvider = ({ children }) => {
   }, [joinUpUser, db]);
 
   return (
-    <joinUpContext.Provider value={{ setJoinUpUser, joinUpSuccess, setJoinUpError, joinUpError, loadingJU }}>
+    <joinUpContext.Provider value={{ setJoinUpUser, joinUpSuccess, setJoinUpError, joinUpError, loadingJU, }}>
       {children}
     </joinUpContext.Provider>
   );

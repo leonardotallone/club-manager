@@ -6,29 +6,30 @@ import { Box, Container, Typography } from "@mui/material";
 import Background from "../assets/backgroundImages/Background.jpg"
 import Navbar from '../components/Navbar';
 import SignInForm from "../components/SignInForm";
-import JoinUpForm from '../components/JoinUpForm';
 import Advertising from "../components/Advertising";
 import Footer from "../components/Footer";
-import { signInContext } from '../Context/SignInContext';
 
+import { signInContext } from '../Context/SignInContext';
 import { joinUpContext } from '../Context/JoinUpContext';
+import { getAllUsersContext } from '../Context/GetAllUsersContext';
 
 const LandingScreen = () => {
 
-  const { loading, accessToken, userRole } = useContext(signInContext);
-
+  const { loading } = useContext(signInContext);
   const { loadingJU } = useContext(joinUpContext);
+  const { loguedUserInformation } = useContext(getAllUsersContext);
 
+  console.log("Informacion de Usuario Conectado", loguedUserInformation)
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (accessToken && userRole && userRole === "admin") {
+    if (loguedUserInformation && loguedUserInformation.admin === true) {
       navigate("/dashboard-admin-screen");
-    } else if (accessToken && userRole && userRole === "socio") {
+    } else if (loguedUserInformation && loguedUserInformation.admin === false) {
       navigate("/dashboard-user-screen");
     }
-  }, [accessToken, userRole, navigate]);
+  }, [loguedUserInformation, navigate]);
 
   return (
     <>
@@ -78,7 +79,8 @@ const LandingScreen = () => {
               justifyContent: 'flex-end', // Alinea el formulario a la derecha
               alignItems: 'center',
             }}>
-              {!accessToken ? <SignInForm /> : null}
+              {!loguedUserInformation ? <SignInForm /> : null}
+
 
             </Grid>
           </Container>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useContext, useEffect } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -13,13 +13,14 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import ClubSocial from "../assets/svg/ClubSocial.png"
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import avatar from "../assets/backgroundImages/Background.jpg";
 
 import { signInContext } from '../Context/SignInContext';
-import { logOutContext } from '../Context/LogOutContext';
+import { getAllUsersContext } from '../Context/GetAllUsersContext';
+import { signOut } from "firebase/auth";
+import { FIREBASE_AUTH } from "../Firebase/Firebase";
 
 const pageAdmin = [
     { name: 'solicitudes', href: "/admin-applications" },
@@ -38,19 +39,16 @@ const pageUsers = [
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Navbar = () => {
-    const [admin] = useState(true);
+
 
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
-    const { socio } = useContext(signInContext);
-    // console.log("SOCIO", socio.id)
-    const { setUserID } = useContext(logOutContext);
+    const { setLoguedUser } = useContext(signInContext);
+    const { loguedUserInformation, setLoguedUserInformation } = useContext(getAllUsersContext);
 
+    const pagesToMap = loguedUserInformation && loguedUserInformation.admin === true ? pageAdmin : pageUsers;
 
-    const role = localStorage.getItem('role')
-
-    const pagesToMap = role === "admin" ? pageAdmin : pageUsers;
     const navigate = useNavigate();
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -59,20 +57,21 @@ const Navbar = () => {
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(event.currentTarget);
     };
-    const handleLogOut = (event: React.MouseEvent<HTMLElement>) => {
-        if (socio) {
-            setUserID(socio.id);
-        } else {
-            setUserID(null);
-        }
-        window.localStorage.removeItem('accessToken')
-        window.localStorage.removeItem('socio')
-        window.localStorage.removeItem('socios')
-        window.localStorage.removeItem('role')
 
-        navigate("/");
-        window.location.reload();
+    const handleLogOut = () => {
+        const auth = FIREBASE_AUTH;
+        signOut(auth)
+            .then(() => {
+                setLoguedUserInformation(null);
+                setLoguedUser(null);
+                localStorage.removeItem("LoguedUser");
+                navigate("/");
+            })
+            .catch((error) => {
+                console.error("Error logOut:", error.message);
+            });
     };
+
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
     };
@@ -156,15 +155,16 @@ const Navbar = () => {
                         ))}
                     </Box>
                     {/*---------------------------------------------------------------------------------  Margen Derecho si hay usuario Conectado  --------------------------------------------------------------- */}
-                    {role ?
+                    {loguedUserInformation ?
                         <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
                             <Typography sx={{ fontSize: 14, fontWeight: "500", color: "#424242", mr: 1.5 }} >
-                                {role === "socio" && socio ? `${socio.nombre} ${socio.apellido}` : role === "admin" ? "Bienvenido Admin" : null}
+                                {loguedUserInformation.admin === true ? "Bienvenido Admin" : null}
+                                {loguedUserInformation.admin === false ? `${loguedUserInformation.name} ${loguedUserInformation.lastName}` : null}
                             </Typography>
                             <IconButton onClick={handleLogOut} >
                                 <LogoutOutlinedIcon sx={{ display: { xs: 'flex', md: 'flex', color: '#424242' }, mr: 1.5 }} />
                             </IconButton>
-                            <Tooltip title={socio?.email}>
+                            <Tooltip title={loguedUserInformation?.email}>
                                 <IconButton onClick={handleOpenUserMenu} >
                                     <Avatar alt="Remy Sharp" src={avatar} />
                                 </IconButton>

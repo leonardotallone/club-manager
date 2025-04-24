@@ -35,7 +35,7 @@ const SignInForm: React.FC = () => {
 
     const handleSubmit = (values: { email: string; password: string }) => {
         const user = {
-            username: values.email,
+            email: values.email,
             password: values.password,
         };
         setCredentials(user);

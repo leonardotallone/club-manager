@@ -74,7 +74,7 @@ const SignUpProvider = ({ children }) => {
   const auth = FIREBASE_AUTH;
   const db = getFirestore(FIREBASE_APP);
 
-  console.log("USER", signUpUser)
+
 
   useEffect(() => {
     const createUserAndAddDoc = async () => {

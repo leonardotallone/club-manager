@@ -9,7 +9,6 @@ const GetAllDisciplinesProvider = ({ children }) => {
   const [disciplines, setDisciplines] = useState<{} | undefined>(undefined);
   const [loadingDisciplines, setLoadingDisciplines] = useState(false)
 
-  console.log("DISCIPLINAS", disciplines)
 
   const db = getFirestore(FIREBASE_APP);
 
