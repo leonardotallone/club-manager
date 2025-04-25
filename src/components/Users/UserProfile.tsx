@@ -29,6 +29,31 @@ const MenuProps = {
         },
     },
 };
+const usuario =
+{
+    name: "Catalina",
+    lastName: "Tallone",
+    email: "catalina@gmail.com",
+    dni: "56.883.870",
+    birthdate: "11/02/2018",
+    address: "Alvarez Rodriguez 231",
+    category: "Activo",
+    group: true,
+    groupHead: false,
+    countState: "Sin Deuda",
+    avatar: avatar1,
+    contactNumber: "+54 236 4321985",
+    discipline: "Hockey Femenino",
+    blockade: false,
+}
+
+const names = [
+    'Fútbol',
+    'Tenis',
+    'Hockey',
+    'Natación',
+    "Gym"
+];
 
 const sociosList = [
     "Leonardo Tallone",
@@ -109,7 +134,7 @@ const validationSchema = Yup.object({
 });
 
 
-const SignUpForm: React.FC = () => {
+const UserProfileForm: React.FC = () => {
 
     const { categories } = useContext(getAllCategoriesContext)
     const { disciplines } = useContext(getAllDisciplinesContext)
@@ -123,7 +148,7 @@ const SignUpForm: React.FC = () => {
     const handleGroupHeadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsGroupHeadActive(event.target.checked);
     };
-console.log(discipline)
+
     //   Limpiar campos cuando se desactiva el checkbox
 
     useEffect(() => {
@@ -170,7 +195,7 @@ console.log(discipline)
             email: values.email,
             admin: false,
 
-            disciplines: discipline,
+            disciplines: values.disciplines,
             category: values.category,
             blockade: false,
             groupHead: false,
@@ -233,25 +258,24 @@ console.log(discipline)
                             <Grid container columnSpacing={2} direction="row">
                                 <Grid container direction="column" size={4}>
                                     <Grid size={12} >
-{/* AVATAR */}
-                                        <Box
+                                        {/* AVATAR */}
+                                        {/* <Box
                                             component={Card}
                                             elevation={1}
                                             sx={{
                                                 display: "flex",
                                                 alignItems: 'center',
                                                 // backgroundColor: 'rgba(245, 186, 206, 1)',
-                                                backgroundColor: 'white',
+                                                backgroundColor: 'rgba(71, 71, 71, 0.33)',
                                                 borderRadius: 1,
                                                 border: '1px solid rgba(240, 8, 8, 0.5)',
                                                 height: '45%',
                                                 mb: 3,
                                             }}
                                         >
-                                            <Avatar alt="Avatar" src={avatar1} sx={{ width: 120, height: 120, ml: 3, boxShadow: 1 }} />
-                                        </Box>
-
-{/* NAME */}
+                                            <Avatar alt="Avatar" src={usuario.avatar} sx={{ width: 120, height: 120, ml: 3, boxShadow: 1 }} />
+                                        </Box> */}
+                                        {/* NAME */}
                                         <TextField
                                             // margin="normal"
                                             // autoFocus
@@ -289,7 +313,7 @@ console.log(discipline)
                                                 },
                                             }}
                                         />
-{/* LASTNAME */}
+                                        {/* LASTNAME */}
                                         <TextField
                                             // margin="normal"
                                             required
@@ -330,7 +354,7 @@ console.log(discipline)
 
                                 <Grid container direction="column" size={4}>
                                     <Grid size={12} >
-{/* EMAIL */}
+                                        {/* EMAIL */}
                                         <TextField
                                             // autoFocus
                                             // margin="normal"
@@ -367,7 +391,7 @@ console.log(discipline)
                                                 },
                                             }}
                                         />
-{/* DNI */}
+                                        {/* DNI */}
                                         <TextField
                                             // margin="none"
                                             required
@@ -403,7 +427,7 @@ console.log(discipline)
                                                 },
                                             }}
                                         />
-{/* ADDRESS */}
+                                        {/* ADDRESS */}
                                         <TextField
                                             // margin="none"
                                             required
@@ -439,7 +463,7 @@ console.log(discipline)
                                                 },
                                             }}
                                         />
-{/* CONTACT NUMBER */}
+                                        {/* CONTACT NUMBER */}
                                         <TextField
                                             // margin="normal"
                                             required
@@ -480,9 +504,14 @@ console.log(discipline)
 
 
 
+
+
+
+
+
                                 <Grid container direction="column" size={4} sx={{ mt: -1 }}>
                                     <Grid container size={12} >
-{/* BIRTHDATE */}
+                                        {/* BIRTHDATE */}
                                         <LocalizationProvider dateAdapter={AdapterDayjs} >
                                             <DemoContainer components={['DatePicker']} sx={{ width: '100%' }} >
                                                 <DatePicker
@@ -518,7 +547,7 @@ console.log(discipline)
                                                 </Typography> : <span> &nbsp; </span>
                                             }
                                         </LocalizationProvider>
-{/* DISCIPLINE */}
+                                        {/* DISCIPLINE */}
                                         <FormControl fullWidth sx={{ mb: 0, mt: 1 }}>
                                             <InputLabel id="demo-multiple-chip-label" sx={{
                                                 "&.Mui-focused": {
@@ -782,5 +811,5 @@ console.log(discipline)
     );
 };
 
-export default SignUpForm;
+export default UserProfileForm;
 

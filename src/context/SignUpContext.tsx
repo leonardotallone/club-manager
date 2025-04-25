@@ -1,44 +1,8 @@
-// import { useState, createContext, useEffect } from "react";
-// import axios from "axios";
-
-// export const signUpContext = createContext(null);
-
-// const SignUpProvider = ({ children }) => {
-//   const [signUpUser, setSignUpUser] = useState();
-//   const [signUpSuccess, setSignUpSuccess] = useState([])
-//   const [signUpError, setSignUpError] = useState([])
-//   const [loading, setLoading] = useState(false)
-
-//   console.log("SIGNUP EN CONTEXT",signUpUser)
-
-//   useEffect(() => {
-//     setLoading(true);
-//     axios
-//       .post("http://10.25.14.90:3001/lotes/crearLote", signUpUser)
-//       .then((response) => {
-//         setSignUpSuccess(response.data);
-//       })
-//       .catch((error) => {
-//         setSignUpError(error.message);
-//         console.error("Error al obtener Usuarios:", error.message);
-//       });
-//     setLoading(false);
-//   }, [signUpUser]);
-
-//   return (
-//     <signUpContext.Provider value={{ setSignUpUser, signUpSuccess, signUpError, loading }}>
-//       {children}
-//     </signUpContext.Provider>
-//   );
-// };
-// export default SignUpProvider;
-
 import { useState, createContext, useEffect } from "react";
 import { FIREBASE_AUTH } from "../Firebase/Firebase"
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_APP } from "../Firebase/Firebase";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
-import { Password } from "@mui/icons-material";
 
 export const signUpContext = createContext(null);
 
@@ -53,16 +17,14 @@ interface User {
   gender: string;
 
   email: string;
-  id: string,
+  // id: string,
   admin: boolean,
-  // password: string;
-
+  
   disciplines: object,
   category: object,
   blockade: boolean,
   groupHead: boolean,
   familyGroup: object,
-
 }
 
 const SignUpProvider = ({ children }) => {
@@ -73,8 +35,6 @@ const SignUpProvider = ({ children }) => {
 
   const auth = FIREBASE_AUTH;
   const db = getFirestore(FIREBASE_APP);
-
-
 
   useEffect(() => {
     const createUserAndAddDoc = async () => {
@@ -101,7 +61,7 @@ const SignUpProvider = ({ children }) => {
             gender: "",
 
             email: signUpUser.email,
-            id: "",
+            // id: "",
             admin: false,
       
 

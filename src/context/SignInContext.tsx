@@ -45,7 +45,7 @@ const SignInProvider = ({ children }) => {
     };
 
     signIn();
-  }, [credentials]);
+  }, [credentials,auth]);
 
   return (
     <signInContext.Provider value={{ setCredentials, setSignInError, signInError, loading, loguedUser, setLoguedUser }}>

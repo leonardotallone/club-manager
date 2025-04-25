@@ -36,10 +36,7 @@ const pageUsers = [
     { name: 'Autoridades', href: '/autoridades' },
 ];
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
 const Navbar = () => {
-
 
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
