@@ -29,6 +29,11 @@ const pageAdmin = [
     // { name: 'Alta Disciplinas', href: '/blog' },
     // { name: 'Documentos', href: '/blog' },
 ];
+const altaSocioOptions = [
+    { name: 'Individual', href: '/signup/unique' },
+    { name: 'Cabeza de Grupo', href: '/signup/grouphead' },
+    { name: 'Menor', href: '/signup/minor' },
+];
 const pageUsers = [
     { name: 'Noticias', href: "/noticias" },
     { name: 'El Club', href: '/elclub' },
@@ -40,12 +45,17 @@ const Navbar = () => {
 
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+    const [anchorElAltaSocio, setAnchorElAltaSocio] = React.useState<null | HTMLElement>(null);
 
     const { setLoguedUser } = useContext(signInContext);
     const { loguedUserInformation, setLoguedUserInformation } = useContext(getAllUsersContext);
 
-    const pagesToMap = loguedUserInformation && loguedUserInformation.admin === true ? pageAdmin : pageUsers;
 
+    let pagesToMap = pageUsers;
+if (loguedUserInformation) {
+  pagesToMap = loguedUserInformation.admin === true ? pageAdmin : pageUsers;
+}
+   
     const navigate = useNavigate();
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -53,6 +63,19 @@ const Navbar = () => {
     };
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(event.currentTarget);
+    };
+    const handleOpenAltaSocio = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorElAltaSocio(event.currentTarget);
+    };
+
+    const handleCloseNavMenu = () => {
+        setAnchorElNav(null);
+    };
+    const handleCloseUserMenu = () => {
+        setAnchorElUser(null);
+    };
+    const handleCloseAltaSocio = () => {
+        setAnchorElAltaSocio(null);
     };
 
     const handleLogOut = () => {
@@ -67,13 +90,6 @@ const Navbar = () => {
             .catch((error) => {
                 console.error("Error logOut:", error.message);
             });
-    };
-
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
-    };
-    const handleCloseUserMenu = () => {
-        setAnchorElUser(null);
     };
 
     return (
@@ -139,18 +155,47 @@ const Navbar = () => {
 
                     {/*--------------------------------------------------------------------------------- Menu Descomprimido  --------------------------------------------------------------- */}
 
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex', color: "red" } }}>
+                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {pagesToMap.map((page) => (
-                            <Button
-                                key={page.name}
-                                href={page.href}
-                                onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: 'grey.800', display: 'block' }} // Cambia el color aquí
-                            >
-                                {page.name}
-                            </Button>
+                            page.name === 'alta de Socio' ? (
+                                <div key={page.name}>
+                                    <Button
+                                        onClick={handleOpenAltaSocio}
+                                        sx={{ my: 2, color: 'grey.800', display: 'block' }}
+                                    >
+                                        {page.name}
+                                    </Button>
+                                    <Menu
+                                        anchorEl={anchorElAltaSocio}
+                                        open={Boolean(anchorElAltaSocio)}
+                                        onClose={handleCloseAltaSocio}
+                                    >
+                                        {altaSocioOptions.map((option) => (
+                                            <MenuItem
+                                                key={option.name}
+                                                onClick={handleCloseAltaSocio}
+                                                component="a"
+                                                href={option.href}
+                                            >
+                                                {option.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Menu>
+                                </div>
+                            ) : (
+                                <Button
+                                    key={page.name}
+                                    href={page.href}
+                                    onClick={handleCloseNavMenu}
+                                    sx={{ my: 2, color: 'grey.800', display: 'block' }}
+                                >
+                                    {page.name}
+                                </Button>
+                            )
                         ))}
                     </Box>
+
+
                     {/*---------------------------------------------------------------------------------  Margen Derecho si hay usuario Conectado  --------------------------------------------------------------- */}
                     {loguedUserInformation ?
                         <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>

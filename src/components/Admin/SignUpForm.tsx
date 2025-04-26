@@ -14,6 +14,7 @@ import dayjs from "dayjs";
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 
+import { useParams } from "react-router-dom";
 import { getAllCategoriesContext } from "../../Context/GetAllCategoriesContext"
 import { getAllDisciplinesContext } from "../../Context/GetAllDisciplinesContext"
 import { signUpContext } from "../../Context/SignUpContext"
@@ -109,7 +110,7 @@ const validationSchema = Yup.object({
 });
 
 
-const SignUpForm: React.FC = () => {
+const SignUpFormUnique: React.FC = () => {
 
     const { categories } = useContext(getAllCategoriesContext)
     const { disciplines } = useContext(getAllDisciplinesContext)
@@ -123,15 +124,18 @@ const SignUpForm: React.FC = () => {
     const handleGroupHeadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsGroupHeadActive(event.target.checked);
     };
-console.log(discipline)
+
+    const { type } = useParams();
+
+    console.log({ type })
     //   Limpiar campos cuando se desactiva el checkbox
 
-    useEffect(() => {
-        if (!isGroupHeadActive) {
-            setSocios([]); // Limpia la lista de socios
-            setEmail("");  // Limpia el campo de correo
-        }
-    }, [isGroupHeadActive]);
+    // useEffect(() => {
+    //     if (!isGroupHeadActive) {
+    //         setSocios([]); // Limpia la lista de socios
+    //         setEmail("");  // Limpia el campo de correo
+    //     }
+    // }, [isGroupHeadActive]);
 
     const theme = useTheme();
     const navigate = useNavigate();
@@ -194,7 +198,7 @@ console.log(discipline)
                 py: 4,
                 backgroundColor: 'rgba(255, 255, 255, 0.8)',
                 borderRadius: 2,
-                width: "auto",
+                width: "100%",
                 height: "auto",
             }}
         >
@@ -231,9 +235,10 @@ console.log(discipline)
                     {({ handleChange, handleBlur, values, errors, touched, }) => (
                         <Form>
                             <Grid container columnSpacing={2} direction="row">
+                                {/* Columna IZQUIERDA */}
                                 <Grid container direction="column" size={4}>
-                                    <Grid size={12} >
-{/* AVATAR */}
+                                
+                                        {/* AVATAR */}
                                         <Box
                                             component={Card}
                                             elevation={1}
@@ -244,14 +249,15 @@ console.log(discipline)
                                                 backgroundColor: 'white',
                                                 borderRadius: 1,
                                                 border: '1px solid rgba(240, 8, 8, 0.5)',
-                                                height: '45%',
+                                                height: '39%',
                                                 mb: 3,
+                                                mt:1
                                             }}
                                         >
                                             <Avatar alt="Avatar" src={avatar1} sx={{ width: 120, height: 120, ml: 3, boxShadow: 1 }} />
                                         </Box>
 
-{/* NAME */}
+                                        {/* NAME */}
                                         <TextField
                                             // margin="normal"
                                             // autoFocus
@@ -289,8 +295,8 @@ console.log(discipline)
                                                 },
                                             }}
                                         />
-{/* LASTNAME */}
-                                        <TextField
+                                          {/* LASTNAME */}
+                                          <TextField
                                             // margin="normal"
                                             required
                                             fullWidth
@@ -325,49 +331,98 @@ console.log(discipline)
                                                 },
                                             }}
                                         />
-                                    </Grid>
+                                      
+                                  
                                 </Grid>
-
+                                {/* Columna CENTRO */}
                                 <Grid container direction="column" size={4}>
-                                    <Grid size={12} >
-{/* EMAIL */}
-                                        <TextField
-                                            // autoFocus
-                                            // margin="normal"
-                                            required={isGroupHeadActive}
-                                            disabled={!isGroupHeadActive}
-                                            fullWidth
-                                            id="email"
-                                            label="Dirección de correo"
-                                            name="email"
-                                            autoComplete="email"
-                                            value={values.email}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            error={touched.email && Boolean(errors.email)}
-                                            helperText={touched.email && errors.email ? errors.email : " "} // 
-                                            // sx={{ mb: -1 }}
-                                            slotProps={{
-                                                input: {
-                                                    sx: {
+                                    <Grid container  >
+                                        {/* BIRTHDATE */}
+                                        <Grid size={6} >
+                                            <LocalizationProvider dateAdapter={AdapterDayjs} >
+                                                <DemoContainer components={['DatePicker']} sx={{ width: '100%' }} >
+                                                    <DatePicker
+                                                        format="DD/MM/YYYY"
+                                                        sx={{
+                                                            width: '100%',
+                                                            "& .MuiInputLabel-root": {
+                                                                "&.Mui-focused": {
+                                                                    color: "#b71c1c", // Change label text color when focused
+                                                                },
+                                                            },
+                                                            "& .MuiOutlinedInput-root": {
+                                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                                    borderColor: "#b71c1c", // Change border color when focused
+                                                                },
+                                                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                                    borderColor: "#b71c1c", // Change border color on hover
+                                                                },
+                                                            },
+                                                        }}
+
+                                                        label="Fecha de Nacimiento"
+                                                        value={values.birthDate} // This should now be a Dayjs object
+                                                        onChange={(newValue) => {
+                                                            handleChange({ target: { name: 'birthDate', value: newValue } }); // Update Formik state
+                                                        }}
+
+                                                    />
+                                                </DemoContainer>
+                                                {touched.birthDate && errors.birthDate ?
+                                                    <Typography color="error" variant="caption" sx={{ fontSize: '0.75rem' }} >
+                                                        {errors.birthDate as string}
+                                                    </Typography> : <span> &nbsp; </span>
+                                                }
+                                            </LocalizationProvider>
+                                        </Grid>
+                                        {/* GENDER */}
+                                        <Grid size={6} >
+                                            <FormControl fullWidth sx={{ mb: 0, mt: 1 }}>
+                                                <InputLabel id="demo-simple-select-label" sx={{
+                                                    "&.Mui-focused": {
+                                                        color: "#b71c1c", // Ensure label color changes when focused
+                                                    },
+                                                }}>Genero</InputLabel>
+                                                <Select
+
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    value={values.gender} // Bind Formik value
+                                                    label="Gendero" // Update label to match the field
+                                                    onChange={(event) => {
+                                                        handleChange({ target: { name: 'gender', value: event.target.value } }); // Correctly update Formik state
+                                                    }}
+                                                    sx={{
                                                         "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c",
+                                                            borderColor: "#b71c1c", // Change border color when focused
                                                         },
                                                         "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c",
+                                                            borderColor: "#b71c1c", // Change border color on hover
                                                         },
-                                                    },
-                                                },
-                                                inputLabel: {
-                                                    sx: {
-                                                        "&.Mui-focused": {
-                                                            color: "#b71c1c",
-                                                        },
-                                                    },
-                                                },
-                                            }}
-                                        />
-{/* DNI */}
+                                                    }}
+
+                                                >
+                                                    {categories?.length > 0 ? (
+                                                        categories.map(({ id, name }) => (
+                                                            <MenuItem key={id} value={name}>
+                                                                {name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()}
+                                                            </MenuItem>
+                                                        ))
+                                                    ) : (
+                                                        <p>Cargando Categorias...</p>
+                                                    )}
+
+                                                </Select>
+                                                {touched.category && errors.category ?
+                                                    <Typography color="error" variant="caption">
+                                                        {errors.category}
+                                                    </Typography> : <span> &nbsp; </span>
+                                                }
+                                            </FormControl>
+                                        </Grid>
+                                        </Grid>
+                                        
+                                        {/* DNI */}
                                         <TextField
                                             // margin="none"
                                             required
@@ -382,7 +437,7 @@ console.log(discipline)
                                             onBlur={handleBlur}
                                             error={touched.dni && Boolean(errors.dni)}
                                             helperText={touched.dni && errors.dni ? errors.dni : " "}
-                                            sx={{ mt: 1 }}
+                                            sx={{ mt: -2 }}
                                             slotProps={{
                                                 input: {
                                                     sx: {
@@ -403,7 +458,8 @@ console.log(discipline)
                                                 },
                                             }}
                                         />
-{/* ADDRESS */}
+
+                                        {/* ADDRESS */}
                                         <TextField
                                             // margin="none"
                                             required
@@ -439,7 +495,7 @@ console.log(discipline)
                                                 },
                                             }}
                                         />
-{/* CONTACT NUMBER */}
+                                        {/* CONTACT NUMBER */}
                                         <TextField
                                             // margin="normal"
                                             required
@@ -475,50 +531,16 @@ console.log(discipline)
                                                 },
                                             }}
                                         />
-                                    </Grid>
+                                    
                                 </Grid>
 
 
 
-                                <Grid container direction="column" size={4} sx={{ mt: -1 }}>
+
+                                <Grid container direction="column" size={4} sx={{ mt: 0 }}>
                                     <Grid container size={12} >
-{/* BIRTHDATE */}
-                                        <LocalizationProvider dateAdapter={AdapterDayjs} >
-                                            <DemoContainer components={['DatePicker']} sx={{ width: '100%' }} >
-                                                <DatePicker
-                                                    format="DD/MM/YYYY"
-                                                    sx={{
-                                                        width: '100%',
-                                                        "& .MuiInputLabel-root": {
-                                                            "&.Mui-focused": {
-                                                                color: "#b71c1c", // Change label text color when focused
-                                                            },
-                                                        },
-                                                        "& .MuiOutlinedInput-root": {
-                                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c", // Change border color when focused
-                                                            },
-                                                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c", // Change border color on hover
-                                                            },
-                                                        },
-                                                    }}
 
-                                                    label="Fecha de Nacimiento"
-                                                    value={values.birthDate} // This should now be a Dayjs object
-                                                    onChange={(newValue) => {
-                                                        handleChange({ target: { name: 'birthDate', value: newValue } }); // Update Formik state
-                                                    }}
-
-                                                />
-                                            </DemoContainer>
-                                            {touched.birthDate && errors.birthDate ?
-                                                <Typography color="error" variant="caption" sx={{ fontSize: '0.75rem' }} >
-                                                    {errors.birthDate as string}
-                                                </Typography> : <span> &nbsp; </span>
-                                            }
-                                        </LocalizationProvider>
-{/* DISCIPLINE */}
+                                        {/* DISCIPLINE */}
                                         <FormControl fullWidth sx={{ mb: 0, mt: 1 }}>
                                             <InputLabel id="demo-multiple-chip-label" sx={{
                                                 "&.Mui-focused": {
@@ -575,22 +597,118 @@ console.log(discipline)
                                                     {/* {errors.disciplines} */}
                                                 </Typography> : <span> &nbsp; </span>
                                             }
-
                                         </FormControl>
-                                        {/* GRUPO Y CATEGORIA */}
-                                        <Grid container columnSpacing={2} sx={{ mb: 0, mt: 1 }} size={12}>
-                                            <Grid size={6} >
-                                                <FormControlLabel
-                                                    control={
-                                                        <Checkbox
-                                                            checked={isGroupHeadActive}
-                                                            onChange={handleGroupHeadChange}
-                                                        />
-                                                    }
-                                                    label="Cabeza de Grupo"
-                                                />
+                                        {/* CATEGORIES */}
+                                        <Grid size={12} >
+                                            <FormControl fullWidth sx={{ mb: 0, mt: 0 }}>
+                                                <InputLabel id="demo-simple-select-label" sx={{
+                                                    "&.Mui-focused": {
+                                                        color: "#b71c1c", // Ensure label color changes when focused
+                                                    },
+                                                }}>Categoria</InputLabel>
+                                                <Select
 
-                                                {/* <FormControl fullWidth sx={{ mb: 0 }}>
+                                                    labelId="demo-simple-select-label"
+                                                    id="demo-simple-select"
+                                                    value={values.category} // Bind Formik value
+                                                    label="Categoria" // Update label to match the field
+                                                    onChange={(event) => {
+                                                        handleChange({ target: { name: 'category', value: event.target.value } }); // Correctly update Formik state
+                                                    }}
+                                                    sx={{
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c", // Change border color when focused
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c", // Change border color on hover
+                                                        },
+                                                    }}
+                                                >
+
+                                                    {categories?.length > 0 ? (
+                                                        categories.map(({ id, name }) => (
+                                                            <MenuItem key={id} value={name}>
+                                                                {name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()}
+                                                            </MenuItem>
+                                                        ))
+                                                    ) : (
+                                                        <p>Cargando Categorias...</p>
+                                                    )}
+
+                                                </Select>
+                                                {touched.category && errors.category ?
+                                                    <Typography color="error" variant="caption">
+                                                        {errors.category}
+                                                    </Typography> : <span> &nbsp; </span>
+                                                }
+                                            </FormControl>
+                                        </Grid>
+                                        {/* EMAIL */}
+                                        {type !== "minor" ?
+                                            <TextField
+                                                // autoFocus
+                                                // margin="normal"
+                                                // required={isGroupHeadActive}
+                                                // disabled={!isGroupHeadActive}
+                                                fullWidth
+                                                id="email"
+                                                label="Dirección de correo"
+                                                name="email"
+                                                autoComplete="email"
+                                                value={values.email}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                error={touched.email && Boolean(errors.email)}
+                                                helperText={touched.email && errors.email ? errors.email : " "} // 
+                                                sx={{ mt: 1 }}
+                                                slotProps={{
+                                                    input: {
+                                                        sx: {
+                                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                                borderColor: "#b71c1c",
+                                                            },
+                                                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                                borderColor: "#b71c1c",
+                                                            },
+                                                        },
+                                                    },
+                                                    inputLabel: {
+                                                        sx: {
+                                                            "&.Mui-focused": {
+                                                                color: "#b71c1c",
+                                                            },
+                                                        },
+                                                    },
+                                                }}
+                                            /> : null}
+
+
+
+
+
+
+
+
+
+
+
+                                    
+                                        {/* <Grid container columnSpacing={2} sx={{ mb: 0, mt: 1 }} size={12}> */}
+
+                                        <Grid size={6} >
+
+                                            {/* {type === "grouphead" ?
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                checked={isGroupHeadActive}
+                                                                onChange={handleGroupHeadChange}
+                                                            />
+                                                        }
+                                                        label="Cabeza de Grupo"
+                                                    /> : null} */}
+
+                                            {/* <FormControl fullWidth sx={{ mb: 0 }}>
                                                     <InputLabel id="group-head-label" sx={{
                                                         "&.Mui-focused": {
                                                             color: "#b71c1c", // Ensure label color changes when focused
@@ -627,68 +745,14 @@ console.log(discipline)
                                                         </Typography> : <span> &nbsp; </span>
                                                     }
                                                 </FormControl> */}
-                                            </Grid>
-                                            <Grid size={6} >
-
-
-
-                                                <FormControl fullWidth sx={{ mb: 0, mt: 0 }}>
-                                                    <InputLabel id="demo-simple-select-label" sx={{
-                                                        "&.Mui-focused": {
-                                                            color: "#b71c1c", // Ensure label color changes when focused
-                                                        },
-                                                    }}>Categoria</InputLabel>
-                                                    <Select
-
-                                                        labelId="demo-simple-select-label"
-                                                        id="demo-simple-select"
-                                                        value={values.category} // Bind Formik value
-                                                        label="Categoria" // Update label to match the field
-                                                        onChange={(event) => {
-                                                            handleChange({ target: { name: 'category', value: event.target.value } }); // Correctly update Formik state
-                                                        }}
-                                                        sx={{
-                                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c", // Change border color when focused
-                                                            },
-                                                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c", // Change border color on hover
-                                                            },
-                                                        }}
-                                                    // onBlur={handleBlur} // Optional: Handle blur event if needed
-                                                    >
-
-                                                        {/* {categories?.length > 0 ? (
-                                                            categories.map(({ id, descripcion }) => (
-                                                                <MenuItem key={id} value={id}>
-                                                                    {descripcion}
-                                                                </MenuItem>
-                                                            ))
-                                                        ) : (
-                                                            <p>Cargando Categorias...</p>
-                                                        )} */}
-                                                        {categories?.length > 0 ? (
-                                                            categories.map(({ id, name }) => (
-                                                                <MenuItem key={id} value={name}>
-                                                                    {name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()}
-                                                                </MenuItem>
-                                                            ))
-                                                        ) : (
-                                                            <p>Cargando Categorias...</p>
-                                                        )}
-
-                                                    </Select>
-                                                    {touched.category && errors.category ?
-                                                        <Typography color="error" variant="caption">
-                                                            {errors.category}
-                                                        </Typography> : <span> &nbsp; </span>
-                                                    }
-                                                </FormControl>
-                                            </Grid>
-
-
                                         </Grid>
-                                        {/* LISTA DE SOCIOS */}
+
+
+
+
+                                        
+{/* LISTA DE SOCIOS */}
+{type === "grouphead"?
                                         <FormControl fullWidth sx={{ mt: 0.9 }}>
                                             <InputLabel id="demo-multiple-chip-label" sx={{
                                                 "&.Mui-focused": {
@@ -738,7 +802,7 @@ console.log(discipline)
                                                     {/* {errors.disciplines} */}
                                                 </Typography> : <span> &nbsp; </span>
                                             }
-                                        </FormControl>
+                                        </FormControl>:null}
 
 
                                     </Grid>
@@ -778,9 +842,9 @@ console.log(discipline)
                     )}
                 </Formik>
             </Container>
-        </Box>
+        </Box >
     );
 };
 
-export default SignUpForm;
+export default SignUpFormUnique;
 

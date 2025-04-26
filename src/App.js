@@ -33,7 +33,7 @@ function App() {
         <Route path="/admin-applications" element={<ApplicationsListScreen />} />
 
         <Route path="/edit-user/:user" element={<EditUserScreen />} />
-        <Route path="/signup" element={<SignUpScreen />} />
+        <Route path="/signup/:type" element={<SignUpScreen />} />
         <Route path="/password-recover" element={<PasswordRecoverScreen />} />
         <Route path="/reset-password" element={<PasswordRecoverScreen />} />
         <Route path="/email-recover" element={<EmailRecoverScreen />} />

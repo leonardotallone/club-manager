@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import Grid from '@mui/material/Grid2';
-import SignUpForm from '../../components/Admin/SignUpForm';
+import SignUpForm from "../../components/Admin/SignUpForm"
 import Navbar from '../../components/Navbar';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Box, Container } from "@mui/material";
@@ -9,9 +9,14 @@ import BlackBanner from '../../components/BlackBanner';
 import Footer from '../../components/Footer';
 import Advertising from '../../components/Advertising';
 
+
+
 const SignUpScreen = () => {
 
   const { loading } = useContext(signUpContext);
+
+
+
   return (
     <>
       <Navbar />
@@ -24,7 +29,7 @@ const SignUpScreen = () => {
                     container
                     sx={{
                         flexGrow: 1, display: 'flex', flexDirection: 'column',
-                        backgroundColor: "#eeeeee",
+                        // backgroundColor: "#eeeeee",
                         backgroundSize: 'cover',
                         backgroundPosition: 'center', // Center the image
                     }}
