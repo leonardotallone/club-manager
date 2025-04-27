@@ -16,7 +16,6 @@ const SignUpScreen = () => {
   const { loading } = useContext(signUpContext);
 
 
-
   return (
     <>
       <Navbar />

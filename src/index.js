@@ -10,6 +10,7 @@ import SignUpProvider from "./Context/SignUpContext";
 import GetAllUsersProvider from "./Context/GetAllUsersContext";
 import GetAllCategoriesProvider from "./Context/GetAllCategoriesContext";
 import GetAllDisciplinesProvider from "./Context/GetAllDisciplinesContext";
+import GetAllGendersProvider from "./Context/GetAllGendersContext";
 
 import GetAllJoinUpProvider from "./Context/GetAllJoinUpContext";
 
@@ -17,7 +18,6 @@ import SignedUserProvider from "./Context/SignedUserContext";
 import RecoverPasswordProvider from "./Context/RecoverPasswordContext";
 import NewPasswordProvider from "./Context/NewPasswordContext";
 import RecoverUserProvider from "./Context/RecoverUserContext";
-
 
 import App from "./App";
 
@@ -34,27 +34,27 @@ root.render(
     <ThemeProvider theme={theme}>
       <SignInProvider>
         <GetAllJoinUpProvider>
-
-            <RecoverPasswordProvider>
-              <NewPasswordProvider>
-                <RecoverUserProvider>
-                  <SignedUserProvider>
-                    <SignUpProvider>
-                      <JoinUpProvider>
-                        <GetAllUsersProvider>
-                          <GetAllCategoriesProvider>
-                            <GetAllDisciplinesProvider>
+          <RecoverPasswordProvider>
+            <NewPasswordProvider>
+              <RecoverUserProvider>
+                <SignedUserProvider>
+                  <SignUpProvider>
+                    <JoinUpProvider>
+                      <GetAllUsersProvider>
+                        <GetAllCategoriesProvider>
+                          <GetAllDisciplinesProvider>
+                            <GetAllGendersProvider>
                               <App />
-                            </GetAllDisciplinesProvider>
-                          </GetAllCategoriesProvider>
-                        </GetAllUsersProvider>
-                      </JoinUpProvider>
-                    </SignUpProvider>
-                  </SignedUserProvider>
-                </RecoverUserProvider>
-              </NewPasswordProvider>
-            </RecoverPasswordProvider>
-         
+                            </GetAllGendersProvider>
+                          </GetAllDisciplinesProvider>
+                        </GetAllCategoriesProvider>
+                      </GetAllUsersProvider>
+                    </JoinUpProvider>
+                  </SignUpProvider>
+                </SignedUserProvider>
+              </RecoverUserProvider>
+            </NewPasswordProvider>
+          </RecoverPasswordProvider>
         </GetAllJoinUpProvider>
       </SignInProvider>
     </ThemeProvider>

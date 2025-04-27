@@ -17,6 +17,7 @@ import * as Yup from "yup";
 import { useParams } from "react-router-dom";
 import { getAllCategoriesContext } from "../../Context/GetAllCategoriesContext"
 import { getAllDisciplinesContext } from "../../Context/GetAllDisciplinesContext"
+import { getAllGendersContext } from "../../Context/GetAllGendersContext"
 import { signUpContext } from "../../Context/SignUpContext"
 
 
@@ -78,12 +79,11 @@ const validationSchema = Yup.object({
     lastName: Yup.string()
         .matches(/^[a-zA-ZÀ-ÿ\s]+$/, "Formato de apellido incorrecto")
         .required("El campo es obligatorio"),
-    email: Yup.string()
-        .email("Dirección de correo electrónico inválida")
+    birthDate: Yup.date()
+        .max(new Date(), "La fecha de nacimiento no puede ser en el futuro")
         .required("El campo es obligatorio"),
-    // password: Yup.string()
-    //     .min(6, "La contraseña debe tener como mínimo 6 caracteres")
-    //     .required("El campo es obligatorio"),
+    gender: Yup.string()
+        .required("El campo es obligatorio"),
     dni: Yup.string()
         .matches(/^\d+$/, "El DNI debe contener solo números")
         .test(
@@ -95,18 +95,18 @@ const validationSchema = Yup.object({
     address: Yup.string()
         .min(5, "La dirección debe tener como mínimo 5 caracteres")
         .required("El campo es obligatorio"),
-    birthDate: Yup.date()
-        .max(new Date(), "La fecha de nacimiento no puede ser en el futuro")
-        .required("El campo es obligatorio"),
     contactNumber: Yup.string()
         .matches(/^\+?\d{7,15}$/, "Número de contacto inválido")
         .required("El campo es obligatorio"),
+    email: Yup.string()
+        .email("Dirección de correo electrónico inválida")
+        .required("El campo es obligatorio"),
     category: Yup.string()
         .required("El campo es obligatorio"),
-    discipline: Yup.array()
-        .of(Yup.string().required("La disciplina es obligatoria"))
-        .min(1, "Debes seleccionar al menos una disciplina")
-        .required("El campo es obligatorio"),
+    // discipline: Yup.array()
+    //     .of(Yup.string().required("La disciplina es obligatoria"))
+    //     .min(1, "Debes seleccionar al menos una disciplina")
+    //     .required("El campo es obligatorio"),
 });
 
 
@@ -114,29 +114,13 @@ const SignUpFormUnique: React.FC = () => {
 
     const { categories } = useContext(getAllCategoriesContext)
     const { disciplines } = useContext(getAllDisciplinesContext)
+    const { genders } = useContext(getAllGendersContext)
     const { setSignUpUser } = useContext(signUpContext)
 
     const [discipline, setDiscipline] = React.useState<string[]>([]);
     const [socios, setSocios] = React.useState<string[]>([]);
-    const [email, setEmail] = useState("");
-    const [isGroupHeadActive, setIsGroupHeadActive] = useState(false);
-
-    const handleGroupHeadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIsGroupHeadActive(event.target.checked);
-    };
 
     const { type } = useParams();
-
-    console.log({ type })
-    //   Limpiar campos cuando se desactiva el checkbox
-
-    // useEffect(() => {
-    //     if (!isGroupHeadActive) {
-    //         setSocios([]); // Limpia la lista de socios
-    //         setEmail("");  // Limpia el campo de correo
-    //     }
-    // }, [isGroupHeadActive]);
-
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -169,7 +153,7 @@ const SignUpFormUnique: React.FC = () => {
             dni: values.dni,
             contactNumber: values.contactNumber,
             avatarURL: "",
-            gender: "",
+            gender: values.gender,
 
             email: values.email,
             admin: false,
@@ -177,8 +161,8 @@ const SignUpFormUnique: React.FC = () => {
             disciplines: discipline,
             category: values.category,
             blockade: false,
-            groupHead: false,
-            familyGroup: [],
+            groupHead: type === "grouphead" ? true : false,
+            familyGroup: socios,
         };
         console.log(user)
         // setSignUpUser(user)
@@ -237,102 +221,98 @@ const SignUpFormUnique: React.FC = () => {
                             <Grid container columnSpacing={2} direction="row">
                                 {/* Columna IZQUIERDA */}
                                 <Grid container direction="column" size={4}>
-                                
-                                        {/* AVATAR */}
-                                        <Box
-                                            component={Card}
-                                            elevation={1}
-                                            sx={{
-                                                display: "flex",
-                                                alignItems: 'center',
-                                                // backgroundColor: 'rgba(245, 186, 206, 1)',
-                                                backgroundColor: 'white',
-                                                borderRadius: 1,
-                                                border: '1px solid rgba(240, 8, 8, 0.5)',
-                                                height: '39%',
-                                                mb: 3,
-                                                mt:1
-                                            }}
-                                        >
-                                            <Avatar alt="Avatar" src={avatar1} sx={{ width: 120, height: 120, ml: 3, boxShadow: 1 }} />
-                                        </Box>
 
-                                        {/* NAME */}
-                                        <TextField
-                                            // margin="normal"
-                                            // autoFocus
-                                            required
-                                            fullWidth
-                                            name="name"
-                                            label="Nombre"
-                                            type="name"
-                                            id="name"
-                                            autoComplete="name"
-                                            value={values.name}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            error={touched.name && Boolean(errors.name)}
-                                            // helperText={touched.name && errors.name}
-                                            helperText={touched.name && errors.name ? errors.name : " "} // 
-                                            sx={{ mt: 1 }}
-                                            slotProps={{
-                                                input: {
-                                                    sx: {
-                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c",
-                                                        },
-                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c",
-                                                        },
+                                    {/* AVATAR */}
+                                    <Box
+                                        component={Card}
+                                        elevation={1}
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: 'center',
+                                            // backgroundColor: 'rgba(245, 186, 206, 1)',
+                                            backgroundColor: 'white',
+                                            borderRadius: 1,
+                                            border: '1px solid rgba(240, 8, 8, 0.5)',
+                                            height: '39%',
+                                            mb: 3,
+                                            mt: 1
+                                        }}
+                                    >
+                                        <Avatar alt="Avatar" src={avatar1} sx={{ width: 120, height: 120, ml: 3, boxShadow: 1 }} />
+                                    </Box>
+
+                                    {/* NAME */}
+                                    <TextField
+                                        // margin="normal"
+                                        // autoFocus
+                                        fullWidth
+                                        name="name"
+                                        label="Nombre"
+                                        type="name"
+                                        id="name"
+                                        autoComplete="name"
+                                        value={values.name}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.name && Boolean(errors.name)}
+                                        // helperText={touched.name && errors.name}
+                                        helperText={touched.name && errors.name ? errors.name : " "} // 
+                                        sx={{ mt: 1 }}
+                                        slotProps={{
+                                            input: {
+                                                sx: {
+                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c",
+                                                    },
+                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c",
                                                     },
                                                 },
-                                                inputLabel: {
-                                                    sx: {
-                                                        "&.Mui-focused": {
-                                                            color: "#b71c1c",
-                                                        },
+                                            },
+                                            inputLabel: {
+                                                sx: {
+                                                    "&.Mui-focused": {
+                                                        color: "#b71c1c",
                                                     },
                                                 },
-                                            }}
-                                        />
-                                          {/* LASTNAME */}
-                                          <TextField
-                                            // margin="normal"
-                                            required
-                                            fullWidth
-                                            name="lastName"
-                                            label="Apellido/s"
-                                            type="lastName"
-                                            id="lastName"
-                                            autoComplete="lastName"
-                                            value={values.lastName}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            error={touched.lastName && Boolean(errors.lastName)}
-                                            helperText={touched.lastName && errors.lastName ? errors.lastName : " "} // 
-                                            sx={{ mt: 1 }}
-                                            slotProps={{
-                                                input: {
-                                                    sx: {
-                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c",
-                                                        },
-                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c",
-                                                        },
+                                            },
+                                        }}
+                                    />
+                                    {/* LASTNAME */}
+                                    <TextField
+                                        // margin="normal"
+                                        fullWidth
+                                        name="lastName"
+                                        label="Apellido/s"
+                                        type="lastName"
+                                        id="lastName"
+                                        autoComplete="lastName"
+                                        value={values.lastName}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.lastName && Boolean(errors.lastName)}
+                                        helperText={touched.lastName && errors.lastName ? errors.lastName : " "} // 
+                                        sx={{ mt: 1 }}
+                                        slotProps={{
+                                            input: {
+                                                sx: {
+                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c",
+                                                    },
+                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c",
                                                     },
                                                 },
-                                                inputLabel: {
-                                                    sx: {
-                                                        "&.Mui-focused": {
-                                                            color: "#b71c1c",
-                                                        },
+                                            },
+                                            inputLabel: {
+                                                sx: {
+                                                    "&.Mui-focused": {
+                                                        color: "#b71c1c",
                                                     },
                                                 },
-                                            }}
-                                        />
-                                      
-                                  
+                                            },
+                                        }}
+                                    />
                                 </Grid>
                                 {/* Columna CENTRO */}
                                 <Grid container direction="column" size={4}>
@@ -341,32 +321,45 @@ const SignUpFormUnique: React.FC = () => {
                                         <Grid size={6} >
                                             <LocalizationProvider dateAdapter={AdapterDayjs} >
                                                 <DemoContainer components={['DatePicker']} sx={{ width: '100%' }} >
+                                               
                                                     <DatePicker
                                                         format="DD/MM/YYYY"
-                                                        sx={{
-                                                            width: '100%',
-                                                            "& .MuiInputLabel-root": {
-                                                                "&.Mui-focused": {
-                                                                    color: "#b71c1c", // Change label text color when focused
-                                                                },
-                                                            },
-                                                            "& .MuiOutlinedInput-root": {
-                                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c", // Change border color when focused
-                                                                },
-                                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c", // Change border color on hover
-                                                                },
-                                                            },
-                                                        }}
-
                                                         label="Fecha de Nacimiento"
                                                         value={values.birthDate} // This should now be a Dayjs object
                                                         onChange={(newValue) => {
                                                             handleChange({ target: { name: 'birthDate', value: newValue } }); // Update Formik state
                                                         }}
-
+                                                        slotProps={{
+                                                            textField: {
+                                                                onBlur: () => handleBlur({ target: { name: 'birthDate' } }),
+                                                                InputLabelProps: {
+                                                                    style: {
+                                                                        color: touched.birthDate && errors.birthDate ? "#b71c1c" : undefined,
+                                                                    },
+                                                                },
+                                                                sx: {
+                                                                    width: '100%',
+                                                                    "& .MuiOutlinedInput-notchedOutline": {
+                                                                        borderColor: touched.birthDate && errors.birthDate ? "#b71c1c" : undefined,
+                                                                    },
+                                                                    "& .MuiInputLabel-root": {
+                                                                        "&.Mui-focused": {
+                                                                            color: "#b71c1c",
+                                                                        },
+                                                                    },
+                                                                    "& .MuiOutlinedInput-root": {
+                                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                                            borderColor: "#b71c1c",
+                                                                        },
+                                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                                            borderColor: "#b71c1c",
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                        }}
                                                     />
+                                                   
                                                 </DemoContainer>
                                                 {touched.birthDate && errors.birthDate ?
                                                     <Typography color="error" variant="caption" sx={{ fontSize: '0.75rem' }} >
@@ -378,21 +371,29 @@ const SignUpFormUnique: React.FC = () => {
                                         {/* GENDER */}
                                         <Grid size={6} >
                                             <FormControl fullWidth sx={{ mb: 0, mt: 1 }}>
-                                                <InputLabel id="demo-simple-select-label" sx={{
-                                                    "&.Mui-focused": {
-                                                        color: "#b71c1c", // Ensure label color changes when focused
-                                                    },
-                                                }}>Genero</InputLabel>
-                                                <Select
+                                                <InputLabel
+                                                    id="demo-simple-select-label"
+                                                    error={touched.gender && Boolean(errors.gender)}
+                                                    sx={{
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c", // Ensure label color changes when focused
 
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={values.gender} // Bind Formik value
-                                                    label="Gendero" // Update label to match the field
+                                                        },
+                                                    }}>Genero</InputLabel>
+                                                <Select
+                                                    labelId="gender-label"
+                                                    id="gender"
+                                                    name="gender"
+                                                    value={values.gender}
                                                     onChange={(event) => {
                                                         handleChange({ target: { name: 'gender', value: event.target.value } }); // Correctly update Formik state
                                                     }}
+                                                    onBlur={handleBlur}
+                                                    label="Género"
                                                     sx={{
+                                                        "& .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: touched.gender && errors.gender ? "#b71c1c" : undefined,
+                                                        },
                                                         "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                                                             borderColor: "#b71c1c", // Change border color when focused
                                                         },
@@ -402,156 +403,154 @@ const SignUpFormUnique: React.FC = () => {
                                                     }}
 
                                                 >
-                                                    {categories?.length > 0 ? (
-                                                        categories.map(({ id, name }) => (
-                                                            <MenuItem key={id} value={name}>
-                                                                {name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()}
+                                                    {genders?.length > 0 ? (
+                                                        genders.map((name) => (
+                                                            <MenuItem key={name} value={name}>
+                                                                {name}
                                                             </MenuItem>
                                                         ))
                                                     ) : (
-                                                        <p>Cargando Categorias...</p>
+                                                        <p>Cargando Generos...</p>
                                                     )}
 
                                                 </Select>
-                                                {touched.category && errors.category ?
+                                                {touched.gender && errors.gender ?
                                                     <Typography color="error" variant="caption">
-                                                        {errors.category}
+                                                        {errors.gender}
                                                     </Typography> : <span> &nbsp; </span>
                                                 }
                                             </FormControl>
                                         </Grid>
-                                        </Grid>
-                                        
-                                        {/* DNI */}
-                                        <TextField
-                                            // margin="none"
-                                            required
-                                            fullWidth
-                                            name="dni"
-                                            label="DNI"
-                                            type="dni"
-                                            id="dni"
-                                            autoComplete="dni"
-                                            value={values.dni}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            error={touched.dni && Boolean(errors.dni)}
-                                            helperText={touched.dni && errors.dni ? errors.dni : " "}
-                                            sx={{ mt: -2 }}
-                                            slotProps={{
-                                                input: {
-                                                    sx: {
-                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c",
-                                                        },
-                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c",
-                                                        },
-                                                    },
-                                                },
-                                                inputLabel: {
-                                                    sx: {
-                                                        "&.Mui-focused": {
-                                                            color: "#b71c1c",
-                                                        },
-                                                    },
-                                                },
-                                            }}
-                                        />
+                                    </Grid>
 
-                                        {/* ADDRESS */}
-                                        <TextField
-                                            // margin="none"
-                                            required
-                                            fullWidth
-                                            name="address"
-                                            label="Domicilio"
-                                            type="address"
-                                            id="address"
-                                            autoComplete="address"
-                                            value={values.address}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            error={touched.address && Boolean(errors.address)}
-                                            helperText={touched.address && errors.address ? errors.address : " "}
-                                            sx={{ mt: 1 }}
-                                            slotProps={{
-                                                input: {
-                                                    sx: {
-                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c",
-                                                        },
-                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c",
-                                                        },
+                                    {/* DNI */}
+                                    <TextField
+                                        // margin="none"
+
+                                        fullWidth
+                                        name="dni"
+                                        label="DNI"
+                                        type="dni"
+                                        id="dni"
+                                        autoComplete="dni"
+                                        value={values.dni}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.dni && Boolean(errors.dni)}
+                                        helperText={touched.dni && errors.dni ? errors.dni : " "}
+                                        sx={{ mt: -2 }}
+                                        slotProps={{
+                                            input: {
+                                                sx: {
+                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c",
+                                                    },
+                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c",
                                                     },
                                                 },
-                                                inputLabel: {
-                                                    sx: {
-                                                        "&.Mui-focused": {
-                                                            color: "#b71c1c",
-                                                        },
+                                            },
+                                            inputLabel: {
+                                                sx: {
+                                                    "&.Mui-focused": {
+                                                        color: "#b71c1c",
                                                     },
                                                 },
-                                            }}
-                                        />
-                                        {/* CONTACT NUMBER */}
-                                        <TextField
-                                            // margin="normal"
-                                            required
-                                            fullWidth
-                                            name="contactNumber"
-                                            label="Número de Contacto"
-                                            type="contactNumber"
-                                            id="contactNumber"
-                                            autoComplete="contactNumber"
-                                            value={values.contactNumber}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            error={touched.contactNumber && Boolean(errors.contactNumber)}
-                                            helperText={touched.contactNumber && errors.contactNumber ? errors.contactNumber : " "}
-                                            sx={{ mt: 1 }}
-                                            slotProps={{
-                                                input: {
-                                                    sx: {
-                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c",
-                                                        },
-                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c",
-                                                        },
+                                            },
+                                        }}
+                                    />
+
+                                    {/* ADDRESS */}
+                                    <TextField
+                                        // margin="none"
+                                        required
+                                        fullWidth
+                                        name="address"
+                                        label="Domicilio"
+                                        type="address"
+                                        id="address"
+                                        autoComplete="address"
+                                        value={values.address}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.address && Boolean(errors.address)}
+                                        helperText={touched.address && errors.address ? errors.address : " "}
+                                        sx={{ mt: 1 }}
+                                        slotProps={{
+                                            input: {
+                                                sx: {
+                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c",
+                                                    },
+                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c",
                                                     },
                                                 },
-                                                inputLabel: {
-                                                    sx: {
-                                                        "&.Mui-focused": {
-                                                            color: "#b71c1c",
-                                                        },
+                                            },
+                                            inputLabel: {
+                                                sx: {
+                                                    "&.Mui-focused": {
+                                                        color: "#b71c1c",
                                                     },
                                                 },
-                                            }}
-                                        />
-                                    
+                                            },
+                                        }}
+                                    />
+                                    {/* CONTACT NUMBER */}
+                                    <TextField
+                                        // margin="normal"
+                                        required
+                                        fullWidth
+                                        name="contactNumber"
+                                        label="Número de Contacto"
+                                        type="contactNumber"
+                                        id="contactNumber"
+                                        autoComplete="contactNumber"
+                                        value={values.contactNumber}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.contactNumber && Boolean(errors.contactNumber)}
+                                        helperText={touched.contactNumber && errors.contactNumber ? errors.contactNumber : " "}
+                                        sx={{ mt: 1 }}
+                                        slotProps={{
+                                            input: {
+                                                sx: {
+                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c",
+                                                    },
+                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c",
+                                                    },
+                                                },
+                                            },
+                                            inputLabel: {
+                                                sx: {
+                                                    "&.Mui-focused": {
+                                                        color: "#b71c1c",
+                                                    },
+                                                },
+                                            },
+                                        }}
+                                    />
                                 </Grid>
-
-
-
 
                                 <Grid container direction="column" size={4} sx={{ mt: 0 }}>
                                     <Grid container size={12} >
-
                                         {/* DISCIPLINE */}
                                         <FormControl fullWidth sx={{ mb: 0, mt: 1 }}>
-                                            <InputLabel id="demo-multiple-chip-label" sx={{
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c", // Ensure label color changes when focused
-                                                },
-                                            }}>Disciplinas</InputLabel>
+                                            <InputLabel
+                                                id="demo-multiple-chip-label"
+                                                sx={{
+                                                    "&.Mui-focused": {
+                                                        color: "#b71c1c", // Ensure label color changes when focused
+                                                    },
+                                                }}>Disciplinas</InputLabel>
                                             <Select
+
                                                 labelId="demo-multiple-chip-label"
                                                 id="demo-multiple-chip"
                                                 multiple
-                                                required
+
                                                 value={discipline}
                                                 onChange={(event) => {
                                                     handleDiscipline(event);
@@ -577,7 +576,7 @@ const SignUpFormUnique: React.FC = () => {
                                                 MenuProps={MenuProps}
                                             >
                                                 {disciplines?.length > 0 ? (
-                                                    disciplines.map((item) => (
+                                                    disciplines.map((item: any) => (
                                                         <MenuItem
                                                             key={item.id}
                                                             value={item.name}
@@ -601,12 +600,34 @@ const SignUpFormUnique: React.FC = () => {
                                         {/* CATEGORIES */}
                                         <Grid size={12} >
                                             <FormControl fullWidth sx={{ mb: 0, mt: 0 }}>
-                                                <InputLabel id="demo-simple-select-label" sx={{
-                                                    "&.Mui-focused": {
-                                                        color: "#b71c1c", // Ensure label color changes when focused
-                                                    },
-                                                }}>Categoria</InputLabel>
+                                                <InputLabel
+                                                    error={touched.category && Boolean(errors.category)}
+                                                    id="demo-simple-select-label"
+                                                    sx={{
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c", // Ensure label color changes when focused
+                                                        },
+                                                    }}>Categoria</InputLabel>
                                                 <Select
+
+
+                                                    name="category"
+
+                                                    // onChange={handleChange}
+                                                    onBlur={handleBlur}
+
+                                                    sx={{
+                                                        "& .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: touched.category && errors.category ? "#b71c1c" : undefined,
+                                                        },
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c", // Change border color when focused
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c", // Change border color on hover
+                                                        },
+                                                    }}
+
 
                                                     labelId="demo-simple-select-label"
                                                     id="demo-simple-select"
@@ -615,14 +636,7 @@ const SignUpFormUnique: React.FC = () => {
                                                     onChange={(event) => {
                                                         handleChange({ target: { name: 'category', value: event.target.value } }); // Correctly update Formik state
                                                     }}
-                                                    sx={{
-                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c", // Change border color when focused
-                                                        },
-                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c", // Change border color on hover
-                                                        },
-                                                    }}
+
                                                 >
 
                                                     {categories?.length > 0 ? (
@@ -648,7 +662,7 @@ const SignUpFormUnique: React.FC = () => {
                                             <TextField
                                                 // autoFocus
                                                 // margin="normal"
-                                                // required={isGroupHeadActive}
+                                                required={type !== "minor"}
                                                 // disabled={!isGroupHeadActive}
                                                 fullWidth
                                                 id="email"
@@ -692,117 +706,64 @@ const SignUpFormUnique: React.FC = () => {
 
 
 
-                                    
-                                        {/* <Grid container columnSpacing={2} sx={{ mb: 0, mt: 1 }} size={12}> */}
+
 
                                         <Grid size={6} >
 
-                                            {/* {type === "grouphead" ?
-                                                    <FormControlLabel
-                                                        control={
-                                                            <Checkbox
-                                                                checked={isGroupHeadActive}
-                                                                onChange={handleGroupHeadChange}
-                                                            />
-                                                        }
-                                                        label="Cabeza de Grupo"
-                                                    /> : null} */}
-
-                                            {/* <FormControl fullWidth sx={{ mb: 0 }}>
-                                                    <InputLabel id="group-head-label" sx={{
-                                                        "&.Mui-focused": {
-                                                            color: "#b71c1c", // Ensure label color changes when focused
-                                                        },
-                                                    }}>Cabeza de Grupo</InputLabel>
-                                                    <Select
-
-                                                        labelId="group-head-label"
-                                                        id="group-head-select"
-                                                        value={values.groupHead} // Bind Formik value
-                                                        label="Cabeza de Grupo" // Update label to match the field
-                                                        onChange={(event) => {
-                                                            handleChange({ target: { name: 'groupHead', value: event.target.value } }); // Correctly update Formik state
-                                                        }}
-                                                        sx={{
-                                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c", // Change border color when focused
-                                                            },
-                                                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c", // Change border color on hover
-                                                            },
-                                                        }}
-                                                    // onBlur={handleBlur} // Optional: Handle blur event if needed
-                                                    >
-
-                                                        <MenuItem value={"true"}>Si</MenuItem>
-                                                        <MenuItem value={"false"}>No</MenuItem>
-
-
-                                                    </Select>
-                                                    {touched.groupHead || errors.groupHead ?
-                                                        <Typography color="error" variant="caption">
-                                                            {errors.groupHead}
-                                                        </Typography> : <span> &nbsp; </span>
-                                                    }
-                                                </FormControl> */}
                                         </Grid>
 
-
-
-
-                                        
-{/* LISTA DE SOCIOS */}
-{type === "grouphead"?
-                                        <FormControl fullWidth sx={{ mt: 0.9 }}>
-                                            <InputLabel id="demo-multiple-chip-label" sx={{
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c", // Ensure label color changes when focused
-                                                },
-                                            }}>Lista de Socios</InputLabel>
-                                            <Select
-                                                labelId="demo-multiple-chip-label"
-                                                id="demo-multiple-chip"
-                                                multiple
-                                                required={isGroupHeadActive}
-                                                disabled={!isGroupHeadActive}
-                                                value={socios}
-                                                onChange={(event) => {
-                                                    handleSocios(event);
-                                                    handleChange({ target: { name: 'group', value: event.target.value } });
-                                                }}
-                                                sx={{
-                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Change border color when focused
+                                        {/* LISTA DE SOCIOS */}
+                                        {type === "grouphead" ?
+                                            <FormControl fullWidth sx={{ mt: 0.9 }}>
+                                                <InputLabel id="demo-multiple-chip-label" sx={{
+                                                    "&.Mui-focused": {
+                                                        color: "#b71c1c", // Ensure label color changes when focused
                                                     },
-                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                        borderColor: "#b71c1c", // Change border color on hover
-                                                    },
-                                                    height: '56px',
-                                                }}
-                                                input={<OutlinedInput id="select-multiple-chip" label="Lista de Socios" />}
-                                                renderValue={(selected) => (
-                                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, maxWidth: '100%' }}>
-                                                        {selected.map((value) => (
-                                                            <Chip key={value} label={value} />
-                                                        ))}
-                                                    </Box>
-                                                )}
-                                                MenuProps={MenuProps}
-                                            >
-                                                {sociosList.map((name) => (
-                                                    <MenuItem key={name} value={name} style={getStyles(name, socios, theme)}>
-                                                        <Checkbox checked={socios.indexOf(name) > -1} />
-                                                        <ListItemText primary={name} />
-                                                    </MenuItem>
-                                                ))}
+                                                }}>Lista de Socios</InputLabel>
+                                                <Select
+                                                    labelId="demo-multiple-chip-label"
+                                                    id="demo-multiple-chip"
+                                                    multiple
 
-                                            </Select>
-                                            {touched.disciplines && errors.disciplines ?
-                                                <Typography color="error" variant="caption" >
-                                                    {/* {errors.disciplines} */}
-                                                </Typography> : <span> &nbsp; </span>
-                                            }
-                                        </FormControl>:null}
+
+                                                    value={socios}
+                                                    onChange={(event) => {
+                                                        handleSocios(event);
+                                                        handleChange({ target: { name: 'socios', value: event.target.value } });
+                                                    }}
+                                                    sx={{
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c", // Change border color when focused
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c", // Change border color on hover
+                                                        },
+                                                        height: '56px',
+                                                    }}
+                                                    input={<OutlinedInput id="select-multiple-chip" label="Lista de Socios" />}
+                                                    renderValue={(selected) => (
+                                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, maxWidth: '100%' }}>
+                                                            {selected.map((value) => (
+                                                                <Chip key={value} label={value} />
+                                                            ))}
+                                                        </Box>
+                                                    )}
+                                                    MenuProps={MenuProps}
+                                                >
+                                                    {sociosList.map((name) => (
+                                                        <MenuItem key={name} value={name} style={getStyles(name, socios, theme)}>
+                                                            <Checkbox checked={socios.indexOf(name) > -1} />
+                                                            <ListItemText primary={name} />
+                                                        </MenuItem>
+                                                    ))}
+
+                                                </Select>
+                                                {touched.disciplines && errors.disciplines ?
+                                                    <Typography color="error" variant="caption" >
+                                                        {/* {errors.disciplines} */}
+                                                    </Typography> : <span> &nbsp; </span>
+                                                }
+                                            </FormControl> : null}
 
 
                                     </Grid>
