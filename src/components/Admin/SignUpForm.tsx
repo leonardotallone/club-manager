@@ -11,13 +11,15 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
 import dayjs from "dayjs";
-import { Formik, Form, FormikHelpers } from "formik";
+import { Formik, Form, FormikHelpers, } from "formik";
+
 import * as Yup from "yup";
 
 import { useParams } from "react-router-dom";
 import { getAllCategoriesContext } from "../../Context/GetAllCategoriesContext"
 import { getAllDisciplinesContext } from "../../Context/GetAllDisciplinesContext"
 import { getAllGendersContext } from "../../Context/GetAllGendersContext"
+import { getAllUsersContext } from '../../Context/GetAllUsersContext';
 import { signUpContext } from "../../Context/SignUpContext"
 
 
@@ -31,16 +33,6 @@ const MenuProps = {
         },
     },
 };
-
-const sociosList = [
-    "Leonardo Tallone",
-    'Catalina Tallone',
-    'Salvador Tallone',
-    'Victoria Semino',
-    "Federico Palmieri",
-    "Bruno, Barbieri",
-    "Catalina, Gazola",
-];
 
 function getStyles(name: string, discipline: readonly string[], theme: Theme) {
     return {
@@ -61,7 +53,6 @@ interface SignUpFormValues {
     gender: string;
 
     email: string;
-    id: string,
     admin: boolean,
 
     disciplines: object,
@@ -71,43 +62,7 @@ interface SignUpFormValues {
     familyGroup: object,
 }
 
-// Validación con Yup
-const validationSchema = Yup.object({
-    name: Yup.string()
-        .matches(/^[a-zA-ZÀ-ÿ\s]+$/, "Formato de nombre incorrecto")
-        .required("El campo es obligatorio"),
-    lastName: Yup.string()
-        .matches(/^[a-zA-ZÀ-ÿ\s]+$/, "Formato de apellido incorrecto")
-        .required("El campo es obligatorio"),
-    birthDate: Yup.date()
-        .max(new Date(), "La fecha de nacimiento no puede ser en el futuro")
-        .required("El campo es obligatorio"),
-    gender: Yup.string()
-        .required("El campo es obligatorio"),
-    dni: Yup.string()
-        .matches(/^\d+$/, "El DNI debe contener solo números")
-        .test(
-            "longitud-dni",
-            "El DNI debe tener entre 7 y 8 dígitos",
-            (value) => value && value.length >= 7 && value.length <= 8
-        )
-        .required("El campo es obligatorio"),
-    address: Yup.string()
-        .min(5, "La dirección debe tener como mínimo 5 caracteres")
-        .required("El campo es obligatorio"),
-    contactNumber: Yup.string()
-        .matches(/^\+?\d{7,15}$/, "Número de contacto inválido")
-        .required("El campo es obligatorio"),
-    email: Yup.string()
-        .email("Dirección de correo electrónico inválida")
-        .required("El campo es obligatorio"),
-    category: Yup.string()
-        .required("El campo es obligatorio"),
-    // discipline: Yup.array()
-    //     .of(Yup.string().required("La disciplina es obligatoria"))
-    //     .min(1, "Debes seleccionar al menos una disciplina")
-    //     .required("El campo es obligatorio"),
-});
+
 
 
 const SignUpFormUnique: React.FC = () => {
@@ -115,10 +70,11 @@ const SignUpFormUnique: React.FC = () => {
     const { categories } = useContext(getAllCategoriesContext)
     const { disciplines } = useContext(getAllDisciplinesContext)
     const { genders } = useContext(getAllGendersContext)
+    const { allUsers } = useContext(getAllUsersContext)
     const { setSignUpUser } = useContext(signUpContext)
 
     const [discipline, setDiscipline] = React.useState<string[]>([]);
-    const [socios, setSocios] = React.useState<string[]>([]);
+    const [familyGroupS, setFamilyGroupS] = React.useState<string[]>([]);
 
     const { type } = useParams();
     const theme = useTheme();
@@ -132,14 +88,68 @@ const SignUpFormUnique: React.FC = () => {
             typeof value === 'string' ? value.split(',') : value,
         );
     };
-    const handleSocios = (event: SelectChangeEvent<typeof socios>) => {
+    const handleFamilyGroup = (event: SelectChangeEvent<typeof familyGroupS>) => {
         const {
             target: { value },
         } = event;
-        setSocios(
+        setFamilyGroupS(
             typeof value === 'string' ? value.split(',') : value,
         );
     };
+
+    // Validación con Yup
+    const validationSchema = Yup.object({
+        name: Yup.string()
+            .matches(/^[a-zA-ZÀ-ÿ\s]+$/, "Formato de nombre incorrecto")
+            .required("El campo es requerido"),
+        lastName: Yup.string()
+            .matches(/^[a-zA-ZÀ-ÿ\s]+$/, "Formato de apellido incorrecto")
+            .required("El campo es requerido"),
+        birthDate: Yup.date()
+            .max(new Date(), "La fecha de nacimiento no puede ser en el futuro")
+            .required("El campo es requerido"),
+        gender: Yup.string()
+            .required("El campo es requerido"),
+        dni: Yup.string()
+            .matches(/^\d+$/, "El DNI debe contener solo números")
+            .test(
+                "longitud-dni",
+                "El DNI debe tener entre 7 y 8 dígitos",
+                (value) => value && value.length >= 7 && value.length <= 8
+            )
+            .required("El campo es requerido"),
+        address: Yup.string()
+            .min(5, "La dirección debe tener como mínimo 5 caracteres")
+            .required("El campo es requerido"),
+        contactNumber: Yup.string()
+            .matches(/^\+?\d{7,15}$/, "Número de contacto inválido")
+            .required("El campo es requerido"),
+        // discipline: Yup.array()
+        //     .of(Yup.string().required("La disciplina es obligatoria"))
+        //     .min(1, "Debes seleccionar al menos una disciplina")
+        //     .required("El campo es obligatorio"),
+        category: Yup.string()
+            .required("El campo es requerido"),
+
+        email: Yup.string()
+            .when([], {
+                is: () => type === "grouphead" || type === "unique",
+                then: (schema) =>
+                    schema
+                        .required("El email es requerido")
+                        .email("Dirección de correo electrónico inválida"),
+                otherwise: (schema) => schema.notRequired(),
+            }),
+        familyGroup: Yup.array()
+            .when([], {
+                is: () => type === "grouphead",
+                then: (schema) =>
+                    schema
+                        .required("El campo es requerido para grouphead o unique")
+                        .min(1, "Debes seleccionar al menos un socio"),
+                otherwise: (schema) => schema.notRequired(),
+            }),
+    });
 
     const handleSubmit = (
         values: SignUpFormValues,
@@ -162,10 +172,10 @@ const SignUpFormUnique: React.FC = () => {
             category: values.category,
             blockade: false,
             groupHead: type === "grouphead" ? true : false,
-            familyGroup: socios,
+            familyGroup: familyGroupS,
         };
         console.log(user)
-        // setSignUpUser(user)
+        setSignUpUser(user)
         // navigate("/home");
     };
 
@@ -202,7 +212,6 @@ const SignUpFormUnique: React.FC = () => {
 
 
                         email: "",
-                        id: "",
                         admin: false,
 
 
@@ -215,6 +224,7 @@ const SignUpFormUnique: React.FC = () => {
                     }}
                     validationSchema={validationSchema}
                     onSubmit={handleSubmit}
+
                 >
                     {({ handleChange, handleBlur, values, errors, touched, }) => (
                         <Form>
@@ -321,7 +331,7 @@ const SignUpFormUnique: React.FC = () => {
                                         <Grid size={6} >
                                             <LocalizationProvider dateAdapter={AdapterDayjs} >
                                                 <DemoContainer components={['DatePicker']} sx={{ width: '100%' }} >
-                                               
+
                                                     <DatePicker
                                                         format="DD/MM/YYYY"
                                                         label="Fecha de Nacimiento"
@@ -359,7 +369,7 @@ const SignUpFormUnique: React.FC = () => {
                                                             },
                                                         }}
                                                     />
-                                                   
+
                                                 </DemoContainer>
                                                 {touched.birthDate && errors.birthDate ?
                                                     <Typography color="error" variant="caption" sx={{ fontSize: '0.75rem' }} >
@@ -422,11 +432,9 @@ const SignUpFormUnique: React.FC = () => {
                                             </FormControl>
                                         </Grid>
                                     </Grid>
-
                                     {/* DNI */}
                                     <TextField
                                         // margin="none"
-
                                         fullWidth
                                         name="dni"
                                         label="DNI"
@@ -459,11 +467,10 @@ const SignUpFormUnique: React.FC = () => {
                                             },
                                         }}
                                     />
-
                                     {/* ADDRESS */}
                                     <TextField
                                         // margin="none"
-                                        required
+
                                         fullWidth
                                         name="address"
                                         label="Domicilio"
@@ -499,7 +506,6 @@ const SignUpFormUnique: React.FC = () => {
                                     {/* CONTACT NUMBER */}
                                     <TextField
                                         // margin="normal"
-                                        required
                                         fullWidth
                                         name="contactNumber"
                                         label="Número de Contacto"
@@ -612,8 +618,6 @@ const SignUpFormUnique: React.FC = () => {
 
 
                                                     name="category"
-
-                                                    // onChange={handleChange}
                                                     onBlur={handleBlur}
 
                                                     sx={{
@@ -660,10 +664,6 @@ const SignUpFormUnique: React.FC = () => {
                                         {/* EMAIL */}
                                         {type !== "minor" ?
                                             <TextField
-                                                // autoFocus
-                                                // margin="normal"
-                                                required={type !== "minor"}
-                                                // disabled={!isGroupHeadActive}
                                                 fullWidth
                                                 id="email"
                                                 label="Dirección de correo"
@@ -696,75 +696,83 @@ const SignUpFormUnique: React.FC = () => {
                                                 }}
                                             /> : null}
 
-
-
-
-
-
-
-
-
-
-
-
-
-                                        <Grid size={6} >
-
-                                        </Grid>
-
                                         {/* LISTA DE SOCIOS */}
-                                        {type === "grouphead" ?
-                                            <FormControl fullWidth sx={{ mt: 0.9 }}>
-                                                <InputLabel id="demo-multiple-chip-label" sx={{
-                                                    "&.Mui-focused": {
-                                                        color: "#b71c1c", // Ensure label color changes when focused
-                                                    },
-                                                }}>Lista de Socios</InputLabel>
+                                        {type === "grouphead" ? (
+                                            <FormControl
+                                                error={Boolean(touched.familyGroup && errors.familyGroup)}
+                                                fullWidth
+                                                sx={{ mb: 0, mt: 1 }}
+                                            >
+                                                <InputLabel
+                                                    id="demo-multiple-chip-label"
+                                                    sx={{
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c", // Color cuando está enfocado
+                                                        },
+                                                    }}
+                                                >
+                                                    Lista de Socios
+                                                </InputLabel>
                                                 <Select
+                                                    name="familyGroup"
                                                     labelId="demo-multiple-chip-label"
                                                     id="demo-multiple-chip"
                                                     multiple
-
-
-                                                    value={socios}
+                                                    value={familyGroupS} // Aquí guardas un array de dni
                                                     onChange={(event) => {
-                                                        handleSocios(event);
-                                                        handleChange({ target: { name: 'socios', value: event.target.value } });
+                                                        // event.target.value es un array de dni seleccionados
+                                                        handleFamilyGroup(event); // tu función para manejar selección
+                                                        handleChange({ target: { name: "familyGroup", value: event.target.value } }); // para Formik u otro form handler
                                                     }}
+                                                    onBlur={handleBlur}
                                                     sx={{
+                                                        "& .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor:
+                                                                touched.familyGroup && errors.familyGroup ? "#b71c1c" : undefined,
+                                                        },
                                                         "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c", // Change border color when focused
+                                                            borderColor: "#b71c1c",
                                                         },
                                                         "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c", // Change border color on hover
+                                                            borderColor: "#b71c1c",
                                                         },
-                                                        height: '56px',
                                                     }}
                                                     input={<OutlinedInput id="select-multiple-chip" label="Lista de Socios" />}
                                                     renderValue={(selected) => (
-                                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, maxWidth: '100%' }}>
-                                                            {selected.map((value) => (
-                                                                <Chip key={value} label={value} />
-                                                            ))}
+                                                        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                                                            {/* selected es un array de dni, buscamos el usuario para mostrar apellido y nombre */}
+                                                            {selected.map((dni) => {
+                                                                const user = allUsers.find((u) => u.dni === dni);
+                                                                return <Chip key={dni} label={user ? `${user.lastName} ${user.name}` : dni} />;
+                                                            })}
                                                         </Box>
                                                     )}
                                                     MenuProps={MenuProps}
                                                 >
-                                                    {sociosList.map((name) => (
-                                                        <MenuItem key={name} value={name} style={getStyles(name, socios, theme)}>
-                                                            <Checkbox checked={socios.indexOf(name) > -1} />
-                                                            <ListItemText primary={name} />
-                                                        </MenuItem>
-                                                    ))}
-
+                                                    {allUsers?.length > 0 ? (
+                                                        allUsers.map((user: any) => (
+                                                            <MenuItem
+                                                                key={user.dni}
+                                                                value={user.dni} // guardamos el dni
+                                                                style={getStyles(user.dni, familyGroupS, theme)} // pasamos dni para estilos
+                                                            >
+                                                                <Checkbox checked={familyGroupS.indexOf(user.dni) > -1} />
+                                                                <ListItemText primary={`${user.lastName} ${user.name}`} />
+                                                            </MenuItem>
+                                                        ))
+                                                    ) : (
+                                                        <p>Cargando Socios...</p>
+                                                    )}
                                                 </Select>
-                                                {touched.disciplines && errors.disciplines ?
-                                                    <Typography color="error" variant="caption" >
-                                                        {/* {errors.disciplines} */}
-                                                    </Typography> : <span> &nbsp; </span>
-                                                }
-                                            </FormControl> : null}
-
+                                                {touched.familyGroup && errors.familyGroup ? (
+                                                    <Typography color="error" variant="caption">
+                                                        Debe seleccionar al menos un socio
+                                                    </Typography>
+                                                ) : (
+                                                    <span> &nbsp; </span>
+                                                )}
+                                            </FormControl>
+                                        ) : null}
 
                                     </Grid>
                                 </Grid>

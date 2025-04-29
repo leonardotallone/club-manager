@@ -21,6 +21,15 @@ const GetAllUsersProvider = ({ children }) => {
   // console.log("ALL USERS", allUsers)
   const db = getFirestore(FIREBASE_APP);
 
+
+  type User = {
+    id: string;
+    name: string;
+    lastName: string;
+    email: string;
+    // add other fields you expect from the "users" collection
+  };
+
   useEffect(() => {
     const fetchDocuments = async () => {
       setLoading(true);
@@ -30,9 +39,17 @@ const GetAllUsersProvider = ({ children }) => {
 
         const documentsData = querySnapshot.docs.map((doc) => ({
           id: doc.id,
-          ...doc.data(),
+          ...(doc.data() as Omit<User, "id">),
         }));
-        setAllUsers(documentsData);
+        const sortedUsers = documentsData.sort((a, b) => {
+          const lastNameComparison = a.lastName.localeCompare(b.lastName);
+          if (lastNameComparison !== 0) {
+            return lastNameComparison;
+          }
+          // Si los apellidos son iguales, ordenar por nombre
+          return a.name.localeCompare(b.name);
+        });
+        setAllUsers(sortedUsers);
       } catch (error) {
         console.error("Error fetching documents:", error.message);
       } finally {
@@ -46,9 +63,17 @@ const GetAllUsersProvider = ({ children }) => {
       (snapshot) => {
         const documentsData = snapshot.docs.map((doc) => ({
           id: doc.id,
-          ...doc.data(),
+          ...(doc.data() as Omit<User, "id">),
         }));
-        setAllUsers(documentsData);
+        const sortedUsers = documentsData.sort((a, b) => {
+          const lastNameComparison = a.lastName.localeCompare(b.lastName);
+          if (lastNameComparison !== 0) {
+            return lastNameComparison;
+          }
+          // Si los apellidos son iguales, ordenar por nombre
+          return a.name.localeCompare(b.name);
+        });
+        setAllUsers(sortedUsers);
       }
     );
 

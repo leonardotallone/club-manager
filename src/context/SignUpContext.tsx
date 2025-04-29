@@ -58,19 +58,16 @@ const SignUpProvider = ({ children }) => {
             dni: signUpUser.dni,
             contactNumber: signUpUser.contactNumber,
             avatarURL: "",
-            gender: "",
+            gender: signUpUser.gender,
 
             email: signUpUser.email,
-            // id: "",
             admin: false,
       
-
-            disciplines: [],
-            category: "",
+            disciplines: signUpUser.disciplines,
+            category: signUpUser.category,
             blockade: false,
-            groupHead: false,
-            familyGroup: [],
-
+            groupHead: signUpUser.groupHead,
+            familyGroup: signUpUser.familyGroup,
           };
 
           // Add user data to Firestore only if user creation is successful
@@ -92,6 +89,52 @@ const SignUpProvider = ({ children }) => {
       setSignUpUser(null);
     };
   }, [signUpUser, auth, db]);
+
+  useEffect(() => {
+    const AddDoc = async () => {
+      try {
+        setLoading(true); // Show ActivityIndicator when action starts
+        if (signUpUser) {
+
+          const userData = {
+            name: signUpUser.name,
+            lastName: signUpUser.lastName,
+            address: signUpUser.address,
+            birthDate: signUpUser.birthDate,
+            dni: signUpUser.dni,
+            contactNumber: signUpUser.contactNumber,
+            avatarURL: "",
+            gender: signUpUser.gender,
+
+            email: signUpUser.email,
+            admin: false,
+      
+            disciplines: signUpUser.disciplines,
+            category: signUpUser.category,
+            blockade: false,
+            groupHead: signUpUser.groupHead,
+            familyGroup: signUpUser.familyGroup,
+          };
+
+          // Add user data to Firestore only if user creation is successful
+          const docRef = await addDoc(collection(db, "users"), userData);
+          // console.log("Document written with ID: ", docRef.id);
+        }
+      } catch (error) {
+        console.log(error)
+        setSignUpError(error.message);
+      } finally {
+        setLoading(false); // Hide ActivityIndicator when action finishes
+      }
+    };
+
+    AddDoc();
+
+    return () => {
+      // Cleanup function
+      setSignUpUser(null);
+    };
+  }, [signUpUser, db]);
 
   return (
     <signUpContext.Provider value={{ setSignUpUser, signUpSuccess, signUpError, loading }}>
