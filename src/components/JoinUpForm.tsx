@@ -2,7 +2,7 @@ import React, { useEffect, useContext, useState } from 'react';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid2';
 import Modal from '@mui/material/Modal';
-import { FormControlLabel,Avatar, Box, Paper, Card, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
+import { FormControlLabel, Avatar, Box, Paper, Card, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 import { Formik, Form, FormikHelpers } from "formik";
@@ -22,7 +22,7 @@ interface JoinUpFormValues {
     lastName: string;
     dni: string;
     phone: string;
-    groupHead:boolean;
+    groupHead: boolean;
 }
 
 // Validación con Yup
@@ -57,12 +57,7 @@ const JoinUpForm: React.FC = () => {
 
     const { setJoinUpUser, joinUpSuccess, joinUpError, setJoinUpError } = useContext(joinUpContext);
     const [open, setOpen] = React.useState(false);
-    const [isGroupHeadActive, setIsGroupHeadActive] = useState(false);
-
-    const handleGroupHeadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIsGroupHeadActive(event.target.checked);
-    };
-
+  
     useEffect(() => {
         if (joinUpSuccess) {
             setOpen(true);
@@ -87,7 +82,7 @@ const JoinUpForm: React.FC = () => {
                 month: '2-digit',
                 year: 'numeric'
             }),
-            groupHead:values.groupHead
+            groupHead: values.groupHead
         };
         setOpen(true)
         setJoinUpUser(user);
@@ -118,7 +113,7 @@ const JoinUpForm: React.FC = () => {
             <Typography component="h1" variant="h5">Solicitud de Nuevo Socio</Typography>
 
             <Formik<JoinUpFormValues>
-                initialValues={{ email: "", password: "", name: "", lastName: "", dni: "", phone: "", groupHead:false }}
+                initialValues={{ email: "", password: "", name: "", lastName: "", dni: "", phone: "", groupHead: false }}
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
             >
@@ -313,18 +308,20 @@ const JoinUpForm: React.FC = () => {
                                     }}
                                 />
                             </Grid>
-                            <Grid size={3}>
-                            <FormControl fullWidth sx={{ mb: 0 }}>
-                                             <FormControlLabel
-                                 control={
-                                     <Checkbox
-                                         checked={isGroupHeadActive}
-                                         onChange={handleGroupHeadChange}
-                                     />
-                                 }
-                                 label="Cabeza de Grupo"
-                             />
-  </FormControl>
+                            <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12 }}>
+                                <FormControl fullWidth sx={{ mb: 0 }}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                            name="groupHead"
+                                            checked={values.groupHead}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            />
+                                        }
+                                        label="Grupo Familiar"
+                                    />
+                                </FormControl>
                             </Grid>
                             <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
                                 <Button
@@ -362,20 +359,6 @@ const JoinUpForm: React.FC = () => {
                     </Form>
                 )}
             </Formik>
-
-            {/* 
-            <Grid container alignItems="center" justifyContent={{ xs: "center", sm: "space-between", md: "space-between", lg: "space-between", }} spacing={{ xs: 3, sm: 20, md: 30, lg: 30 }} direction={{ xs: "column", sm: "row", md: "row", lg: "row", }}  >
-                <Grid size={{ xs: 12, sm: "auto", md: "auto", lg: "auto" }} sx={{ textAlign: 'center' }}>
-                    <Link href="/password-recover" variant="body2">
-                        ¿Olvidaste tu contraseña?
-                    </Link>
-                </Grid>
-                <Grid size={{ xs: 12, sm:"auto", md: "auto", lg: "auto" }} sx={{ textAlign: 'center' }}>
-                    <Link href="/signup" variant="body2">
-                        ¿Aún no sos socio?
-                    </Link>
-                </Grid>
-            </Grid> */}
 
             <Modal
                 open={open}
