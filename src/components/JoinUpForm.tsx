@@ -1,24 +1,16 @@
-import React, { useEffect, useContext } from 'react';
-
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import React, { useEffect, useContext, useState } from 'react';
 import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Modal from '@mui/material/Modal';
-
+import { FormControlLabel,Avatar, Box, Paper, Card, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
+
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 
 import { useNavigate } from "react-router-dom";
 import { joinUpContext } from '../Context/JoinUpContext';
-import { Password } from '@mui/icons-material';
+
 
 
 // Componente Copyright
@@ -30,20 +22,20 @@ interface JoinUpFormValues {
     lastName: string;
     dni: string;
     phone: string;
+    groupHead:boolean;
 }
 
 // Validación con Yup
 const validationSchema = Yup.object({
     email: Yup.string()
-        .email("Dirección de correo electrónico inválida")
-        .required("El campo es obligatorio"),
+        .email("Correo electrónico inválido")
+        .required("El campo es requerido"),
     name: Yup.string()
         .matches(/^[a-zA-ZÀ-ÿ\s]+$/, "Formato de nombre incorrecto")
-        .required("El campo es obligatorio"),
-
+        .required("El campo es requerido"),
     lastName: Yup.string()
         .matches(/^[a-zA-ZÀ-ÿ\s]+$/, "Formato de apellido incorrecto")
-        .required("El campo es obligatorio"),
+        .required("El campo es requerido"),
     dni: Yup.string()
         .matches(/^\d+$/, "El DNI debe contener solo números")
         .test(
@@ -51,13 +43,13 @@ const validationSchema = Yup.object({
             "El DNI debe tener entre 7 y 8 dígitos",
             (value) => value && value.length >= 7 && value.length <= 8
         )
-        .required("El campo es obligatorio"),
+        .required("El campo es requerido"),
     phone: Yup.string()
         .matches(
             /^\d{10}$/,
-            "El número de teléfono inválido"
+            "Número de teléfono inválido"
         )
-        .required("El campo es obligatorio"),
+        .required("El campo es requerido"),
 });
 
 
@@ -65,6 +57,11 @@ const JoinUpForm: React.FC = () => {
 
     const { setJoinUpUser, joinUpSuccess, joinUpError, setJoinUpError } = useContext(joinUpContext);
     const [open, setOpen] = React.useState(false);
+    const [isGroupHeadActive, setIsGroupHeadActive] = useState(false);
+
+    const handleGroupHeadChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIsGroupHeadActive(event.target.checked);
+    };
 
     useEffect(() => {
         if (joinUpSuccess) {
@@ -76,18 +73,24 @@ const JoinUpForm: React.FC = () => {
         setOpen(false);
     };
 
-
-
-
     const handleSubmit = (
         values: JoinUpFormValues,
         formikHelpers: FormikHelpers<JoinUpFormValues>
     ) => {
-        const user = { email: values.email, name: values.name, lastName: values.lastName, dni: values.dni, phone: values.phone };
+        const user = {
+            email: values.email,
+            name: values.name, lastName: values.lastName,
+            dni: values.dni,
+            phone: values.phone,
+            date: new Date().toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            }),
+            groupHead:values.groupHead
+        };
         setOpen(true)
         setJoinUpUser(user);
-        // setJoin(false)
-
     };
 
 
@@ -115,13 +118,14 @@ const JoinUpForm: React.FC = () => {
             <Typography component="h1" variant="h5">Solicitud de Nuevo Socio</Typography>
 
             <Formik<JoinUpFormValues>
-                initialValues={{ email: "", password: "", name: "", lastName: "", dni: "", phone: "" }}
+                initialValues={{ email: "", password: "", name: "", lastName: "", dni: "", phone: "", groupHead:false }}
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
             >
                 {({ handleChange, handleBlur, values, errors, touched, isValid, dirty }) => (
                     <Form>
-                        <Grid container spacing={2}>
+                        <Grid container spacing={2}
+                        >
                             <Grid size={6}>
                                 <TextField
                                     margin="normal"
@@ -308,6 +312,19 @@ const JoinUpForm: React.FC = () => {
                                         },
                                     }}
                                 />
+                            </Grid>
+                            <Grid size={3}>
+                            <FormControl fullWidth sx={{ mb: 0 }}>
+                                             <FormControlLabel
+                                 control={
+                                     <Checkbox
+                                         checked={isGroupHeadActive}
+                                         onChange={handleGroupHeadChange}
+                                     />
+                                 }
+                                 label="Cabeza de Grupo"
+                             />
+  </FormControl>
                             </Grid>
                             <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
                                 <Button

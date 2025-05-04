@@ -176,7 +176,7 @@ const SignUpFormUnique: React.FC = () => {
         };
         console.log(user)
         setSignUpUser(user)
-        // navigate("/home");
+        navigate("/");
     };
 
     return (

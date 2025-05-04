@@ -19,11 +19,11 @@ const emailRegex = /^[a-zA-Z0-9\u00E0-\u00FC._%+!#$&'*+/=?^_`{|}~-]+@[a-zA-Z0-9.
 // Validación con Yup
 const validationSchema = Yup.object().shape({
     email: Yup.string()
-        .matches(emailRegex, 'Dirección de correo electrónico inválida')
-        .required('El correo electrónico es obligatorio'),
+        .matches(emailRegex, 'Correo electrónico inválido')
+        .required('El correo electrónico es requerido'),
     password: Yup.string()
         .min(6, "La contraseña debe tener como mínimo 6 caracteres")
-        .required("El campo es obligatorio"),
+        .required("El campo es requerido"),
 });
 
 

@@ -17,25 +17,32 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import DeleteIcon from '@mui/icons-material/Delete';
 import ManOutlinedIcon from '@mui/icons-material/ManOutlined';
 import FamilyRestroomOutlinedIcon from '@mui/icons-material/FamilyRestroomOutlined';
 import Pagination from '@mui/material/Pagination';
 
 import { getAllJoinUpContext } from '../../Context/GetAllJoinUpContext';
+import { joinUpContext } from '../../Context/JoinUpContext';
 
 
 const ApplicationsList = () => {
     const [selectedCategory, setSelectedCategory] = React.useState('');
     const { allApplications } = useContext(getAllJoinUpContext);
+    const { setDeleteApplication, deleteSuccess, deleteError, loadingDelete } = useContext(joinUpContext);
 
     console.log("Solicitudes UI", allApplications)
-    
+
     const navigate = useNavigate();
 
     const category = [
         'Fecha',
         'Apellido',
     ];
+
+    const handleDelete = (id: string) => {
+        setDeleteApplication({ id }); // Pass the document ID to context
+    };
 
     return (
         <>
@@ -44,6 +51,7 @@ const ApplicationsList = () => {
                     mb: 3,
                     // position: "fixed", // Asegura que ocupe toda la pantalla
                     width: '100%', // Asegura que tome todo el ancho del viewport
+                    // minHeight: '100vh',
                 }}
             >
                 <Container maxWidth="xl">
@@ -61,7 +69,6 @@ const ApplicationsList = () => {
                             >
                                 Ordenar Solicitudes
                             </Typography>
-
                         </Grid>
                         <Grid size={{ xs: 6, sm: 6, md: 6, lg: 2 }} >
                             <FormControl fullWidth sx={{ mt: 2 }}>
@@ -79,20 +86,15 @@ const ApplicationsList = () => {
                                         </MenuItem>
                                     ))}
                                 </Select>
-
                             </FormControl>
-
                         </Grid>
                     </Grid>
-
-
-
                 </Container>
             </Box>
 
             <Container maxWidth="xl">
                 <Grid container>
-                    {allApplications?.map((application, index) => (
+                    {allApplications?.map((application:any, index:any) => (
                         <Grid key={index} size={{ xs: 12, sm: 6, md: 6, lg: 12 }} sx={{ mb: 1.5 }}>
                             <Box
                                 sx={{
@@ -135,18 +137,18 @@ const ApplicationsList = () => {
                                             TELEFONO
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                        {application.phone}
+                                            {application.phone}
                                         </Typography>
                                     </Grid>
 
-                                    {/* <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }} direction="column">
+                                    <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }} direction="column">
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
-                                            CATEGORIA
+                                           FECHA DE SOLICITUD
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                            {socio.categoria.nombre}
+                                        {application.date}
                                         </Typography>
-                                    </Grid> */}
+                                    </Grid>
 
                                     {/* <Grid size={{ xs: 1.5, sm: 1.5, md: 1.5, lg: 1.5, xl: 1.2 }} direction="column">
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
@@ -174,7 +176,7 @@ const ApplicationsList = () => {
                                         </Typography>
                                     </Grid> */}
 
-                                    <Grid size={{ xs: 1, sm: 6, md: 6, lg: 7.7, xl: 7.7 }} direction="column" sx={{
+                                    <Grid size={{ xs: 1, sm: 6, md: 6, lg: 7.7, xl: 6.7 }} direction="column" sx={{
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'flex-end',
@@ -183,14 +185,14 @@ const ApplicationsList = () => {
                                         color: 'black',
 
                                     }}>
-                                        <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none', mr: 1 }}>
-                                            ELIMINAR SOLICITUD
-                                        </Typography>
-                                        {/* <Button
-                                            startIcon={<ModeEditOutlineOutlinedIcon sx={{ fontSize: 24, color: "black", mr: -3 }} />}
-                                            onClick={() => navigate(`/edit-user/${user}`, { state: user })}
+                                        <Button
+                                            startIcon={<DeleteIcon sx={{ fontSize: 24, color: "black" }} />}
+                                            onClick={() => handleDelete(application.id)}
                                         >
-                                        </Button> */}
+                                            <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none', mr: 1 }}>
+                                                ELIMINAR SOLICITUD
+                                            </Typography>
+                                        </Button>
                                     </Grid>
                                 </Grid>
                             </Box>
