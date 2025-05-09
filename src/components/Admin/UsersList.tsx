@@ -52,6 +52,7 @@ const UsersList = () => {
                     // position: "fixed", // Asegura que ocupe toda la pantalla
                     width: '100%', // Asegura que tome todo el ancho del viewport
 
+           
                 }}
             >
                 <Container maxWidth="xl">
@@ -99,7 +100,7 @@ const UsersList = () => {
 
             <Container maxWidth="xl">
                 <Grid container>
-                    {allUsers?.map((user, index) => (
+                    {allUsers?.map((user:any, index:any) => (
                         <Grid key={index} size={{ xs: 12, sm: 6, md: 6, lg: 12 }} sx={{ mb: 1.5 }}>
                             <Box
                                 sx={{
@@ -113,6 +114,7 @@ const UsersList = () => {
                                     boxShadow: 2,
                                     display: 'flex',
                                     alignItems: 'center',
+
                                 }}
                             >
                                 <Grid container sx={{ width: '100%' }} >

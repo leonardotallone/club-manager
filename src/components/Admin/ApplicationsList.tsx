@@ -28,12 +28,20 @@ import { joinUpContext } from '../../Context/JoinUpContext';
 
 const ApplicationsList = () => {
     const [selectedCategory, setSelectedCategory] = React.useState('');
+    const [page, setPage] = useState(1);
     const { allApplications } = useContext(getAllJoinUpContext);
     const { setDeleteApplication, deleteSuccess, deleteError, loadingDelete } = useContext(joinUpContext);
 
     console.log("Solicitudes UI", allApplications)
 
     const navigate = useNavigate();
+
+    const applicationsPerPage = 4;
+
+    const startIndex = (page - 1) * applicationsPerPage;
+    const endIndex = startIndex + applicationsPerPage;
+    const paginatedApplications = allApplications?.slice(startIndex, endIndex);
+    const totalPages = Math.ceil((allApplications?.length || 0) / applicationsPerPage);
 
     const category = [
         'Fecha',
@@ -94,7 +102,8 @@ const ApplicationsList = () => {
 
             <Container maxWidth="xl">
                 <Grid container>
-                    {allApplications?.map((application:any, index:any) => (
+                    {/* {allApplications?.map((application: any, index: any) => ( */}
+                    {paginatedApplications?.map((application: any, index: any) => (
                         <Grid key={index} size={{ xs: 12, sm: 6, md: 6, lg: 12 }} sx={{ mb: 1.5 }}>
                             <Box
                                 sx={{
@@ -143,10 +152,10 @@ const ApplicationsList = () => {
 
                                     <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }} direction="column">
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
-                                           FECHA DE SOLICITUD
+                                            FECHA DE SOLICITUD
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                        {application.date}
+                                            {application.date}
                                         </Typography>
                                     </Grid>
 
@@ -158,14 +167,14 @@ const ApplicationsList = () => {
                                             <LockOutlinedIcon sx={{ fontSize: 24, color: 'Red', ml: 5 }} />}
                                     </Grid> */}
 
-                                    {/* <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 0.7 }} direction="column">
+                                    <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 0.7 }} direction="column">
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             GRUPO
                                         </Typography>
-                                        {socio.cabezaGrupo ?
+                                        {application.groupHead ?
                                             <FamilyRestroomOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} /> :
                                             <ManOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} />}
-                                    </Grid> */}
+                                    </Grid>
 
                                     {/* <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }} direction="column" >
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
@@ -176,7 +185,7 @@ const ApplicationsList = () => {
                                         </Typography>
                                     </Grid> */}
 
-                                    <Grid size={{ xs: 1, sm: 6, md: 6, lg: 7.7, xl: 6.7 }} direction="column" sx={{
+                                    <Grid size={{ xs: 1, sm: 6, md: 6, lg: 7, xl: 6 }} direction="column" sx={{
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'flex-end',
@@ -202,7 +211,12 @@ const ApplicationsList = () => {
 
 
                 </Grid>
-                <Pagination count={10} variant="outlined" sx={{ mt: 1, display: 'flex', justifyContent: 'center' }} />
+                <Pagination
+                    count={totalPages}
+                    page={page}
+                    onChange={(event, value) => setPage(value)}
+                    variant="outlined"
+                    sx={{ mt: 1, display: 'flex', justifyContent: 'center' }} />
             </Container>
             <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12 }} sx={{ mt: 2 }}>
                 <Advertising />
