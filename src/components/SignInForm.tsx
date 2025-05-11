@@ -159,7 +159,7 @@ const SignInForm: React.FC = () => {
                                         type="button"
                                         onClick={(e) => {
                                             e.preventDefault(); // Prevenir el envío del formulario
-                                            navigate('/join')
+                                            navigate('/signup/grouphead')
                                         }}
 
                                         fullWidth variant="contained" sx={{
