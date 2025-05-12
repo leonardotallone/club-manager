@@ -87,7 +87,7 @@ const initialState = {
 
 const stateKeys = Object.keys(initialState);
 
-const SignUpFormUnique: React.FC = () => {
+const EditUserForm: React.FC = () => {
 
     const { categories } = useContext(getAllCategoriesContext)
     const { disciplines } = useContext(getAllDisciplinesContext)
@@ -1297,5 +1297,5 @@ const SignUpFormUnique: React.FC = () => {
     );
 };
 
-export default SignUpFormUnique;
+export default EditUserForm;
 
