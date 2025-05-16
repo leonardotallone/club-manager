@@ -87,7 +87,7 @@ const initialState = {
 
 const stateKeys = Object.keys(initialState);
 
-const SignUpFormUnique: React.FC = () => {
+const SignUpForm: React.FC = () => {
 
     const { categories } = useContext(getAllCategoriesContext)
     const { disciplines } = useContext(getAllDisciplinesContext)
@@ -171,10 +171,6 @@ const SignUpFormUnique: React.FC = () => {
         contactNumber: Yup.string()
             .matches(/^\+?\d{7,15}$/, "Número de contacto inválido")
             .required("El campo es requerido"),
-        // discipline: Yup.array()
-        //     .of(Yup.string().required("La disciplina es obligatoria"))
-        //     .min(1, "Debes seleccionar al menos una disciplina")
-        //     .required("El campo es obligatorio"),
         category: Yup.string()
             .required("El campo es requerido"),
 
@@ -267,20 +263,19 @@ const SignUpFormUnique: React.FC = () => {
 
                         name: "",
                         name_1: "",
-
                         lastName: "",
                         lastName_1: "",
                         address: "",
                         address_1: "",
                         birthDate: null,
                         birthDate_1: null,
+                        gender: "",
+                        gender_1: "",
                         dni: "",
                         dni_1: "",
                         contactNumber: "",
                         contactNumber_1: "",
                         avatarURL: "",
-                        gender: "",
-                        gender_1: "",
 
                         email: "",
                         admin: false,
@@ -618,13 +613,12 @@ const SignUpFormUnique: React.FC = () => {
                                                     "&.Mui-focused": {
                                                         color: "#b71c1c", // Ensure label color changes when focused
                                                     },
-                                                }}>Disciplinas</InputLabel>
+                                                }}>Disciplinas
+                                            </InputLabel>
                                             <Select
-
                                                 labelId="demo-multiple-chip-label"
                                                 id="demo-multiple-chip"
                                                 multiple
-
                                                 value={discipline}
                                                 onChange={(event) => {
                                                     handleDiscipline(event);
@@ -741,7 +735,7 @@ const SignUpFormUnique: React.FC = () => {
                                             onBlur={handleBlur}
                                             error={touched.email && Boolean(errors.email)}
                                             helperText={touched.email && errors.email ? errors.email : " "} // 
-                                            sx={{ mt: 1 }}
+                                            sx={{ mt: 0.65 }}
                                             slotProps={{
                                                 input: {
                                                     sx: {
@@ -1297,5 +1291,5 @@ const SignUpFormUnique: React.FC = () => {
     );
 };
 
-export default SignUpFormUnique;
+export default SignUpForm;
 

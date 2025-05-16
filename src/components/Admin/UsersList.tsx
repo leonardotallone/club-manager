@@ -31,7 +31,7 @@ const UsersList = () => {
     const [selectedCategory, setSelectedCategory] = React.useState('');
     const { allUsers } = useContext(getAllUsersContext);
 
-    console.log(allUsers)
+    // console.log(allUsers)
 
     const navigate = useNavigate();
 
@@ -184,11 +184,11 @@ const UsersList = () => {
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none', mr: 1 }}>
                                             EDITAR
                                         </Typography>
-                                        {/* <Button
+                                        <Button
                                             startIcon={<ModeEditOutlineOutlinedIcon sx={{ fontSize: 24, color: "black", mr: -3 }} />}
                                             onClick={() => navigate(`/edit-user/${user}`, { state: user })}
                                         >
-                                        </Button> */}
+                                        </Button>
                                     </Grid>
                                 </Grid>
                             </Box>

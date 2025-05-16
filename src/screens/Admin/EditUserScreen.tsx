@@ -24,7 +24,7 @@ const EditUserScreen = () => {
                     container
                     sx={{
                         flexGrow: 1, display: 'flex', flexDirection: 'column',
-                        backgroundColor: "#eeeeee",
+                        // backgroundColor: "#eeeeee",
                         backgroundSize: 'cover',
                         backgroundPosition: 'center', // Center the image
                     }}
