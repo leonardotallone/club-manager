@@ -23,8 +23,8 @@ import { useParams } from "react-router-dom";
 import { getAllCategoriesContext } from "../../Context/GetAllCategoriesContext"
 import { getAllDisciplinesContext } from "../../Context/GetAllDisciplinesContext"
 import { getAllGendersContext } from "../../Context/GetAllGendersContext"
-import { getAllUsersContext } from '../../Context/GetAllUsersContext';
-import { signUpContext } from "../../Context/SignUpContext"
+import { joinUpContext } from "../../Context/JoinUpContext"
+import { getAllUsersContext } from "../../Context/GetAllUsersContext"
 
 
 const ITEM_HEIGHT = 48;
@@ -71,10 +71,10 @@ interface SignUpFormValues {
     category: string,
     category_1: string,
     blockade: boolean,
+    admited: boolean,
     groupHead: boolean,
     familyGroup: object,
 }
-
 
 const initialState = {
     nested_1: false,
@@ -92,12 +92,11 @@ const SignUpForm: React.FC = () => {
     const { categories } = useContext(getAllCategoriesContext)
     const { disciplines } = useContext(getAllDisciplinesContext)
     const { genders } = useContext(getAllGendersContext)
-    const { allUsers } = useContext(getAllUsersContext)
-    const { setSignUpUser } = useContext(signUpContext)
+    const { setJoinUpUser } = useContext(joinUpContext)
+    const { loguedUserInformation } = useContext(getAllUsersContext)
 
     const [discipline, setDiscipline] = useState<string[]>([]);
     const [discipline_1, setDiscipline_1] = useState<string[]>([]);
-    const [familyGroupS, setFamilyGroupS] = useState<string[]>([]);
 
     const [nested, setNested] = useState(initialState);
 
@@ -109,7 +108,6 @@ const SignUpForm: React.FC = () => {
             setNested(prev => ({ ...prev, [key]: true }));
         }
     };
-
     // Encuentra el último estado en true para retroceder
     const removeUser = () => {
         const idx = [...stateKeys].reverse().findIndex(key => nested[key]);
@@ -126,20 +124,11 @@ const SignUpForm: React.FC = () => {
     const navigate = useNavigate();
 
 
-
     const handleDiscipline = (event: SelectChangeEvent<typeof discipline>) => {
         const {
             target: { value },
         } = event;
         setDiscipline(
-            typeof value === 'string' ? value.split(',') : value,
-        );
-    };
-    const handleFamilyGroup = (event: SelectChangeEvent<typeof familyGroupS>) => {
-        const {
-            target: { value },
-        } = event;
-        setFamilyGroupS(
             typeof value === 'string' ? value.split(',') : value,
         );
     };
@@ -173,7 +162,6 @@ const SignUpForm: React.FC = () => {
             .required("El campo es requerido"),
         category: Yup.string()
             .required("El campo es requerido"),
-
         email: Yup.string()
             .when([], {
                 is: () => type === "grouphead" || type === "unique",
@@ -183,15 +171,6 @@ const SignUpForm: React.FC = () => {
                         .email("Dirección de correo electrónico inválida"),
                 otherwise: (schema) => schema.notRequired(),
             }),
-        // familyGroup: Yup.array()
-        //     .when([], {
-        //         is: () => type === "grouphead",
-        //         then: (schema) =>
-        //             schema
-        //                 .required("El campo es requerido para grouphead o unique")
-        //                 .min(1, "Debes seleccionar al menos un socio"),
-        //         otherwise: (schema) => schema.notRequired(),
-        //     }),
     });
 
     const handleSubmit = (
@@ -214,6 +193,7 @@ const SignUpForm: React.FC = () => {
             disciplines: discipline,
             category: values.category,
             blockade: false,
+            admited: false,
             groupHead: true,
             familyGroup: nested.nested_1
                 ? [{
@@ -235,7 +215,7 @@ const SignUpForm: React.FC = () => {
         };
 
         console.log("USER", user)
-        setSignUpUser(user)
+        setJoinUpUser(user)
         // navigate("/");
     };
 
@@ -285,6 +265,7 @@ const SignUpForm: React.FC = () => {
                         category: "",
                         category_1: "",
                         blockade: false,
+                        admited: false,
                         groupHead: true,
                         familyGroup: [],
                     }}
@@ -1231,7 +1212,7 @@ const SignUpForm: React.FC = () => {
                                                 },
                                             }}
                                         >
-                                            REGISTRAR SOCIO
+                                            {loguedUserInformation && loguedUserInformation.admin === true ? "REGISTRAR SOCIO" : "REGISTRARME"}
                                         </Button>
                                     </Grid>
 

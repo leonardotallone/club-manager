@@ -18,6 +18,7 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
+import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import ManOutlinedIcon from '@mui/icons-material/ManOutlined';
 import FamilyRestroomOutlinedIcon from '@mui/icons-material/FamilyRestroomOutlined';
 import Pagination from '@mui/material/Pagination';
@@ -185,7 +186,7 @@ const ApplicationsList = () => {
                                         </Typography>
                                     </Grid> */}
 
-                                    <Grid size={{ xs: 1, sm: 6, md: 6, lg: 7, xl: 6 }} direction="column" sx={{
+                                    <Grid size={{ xs: 1, sm: 3, md: 3, lg: 3, xl: 3 }} direction="column" sx={{
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'flex-end',
@@ -200,6 +201,24 @@ const ApplicationsList = () => {
                                         >
                                             <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none', mr: 1 }}>
                                                 ELIMINAR SOLICITUD
+                                            </Typography>
+                                        </Button>
+                                    </Grid>
+                                    <Grid size={{ xs: 1, sm: 3, md: 3, lg: 3, xl: 3 }} direction="column" sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'flex-end',
+                                        justifyContent: 'center',
+                                        fontSize: 24,
+                                        color: 'black',
+
+                                    }}>
+                                        <Button
+                                            startIcon={<RemoveRedEyeOutlinedIcon sx={{ fontSize: 24, color: "black" }} />}
+                                            onClick={() => navigate(`/edit-user/${application}`, { state: application })}
+                                        >
+                                            <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none', mr: 1 }}>
+                                                VER SOLICITUD
                                             </Typography>
                                         </Button>
                                     </Grid>

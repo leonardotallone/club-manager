@@ -479,7 +479,7 @@ const EditUserForm: React.FC = () => {
                                         onBlur={handleBlur}
                                         error={touched.dni && Boolean(errors.dni)}
                                         helperText={touched.dni && errors.dni ? errors.dni : " "}
-                                        sx={{ mt: -2 }}
+                                        sx={{ mt: -2.8 }}
                                         slotProps={{
                                             input: {
                                                 sx: editMode
@@ -667,7 +667,7 @@ const EditUserForm: React.FC = () => {
 
                                         <Grid size={12} >
                                             {/* CATEGORY */}
-                                            <FormControl fullWidth sx={{ mb: 0, mt: 0 }}>
+                                            <FormControl fullWidth sx={{ mb: 0, mt: -0.8 }}>
                                                 <InputLabel
                                                     id="demo-simple-select-label"
                                                     shrink={true} // Forzar que el label esté siempre flotando
@@ -689,7 +689,9 @@ const EditUserForm: React.FC = () => {
                                                     onChange={(event) => {
                                                         handleChange({ target: { name: 'category', value: event.target.value } });
                                                     }}
+
                                                     sx={
+
                                                         editMode
                                                             ? {
                                                                 '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
@@ -733,7 +735,7 @@ const EditUserForm: React.FC = () => {
                                                 onBlur={handleBlur}
                                                 error={touched.email && Boolean(errors.email)}
                                                 helperText={touched.email && errors.email ? errors.email : " "} // 
-                                                sx={{ mt: 0.65 }}
+                                                sx={{ mt: 0.85 }}
                                                 slotProps={editMode ? {
                                                     input: {
                                                         sx: editMode
@@ -762,53 +764,104 @@ const EditUserForm: React.FC = () => {
 
                                 {/* BOTONES */}
                                 <Grid size={4}>
-                                    <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
-                                        mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo gris
-                                        '&:hover': {
-                                            backgroundColor: 'darkgrey', // Color al pasar el mouse
-                                        },
-                                    }}>
-                                        CANCELAR
-                                    </Button>
-                                </Grid>
-                                <Grid size={2}>
-                                    {user.blockade === false ?
-                                        <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
-                                            mt: 3, mb: 0, backgroundColor: '#b71c1c', // Color de fondo gris
-                                            '&:hover': {
-                                                backgroundColor: 'darkred', // Color al pasar el mouse
-                                            },
-                                        }}
-                                            onClick={handleLockUser}
-                                            disabled={!editMode}
-                                        >
-                                            BLOQUEAR SOCIO
-                                        </Button> :
-                                        <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
+                                    {user.admited === false ?
+                                        <Button href="/admin-applications" variant="contained" fullWidth sx={{
                                             mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo gris
                                             '&:hover': {
                                                 backgroundColor: 'darkgrey', // Color al pasar el mouse
                                             },
-                                        }}
-                                            onClick={handleLockUser}
-                                            disabled={!editMode}
-                                        >
-                                            DESBLOQUEAR SOCIO
+                                        }}>
+                                            VOLVER
+                                        </Button> :
+                                        <Button href="/admin-users-list" variant="contained" fullWidth sx={{
+                                            mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo gris
+                                            '&:hover': {
+                                                backgroundColor: 'darkgrey', // Color al pasar el mouse
+                                            },
+                                        }}>
+                                            CANCELAR
                                         </Button>}
                                 </Grid>
-                                <Grid size={2}>
-                                    <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
-                                        mt: 3, mb: 0, backgroundColor: '#b71c1c', // Color de fondo gris
-                                        '&:hover': {
-                                            backgroundColor: 'darkred', // Color al pasar el mouse
-                                        },
-                                    }}
-                                        onClick={handleRemoveUser}
-                                        disabled={!editMode}
-                                    >
-                                        ELIMINAR SOCIO
-                                    </Button>
-                                </Grid>
+
+                                {user.admited === true ?
+                                    <Grid container size={4}>
+                                        <Grid size={6}>
+                                            {user.blockade === false ?
+                                                <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
+                                                    mt: 3, mb: 0, backgroundColor: '#b71c1c', // Color de fondo gris
+                                                    '&:hover': {
+                                                        backgroundColor: 'darkred', // Color al pasar el mouse
+                                                    },
+                                                }}
+                                                    onClick={handleLockUser}
+                                                    disabled={!editMode}
+                                                >
+                                                    BLOQUEAR SOCIO
+                                                </Button> :
+                                                <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
+                                                    mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo gris
+                                                    '&:hover': {
+                                                        backgroundColor: 'darkgrey', // Color al pasar el mouse
+                                                    },
+                                                }}
+                                                    onClick={handleLockUser}
+                                                    disabled={!editMode}
+                                                >
+                                                    DESBLOQUEAR SOCIO
+                                                </Button>}
+                                        </Grid>
+
+
+                                        <Grid size={6}>
+                                            <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
+                                                mt: 3, mb: 0, backgroundColor: '#b71c1c', // Color de fondo gris
+                                                '&:hover': {
+                                                    backgroundColor: 'darkred', // Color al pasar el mouse
+                                                },
+                                            }}
+                                                onClick={handleRemoveUser}
+                                                disabled={!editMode}
+                                            >
+                                                ELIMINAR SOCIO
+                                            </Button>
+                                        </Grid>
+
+                                    </Grid> : null}
+                                {user.admited === false ?
+                                    <Grid container size={4}>
+                                        <Grid size={6}>
+                                            {user.blockade === false ?
+                                                <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
+                                                    mt: 3, mb: 0, backgroundColor: '#b71c1c', // Color de fondo gris
+                                                    '&:hover': {
+                                                        backgroundColor: 'darkred', // Color al pasar el mouse
+                                                    },
+                                                }}
+                                                    onClick={handleLockUser}
+                                                    disabled={!editMode}
+                                                >
+                                                    ACEPTAR SOLICITUD
+                                                </Button> : null}
+                                        </Grid>
+                                        <Grid size={6}>
+                                            {user.blockade === false ?
+                                                <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
+                                                    mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo gris
+                                                    '&:hover': {
+                                                        backgroundColor: 'darkgrey', // Color al pasar el mouse
+                                                    },
+                                                }}
+                                                    onClick={handleLockUser}
+                                                    disabled={!editMode}
+                                                >
+                                                    DECLINAR SOLICITUD
+                                                </Button> : null}
+                                        </Grid>
+                                    </Grid> : null}
+
+
+
+
                                 <Grid size={4}>
                                     {!editMode ?
                                         <Button

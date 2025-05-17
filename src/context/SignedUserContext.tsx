@@ -18,6 +18,8 @@ const SignedUserContext = ({ children }) => {
         uid: "",
     });
 
+    console.log("USUARIO CONECTADO", signedUser)
+
     //   useEffect(() => {
     //     const signIn = async () => {
     //       try {

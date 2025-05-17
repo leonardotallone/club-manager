@@ -17,7 +17,6 @@ interface User {
   gender: string;
 
   email: string;
-  // id: string,
   admin: boolean,
   
   disciplines: object,

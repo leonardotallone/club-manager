@@ -15,10 +15,8 @@ const GetAllUsersProvider = ({ children }) => {
   const { loguedUser } = useContext(signInContext);
   const [allUsers, setAllUsers] = useState([]);
   const [loguedUserInformation, setLoguedUserInformation] = useState();
-
   const [loading, setLoading] = useState(false)
-
-  // console.log("ALL USERS", allUsers)
+  
   const db = getFirestore(FIREBASE_APP);
 
 
