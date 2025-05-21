@@ -17,6 +17,9 @@ import * as Yup from "yup";
 import { getAllCategoriesContext } from "../../Context/GetAllCategoriesContext"
 import { getAllDisciplinesContext } from "../../Context/GetAllDisciplinesContext"
 import { getAllGendersContext } from "../../Context/GetAllGendersContext"
+import { joinUpContext } from '../../Context/JoinUpContext';
+import { updateUserProfileContext } from "../../Context/UpdateUserProfileContext"
+import { signUpContext } from "../../Context/SignUpContext"
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 0;
@@ -115,6 +118,9 @@ const EditUserForm: React.FC = () => {
     const { categories } = useContext(getAllCategoriesContext)
     const { disciplines } = useContext(getAllDisciplinesContext)
     const { genders } = useContext(getAllGendersContext)
+    const { setDeleteApplication, deleteSuccess, deleteError, loadingDelete } = useContext(joinUpContext);
+    const { setSignUpUser } = useContext(signUpContext)
+
 
     const [discipline, setDiscipline] = React.useState<string[]>([]);
     const [discipline_1, setDiscipline_1] = useState<string[]>([]);
@@ -124,10 +130,11 @@ const EditUserForm: React.FC = () => {
     const [lockUser, setLockUser] = React.useState<boolean>(false);
 
     const [nested, setNested] = useState(initialState);
+    const [setUpdateUserData] = useState();
 
     const location = useLocation();
     const user = location.state;
-    console.log("User", user)
+
 
 
     const theme = useTheme();
@@ -141,9 +148,19 @@ const EditUserForm: React.FC = () => {
         event.preventDefault();
         setLockUser(prevEditMode => !prevEditMode);
     }
+
     const handleRemoveUser = () => {
         console.log("Removing user")
     }
+    const handleDeleteRequest = (id: string) => {
+        console.log("ID", id)
+        setDeleteApplication({ id }); // Pass the document ID to context
+    };
+  const handleAceptRequest = () => {
+    user.admited = true; // Update the property
+    console.log("SOLICITUD ACEPTADA", user);
+     setSignUpUser(user)
+}
 
     useEffect(() => {
         if (user && user.disciplines) {
@@ -764,7 +781,7 @@ const EditUserForm: React.FC = () => {
 
                                 {/* BOTONES */}
                                 <Grid size={4}>
-                                    {user.admited === false ?
+                                    {user.admition === false ?
                                         <Button href="/admin-applications" variant="contained" fullWidth sx={{
                                             mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo gris
                                             '&:hover': {
@@ -783,7 +800,7 @@ const EditUserForm: React.FC = () => {
                                         </Button>}
                                 </Grid>
 
-                                {user.admited === true ?
+                                {user.admition === true ?
                                     <Grid container size={4}>
                                         <Grid size={6}>
                                             {user.blockade === false ?
@@ -810,8 +827,6 @@ const EditUserForm: React.FC = () => {
                                                     DESBLOQUEAR SOCIO
                                                 </Button>}
                                         </Grid>
-
-
                                         <Grid size={6}>
                                             <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
                                                 mt: 3, mb: 0, backgroundColor: '#b71c1c', // Color de fondo gris
@@ -825,45 +840,44 @@ const EditUserForm: React.FC = () => {
                                                 ELIMINAR SOCIO
                                             </Button>
                                         </Grid>
-
                                     </Grid> : null}
-                                {user.admited === false ?
+                                {!editMode && !user.admition ?
                                     <Grid container size={4}>
-                                        <Grid size={6}>
-                                            {user.blockade === false ?
-                                                <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
+                                        <Grid size={12}>
+                                            <Button
+                                                // href="/dashboard-admin-screen" 
+                                                variant="contained" fullWidth sx={{
                                                     mt: 3, mb: 0, backgroundColor: '#b71c1c', // Color de fondo gris
                                                     '&:hover': {
                                                         backgroundColor: 'darkred', // Color al pasar el mouse
                                                     },
                                                 }}
-                                                    onClick={handleLockUser}
-                                                    disabled={!editMode}
-                                                >
-                                                    ACEPTAR SOLICITUD
-                                                </Button> : null}
-                                        </Grid>
-                                        <Grid size={6}>
-                                            {user.blockade === false ?
-                                                <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
-                                                    mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo gris
-                                                    '&:hover': {
-                                                        backgroundColor: 'darkgrey', // Color al pasar el mouse
-                                                    },
-                                                }}
-                                                    onClick={handleLockUser}
-                                                    disabled={!editMode}
-                                                >
-                                                    DECLINAR SOLICITUD
-                                                </Button> : null}
+                                                onClick={() => handleDeleteRequest(user.id)}
+                                            // disabled={!editMode}
+                                            >
+                                                DECLINAR SOLICITUD
+                                            </Button>
                                         </Grid>
                                     </Grid> : null}
 
-
-
-
                                 <Grid size={4}>
-                                    {!editMode ?
+
+                                    {!user.admition ?
+                                        <Button
+                                            variant="contained"
+                                            fullWidth
+                                            sx={{
+                                                mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo rojo
+                                                '&:hover': {
+                                                    backgroundColor: 'darkgrey', // Color al pasar el mouse
+                                                },
+                                            }}
+                                            onClick={handleAceptRequest}
+
+                                        >
+                                            ACEPTAR SOLICITUD
+                                        </Button> : null}
+                                    {!editMode && user.admition ?
                                         <Button
                                             variant="contained"
                                             fullWidth
@@ -877,7 +891,8 @@ const EditUserForm: React.FC = () => {
 
                                         >
                                             EDITAR SOCIO
-                                        </Button> :
+                                        </Button> : null}
+                                    {editMode && user.admition ?
                                         <Button
                                             type="submit"
                                             variant="contained"
@@ -891,7 +906,8 @@ const EditUserForm: React.FC = () => {
                                             onClick={handleEditMode}
                                         >
                                             GUARDAR CAMBIOS
-                                        </Button>}
+                                        </Button> : null}
+
                                 </Grid>
 
 

@@ -13,6 +13,7 @@ import GetAllDisciplinesProvider from "./Context/GetAllDisciplinesContext";
 import GetAllGendersProvider from "./Context/GetAllGendersContext";
 
 import GetAllJoinUpProvider from "./Context/GetAllJoinUpContext";
+import UpdateUserProfileProvider from "./Context/UpdateUserProfileContext";
 
 import SignedUserProvider from "./Context/SignedUserContext";
 import RecoverPasswordProvider from "./Context/RecoverPasswordContext";
@@ -44,7 +45,9 @@ root.render(
                         <GetAllCategoriesProvider>
                           <GetAllDisciplinesProvider>
                             <GetAllGendersProvider>
-                              <App />
+                              <UpdateUserProfileProvider>
+                                <App />
+                              </UpdateUserProfileProvider>
                             </GetAllGendersProvider>
                           </GetAllDisciplinesProvider>
                         </GetAllCategoriesProvider>

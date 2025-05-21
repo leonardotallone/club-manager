@@ -186,7 +186,7 @@ const ApplicationsList = () => {
                                         </Typography>
                                     </Grid> */}
 
-                                    <Grid size={{ xs: 1, sm: 3, md: 3, lg: 3, xl: 3 }} direction="column" sx={{
+                                    {/* <Grid size={{ xs: 1, sm: 3, md: 3, lg: 3, xl: 3 }} direction="column" sx={{
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'flex-end',
@@ -203,7 +203,7 @@ const ApplicationsList = () => {
                                                 ELIMINAR SOLICITUD
                                             </Typography>
                                         </Button>
-                                    </Grid>
+                                    </Grid> */}
                                     <Grid size={{ xs: 1, sm: 3, md: 3, lg: 3, xl: 3 }} direction="column" sx={{
                                         display: 'flex',
                                         flexDirection: 'column',

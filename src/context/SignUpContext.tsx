@@ -18,10 +18,12 @@ interface User {
 
   email: string;
   admin: boolean,
-  
+
   disciplines: object,
   category: object,
   blockade: boolean,
+  admition: boolean,
+
   groupHead: boolean,
   familyGroup: object,
 }
@@ -61,10 +63,11 @@ const SignUpProvider = ({ children }) => {
 
             email: signUpUser.email,
             admin: false,
-      
+
             disciplines: signUpUser.disciplines,
             category: signUpUser.category,
             blockade: false,
+            admition: true,
             groupHead: signUpUser.groupHead,
             familyGroup: signUpUser.familyGroup,
           };
@@ -107,7 +110,7 @@ const SignUpProvider = ({ children }) => {
 
             email: signUpUser.email,
             admin: false,
-      
+
             disciplines: signUpUser.disciplines,
             category: signUpUser.category,
             blockade: false,
