@@ -172,9 +172,10 @@ const ApplicationsList = () => {
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             GRUPO
                                         </Typography>
-                                        {application.groupHead ?
-                                            <FamilyRestroomOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} /> :
-                                            <ManOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} />}
+                                        {application.familyGroup.length === 0 ?
+                                            <ManOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} /> :
+                                            <FamilyRestroomOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} />
+                                        }
                                     </Grid>
 
                                     {/* <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }} direction="column" >
