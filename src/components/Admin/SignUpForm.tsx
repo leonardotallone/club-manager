@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Input, Avatar, Box, Paper, Card, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
 import Grid from '@mui/material/Grid2';
-
+import SwipeableViews from 'react-swipeable-views';
 import avatar1 from "../../assets/avatars/1.jpg";
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -160,6 +160,8 @@ const SignUpForm: React.FC = () => {
 
     const [discipline, setDiscipline] = useState<string[]>([]);
     const [discipline_1, setDiscipline_1] = useState<string[]>([]);
+
+    const [activeStep, setActiveStep] = useState(0);
 
     const [nested, setNested] = useState(initialState);
     console.log(nested)
@@ -421,350 +423,138 @@ const SignUpForm: React.FC = () => {
             >
                 {({ handleChange, handleBlur, values, errors, touched, }) => (
                     <Form>
-                        <Grid container columnSpacing={2} direction="row" size={12}>
-                            {/* AVATAR */}
-                            <Grid container direction="column" size={1} >
-                                <Avatar
-                                    alt="Avatar"
-                                    src={avatar1}
-                                    sx={{
-                                        width: 110,
-                                        height: 110,
-                                        boxShadow: 4,
-                                        border: "3px solid #fff",
-                                        bgcolor: "#fff",
-                                    }}
-                                />
-                            </Grid>
+                        <SwipeableViews index={activeStep} disabled>
+                            <Grid container columnSpacing={2} direction="row" size={12}>
+                                {/* AVATAR */}
 
-                            <Grid container direction="column" size={2} sx={{ mt: 0 }}>
-                                {/* NAME */}
-                                <TextField
-                                    variant="standard"
-                                    fullWidth
-                                    name="name"
-                                    label="Nombre"
-                                    type="name"
-                                    id="name"
-                                    autoComplete="name"
-                                    value={values.name}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={touched.name && Boolean(errors.name)}
-                                    // helperText={touched.name && errors.name}
-                                    helperText={touched.name && errors.name ? errors.name : " "} // 
-                                    sx={{ mt: 0 }}
-                                    slotProps={{
-                                        input: {
-                                            sx: {
-                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                            },
-                                        },
-                                        inputLabel: {
-                                            sx: {
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c",
-                                                },
-                                            },
-                                        },
-                                    }}
-                                />
-                                {/* LASTNAME */}
-                                <TextField
-                                    // margin="normal"
-                                    variant="standard"
-                                    fullWidth
-                                    name="lastName"
-                                    label="Apellido/s"
-                                    type="lastName"
-                                    id="lastName"
-                                    autoComplete="lastName"
-                                    value={values.lastName}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={touched.lastName && Boolean(errors.lastName)}
-                                    helperText={touched.lastName && errors.lastName ? errors.lastName : " "} // 
-                                    sx={{ mt: 0 }}
-                                    slotProps={{
-                                        input: {
-                                            sx: {
-                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                            },
-                                        },
-                                        inputLabel: {
-                                            sx: {
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c",
-                                                },
-                                            },
-                                        },
-                                    }}
-                                />
-                            </Grid>
+                                <Grid direction="column" size={1.3}>
+                                    <Avatar
+                                        alt="Avatar"
+                                        src={avatar1}
+                                        sx={{
+                                            width: 110,
+                                            height: 110,
+                                            boxShadow: 4,
+                                            border: "3px solid #fff",
+                                            bgcolor: "#fff",
+                                            ml: 1,
+                                            mt: 1
+                                        }}
+                                    />
+                                </Grid>
 
-                            <Grid direction="column" size={1.8} sx={{ mt: -1 }}>
-                                {/* BIRTHDATE */}
+                                <Grid direction="column" size={3.35}>
+                                    {/* NAME */}
+                                    <TextField
+                                        variant="standard"
+                                        fullWidth
+                                        name="name"
+                                        label="Nombre"
+                                        type="name"
+                                        id="name"
+                                        autoComplete="name"
+                                        value={values.name}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.name && Boolean(errors.name)}
+                                        helperText={touched.name && errors.name ? errors.name : " "} // 
+                                        sx={{ mb: 0 }}
+                                        slotProps={{
+                                            input: {
+                                                sx: {
+                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c",
+                                                    },
+                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c",
+                                                    },
+                                                },
+                                            },
+                                            inputLabel: {
+                                                sx: {
+                                                    "&.Mui-focused": {
+                                                        color: "#b71c1c",
+                                                    },
+                                                },
+                                            },
+                                        }}
+                                    />
+                                    {/* ADDRESS */}
+                                    <TextField                                 
+                                        variant="standard"
+                                        fullWidth
+                                        name="address"
+                                        label="Domicilio"
+                                        type="address"
+                                        id="address"
+                                        autoComplete="address"
+                                        value={values.address}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.address && Boolean(errors.address)}
+                                        helperText={touched.address && errors.address ? errors.address : " "}
+                                        sx={{ mb: -1 }}
+                                        slotProps={{
+                                            input: {
+                                                sx: {
+                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c",
+                                                    },
+                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c",
+                                                    },
+                                                },
+                                            },
+                                            inputLabel: {
+                                                sx: {
+                                                    "&.Mui-focused": {
+                                                        color: "#b71c1c",
+                                                    },
+                                                },
+                                            },
+                                        }}
+                                    />
 
-                                <LocalizationProvider dateAdapter={AdapterDayjs} >
-                                    <DemoContainer components={['DatePicker']}  >
-                                        <DatePicker
-                                            format="DD/MM/YYYY"
-                                            label="Fecha de Nacimiento"
-                                            value={values.birthDate} // This should now be a Dayjs object
-                                            onChange={(newValue) => {
-                                                handleChange({ target: { name: 'birthDate', value: newValue } }); // Update Formik state
-                                            }}
-                                            slotProps={{
-                                                textField: {
-                                                    variant: 'standard',
-                                                    onBlur: () => handleBlur({ target: { name: 'birthDate' } }),
-                                                    InputLabelProps: {
-                                                        style: {
-                                                            color: touched.birthDate && errors.birthDate ? "#b71c1c" : undefined,
+                                    {/* BIRTHDATE */}
+                                    <LocalizationProvider dateAdapter={AdapterDayjs} >
+                                        <DemoContainer components={['DatePicker']}  >
+                                            <DatePicker
+                                                format="DD/MM/YYYY"
+                                                label="Fecha de Nacimiento"
+                                                value={values.birthDate} // This should now be a Dayjs object
+                                                onChange={(newValue) => {
+                                                    handleChange({ target: { name: 'birthDate', value: newValue } }); // Update Formik state
+                                                }}
+                                                slotProps={{
+                                                    textField: {
+                                                        variant: 'standard',
+                                                        onBlur: () => handleBlur({ target: { name: 'birthDate' } }),
+                                                        InputLabelProps: {
+                                                            style: {
+                                                                color: touched.birthDate && errors.birthDate ? "#b71c1c" : undefined,
+                                                            },
+                                                        },
+                                                        sx: {
+                                                            width: '100%',
+                                                            overflow: 'hidden', // <-- Oculta scroll
+                                                            "&::-webkit-scrollbar": { display: "none" }, // Chrome/Safari
+                                                            scrollbarWidth: "none", // Firefox
+                                                            paddingRight: '4px',
                                                         },
                                                     },
-                                                    sx: {
-                                                        width: '100%',
-                                                        overflow: 'hidden', // <-- Oculta scroll
-                                                        "&::-webkit-scrollbar": { display: "none" }, // Chrome/Safari
-                                                        scrollbarWidth: "none", // Firefox
-                                                        paddingRight: '4px',
-                                                    },
-                                                },
-                                            }}
-                                        />
+                                                }}
+                                            />
 
-                                    </DemoContainer>
-                                    {touched.birthDate && errors.birthDate ?
-                                        <Typography color="error" variant="caption" sx={{ fontSize: '0.75rem' }} >
-                                            {errors.birthDate as string}
-                                        </Typography> : <span> &nbsp; </span>
-                                    }
-                                </LocalizationProvider>
+                                        </DemoContainer>
+                                        {touched.birthDate && errors.birthDate ?
+                                            <Typography color="error" variant="caption" sx={{ fontSize: '0.75rem' }} >
+                                                {errors.birthDate as string}
+                                            </Typography> : <span> &nbsp; </span>
+                                        }
+                                    </LocalizationProvider>
+                                    {/* CATEGORI */}
 
-
-
-
-
-                                {/* GENDER */}
-
-                                <FormControl fullWidth variant="standard">
-                                    <InputLabel
-
-                                        id="demo-simple-select-label"
-                                        error={touched.gender && Boolean(errors.gender)}
-                                        sx={{
-                                            "&.Mui-focused": {
-                                                color: "#b71c1c", // Ensure label color changes when focused
-
-                                            },
-                                        }}>Genero</InputLabel>
-                                    <Select
-
-                                        labelId="gender-label"
-                                        id="gender"
-                                        name="gender"
-                                        value={values.gender}
-                                        onChange={(event) => {
-                                            handleChange({ target: { name: 'gender', value: event.target.value } }); // Correctly update Formik state
-                                        }}
-                                        onBlur={handleBlur}
-                                        label="Género"
-                                    // sx={{
-                                    //     "& .MuiOutlinedInput-notchedOutline": {
-                                    //         borderColor: touched.gender && errors.gender ? "#b71c1c" : undefined,
-                                    //     },
-                                    //     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                    //         borderColor: "#b71c1c", // Change border color when focused
-                                    //     },
-                                    //     "&:hover .MuiOutlinedInput-notchedOutline": {
-                                    //         borderColor: "#b71c1c", // Change border color on hover
-                                    //     },
-                                    // }}
-
-                                    >
-                                        {genders?.length > 0 ? (
-                                            genders.map((name) => (
-                                                <MenuItem key={name} value={name}>
-                                                    {name}
-                                                </MenuItem>
-                                            ))
-                                        ) : (
-                                            <p>Cargando Generos...</p>
-                                        )}
-
-                                    </Select>
-                                    {touched.gender && errors.gender ?
-                                        <Typography color="error" variant="caption">
-                                            {errors.gender}
-                                        </Typography> : <span> &nbsp; </span>
-                                    }
-                                </FormControl>
-
-
-
-                            </Grid>
-                            <Grid direction="column" size={2.2} sx={{ mt: 0 }}>
-                                {/* ADDRESS */}
-                                <TextField
-                                    // margin="none"
-                                    variant="standard"
-                                    fullWidth
-                                    name="address"
-                                    label="Domicilio"
-                                    type="address"
-                                    id="address"
-                                    autoComplete="address"
-                                    value={values.address}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={touched.address && Boolean(errors.address)}
-                                    helperText={touched.address && errors.address ? errors.address : " "}
-                                    sx={{ mt: 0 }}
-                                    slotProps={{
-                                        input: {
-                                            sx: {
-                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                            },
-                                        },
-                                        inputLabel: {
-                                            sx: {
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c",
-                                                },
-                                            },
-                                        },
-                                    }}
-                                />
-                                {/* CONTACT NUMBER */}
-                                <TextField
-                                    // margin="normal"
-                                    variant="standard"
-                                    fullWidth
-                                    name="contactNumber"
-                                    label="Número de Contacto"
-                                    type="contactNumber"
-                                    id="contactNumber"
-                                    autoComplete="contactNumber"
-                                    value={values.contactNumber}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={touched.contactNumber && Boolean(errors.contactNumber)}
-                                    helperText={touched.contactNumber && errors.contactNumber ? errors.contactNumber : " "}
-                                    sx={{ mt: 0 }}
-                                    slotProps={{
-                                        input: {
-                                            sx: {
-                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                            },
-                                        },
-                                        inputLabel: {
-                                            sx: {
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c",
-                                                },
-                                            },
-                                        },
-                                    }}
-                                />
-                            </Grid>
-
-                            <Grid container direction="column" size={2.6} sx={{ mt: 0 }}>
-
-                                {/* DISCIPLINE */}
-                                <FormControl fullWidth variant="standard" >
-                                    <InputLabel
-                                        id="demo-multiple-chip-label"
-                                        sx={{
-                                            "&.Mui-focused": {
-                                                color: "#b71c1c", // color cuando está enfocado
-                                            },
-                                        }}
-                                    >
-                                        Disciplinas
-                                    </InputLabel>
-                                    <Select
-                                        labelId="demo-multiple-chip-label"
-                                        id="demo-multiple-chip"
-                                        multiple
-                                        value={discipline}
-                                        onChange={(event) => {
-                                            handleDiscipline(event);
-                                            handleChange({ target: { name: "discipline", value: event.target.value } });
-                                        }}
-                                        sx={{
-                                            // Elimina estilos de borde
-                                            "&.Mui-focused": {
-                                                borderColor: "transparent",
-                                            },
-                                            "&:hover": {
-                                                borderColor: "transparent",
-                                            },
-
-                                        }}
-                                        // Cambiar input a Input para variante standard sin borde
-                                        input={<Input id="select-multiple-chip" />}
-                                        renderValue={(selected) => (
-                                            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                                                {selected.map((value) => (
-                                                    <Chip key={value} label={value} />
-                                                ))}
-                                            </Box>
-                                        )}
-                                        MenuProps={MenuProps}
-                                    >
-                                        {disciplines?.length > 0 ? (
-                                            disciplines.map((item: any) => (
-                                                <MenuItem
-                                                    key={item.id}
-                                                    value={item.name}
-                                                    style={getStyles(item.name, discipline, theme)}
-                                                >
-                                                    <Checkbox checked={discipline.indexOf(item.name) > -1} />
-                                                    <ListItemText
-                                                        primary={
-                                                            item.name.charAt(0).toUpperCase() +
-                                                            item.name.slice(1).toLowerCase()
-                                                        }
-                                                    />
-                                                </MenuItem>
-                                            ))
-                                        ) : (
-                                            <p>Cargando disciplinas...</p>
-                                        )}
-                                    </Select>
-                                    {touched.disciplines && errors.disciplines ? (
-                                        <Typography color="error" variant="caption">
-                                            {/* {errors.disciplines} */}
-                                        </Typography>
-                                    ) : (
-                                        <span> &nbsp; </span>
-                                    )}
-                                </FormControl>
-
-                                {/* CATEGORIES */}
-                                <Grid size={12} >
-                                    <FormControl fullWidth sx={{ mb: 0, mt: 0 }} variant='standard'>
+                                    <FormControl fullWidth sx={{ mb: 2, mt: 0 }} variant='standard'>
                                         <InputLabel
                                             error={touched.category && Boolean(errors.category)}
                                             id="demo-simple-select-label"
@@ -817,89 +607,289 @@ const SignUpForm: React.FC = () => {
                                         }
                                     </FormControl>
 
+                                </Grid>
 
+
+
+                                <Grid direction="column" size={3.35} sx={{ mt: 0 }}>
+                                    {/* LASTNAME */}
+                                    <TextField
+                                        // margin="normal"
+                                        variant="standard"
+                                        fullWidth
+                                        name="lastName"
+                                        label="Apellido/s"
+                                        type="lastName"
+                                        id="lastName"
+                                        autoComplete="lastName"
+                                        value={values.lastName}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.lastName && Boolean(errors.lastName)}
+                                        helperText={touched.lastName && errors.lastName ? errors.lastName : " "} // 
+                                        sx={{ mt: 0 }}
+                                        slotProps={{
+                                            input: {
+                                                sx: {
+                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c",
+                                                    },
+                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c",
+                                                    },
+                                                },
+                                            },
+                                            inputLabel: {
+                                                sx: {
+                                                    "&.Mui-focused": {
+                                                        color: "#b71c1c",
+                                                    },
+                                                },
+                                            },
+                                        }}
+                                    />
+
+                                    {/* CONTACT NUMBER */}
+                                    <TextField
+                                        // margin="normal"
+                                        variant="standard"
+                                        fullWidth
+                                        name="contactNumber"
+                                        label="Número de Contacto"
+                                        type="contactNumber"
+                                        id="contactNumber"
+                                        autoComplete="contactNumber"
+                                        value={values.contactNumber}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={touched.contactNumber && Boolean(errors.contactNumber)}
+                                        helperText={touched.contactNumber && errors.contactNumber ? errors.contactNumber : " "}
+                                        sx={{ mt: 0 }}
+                                        slotProps={{
+                                            input: {
+                                                sx: {
+                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c",
+                                                    },
+                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                        borderColor: "#b71c1c",
+                                                    },
+                                                },
+                                            },
+                                            inputLabel: {
+                                                sx: {
+                                                    "&.Mui-focused": {
+                                                        color: "#b71c1c",
+                                                    },
+                                                },
+                                            },
+                                        }}
+                                    />
+
+                                    {/* GENDER */}
+                                    <FormControl fullWidth variant="standard">
+                                        <InputLabel
+
+                                            id="demo-simple-select-label"
+                                            error={touched.gender && Boolean(errors.gender)}
+                                            sx={{
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c", // Ensure label color changes when focused
+
+                                                },
+                                            }}>Genero</InputLabel>
+                                        <Select
+
+                                            labelId="gender-label"
+                                            id="gender"
+                                            name="gender"
+                                            value={values.gender}
+                                            onChange={(event) => {
+                                                handleChange({ target: { name: 'gender', value: event.target.value } }); // Correctly update Formik state
+                                            }}
+                                            onBlur={handleBlur}
+                                            label="Género"
+                                        >
+                                            {genders?.length > 0 ? (
+                                                genders.map((name) => (
+                                                    <MenuItem key={name} value={name}>
+                                                        {name}
+                                                    </MenuItem>
+                                                ))
+                                            ) : (
+                                                <p>Cargando Generos...</p>
+                                            )}
+
+                                        </Select>
+                                        {touched.gender && errors.gender ?
+                                            <Typography color="error" variant="caption">
+                                                {errors.gender}
+                                            </Typography> : <span> &nbsp; </span>
+                                        }
+                                    </FormControl>
+                                    {/* DISCIPLINE */}
+                                    <FormControl fullWidth variant="standard" >
+                                        <InputLabel
+                                            id="demo-multiple-chip-label"
+                                            sx={{
+                                                "&.Mui-focused": {
+                                                    color: "#b71c1c", // color cuando está enfocado
+                                                },
+                                            }}
+                                        >
+                                            Disciplinas
+                                        </InputLabel>
+                                        <Select
+                                            labelId="demo-multiple-chip-label"
+                                            id="demo-multiple-chip"
+                                            multiple
+                                            value={discipline}
+                                            onChange={(event) => {
+                                                handleDiscipline(event);
+                                                handleChange({ target: { name: "discipline", value: event.target.value } });
+                                            }}
+                                            sx={{
+                                                // Elimina estilos de borde
+                                                "&.Mui-focused": {
+                                                    borderColor: "transparent",
+                                                },
+                                                "&:hover": {
+                                                    borderColor: "transparent",
+                                                },
+
+                                            }}
+                                            // Cambiar input a Input para variante standard sin borde
+                                            input={<Input id="select-multiple-chip" />}
+                                            renderValue={(selected) => (
+                                                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                                                    {selected.map((value) => (
+                                                        <Chip key={value} label={value} />
+                                                    ))}
+                                                </Box>
+                                            )}
+                                            MenuProps={MenuProps}
+                                        >
+                                            {disciplines?.length > 0 ? (
+                                                disciplines.map((item: any) => (
+                                                    <MenuItem
+                                                        key={item.id}
+                                                        value={item.name}
+                                                        style={getStyles(item.name, discipline, theme)}
+                                                    >
+                                                        <Checkbox checked={discipline.indexOf(item.name) > -1} />
+                                                        <ListItemText
+                                                            primary={
+                                                                item.name.charAt(0).toUpperCase() +
+                                                                item.name.slice(1).toLowerCase()
+                                                            }
+                                                        />
+                                                    </MenuItem>
+                                                ))
+                                            ) : (
+                                                <p>Cargando disciplinas...</p>
+                                            )}
+                                        </Select>
+                                        {touched.disciplines && errors.disciplines ? (
+                                            <Typography color="error" variant="caption">
+                                                {/* {errors.disciplines} */}
+                                            </Typography>
+                                        ) : (
+                                            <span> &nbsp; </span>
+                                        )}
+                                    </FormControl>
 
                                 </Grid>
-                            </Grid>
-                            <Grid container direction="column" size={2.4} sx={{ mt: 0 }}>
-                                {/* DNI */}
-                                <TextField
-                                    variant="standard"
-                                    // margin="none"
-                                    fullWidth
-                                    name="dni"
-                                    label="DNI"
-                                    type="dni"
-                                    id="dni"
-                                    autoComplete="dni"
-                                    value={values.dni}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={touched.dni && Boolean(errors.dni)}
-                                    helperText={touched.dni && errors.dni ? errors.dni : " "}
-                                    sx={{ mt: 0 }}
-                                    slotProps={{
-                                        input: {
-                                            sx: {
-                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
+
+                                <Grid container direction="column" size={4} sx={{ mt: 0 }}>
+                                    <Grid container direction="column" size={10} >
+                                        {/* DNI */}
+                                        <TextField
+                                            variant="standard"
+                                            // margin="none"
+                                            fullWidth
+                                            name="dni"
+                                            label="DNI"
+                                            type="dni"
+                                            id="dni"
+                                            autoComplete="dni"
+                                            value={values.dni}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            error={touched.dni && Boolean(errors.dni)}
+                                            helperText={touched.dni && errors.dni ? errors.dni : " "}
+                                            sx={{ mt: 0 }}
+                                            slotProps={{
+                                                input: {
+                                                    sx: {
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
+                                                    },
                                                 },
-                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
+                                                inputLabel: {
+                                                    sx: {
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c",
+                                                        },
+                                                    },
                                                 },
-                                            },
-                                        },
-                                        inputLabel: {
-                                            sx: {
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c",
+                                            }}
+                                        />
+                                        {/* EMAIL */}
+                                        <TextField
+                                            variant='standard'
+                                            fullWidth
+                                            id="email"
+                                            label="Dirección de correo"
+                                            name="email"
+                                            autoComplete="email"
+                                            value={values.email}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            error={touched.email && Boolean(errors.email)}
+                                            helperText={touched.email && errors.email ? errors.email : " "} //
+                                            sx={{ mt: 0 }}
+                                            slotProps={{
+                                                input: {
+                                                    sx: {
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#b71c1c",
+                                                        },
+                                                    },
                                                 },
-                                            },
-                                        },
-                                    }}
-                                />
-                                {/* EMAIL */}
-                                <TextField
-                                    variant='standard'
-                                    fullWidth
-                                    id="email"
-                                    label="Dirección de correo"
-                                    name="email"
-                                    autoComplete="email"
-                                    value={values.email}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={touched.email && Boolean(errors.email)}
-                                    helperText={touched.email && errors.email ? errors.email : " "} //
-                                    sx={{ mt: 0 }}
-                                    slotProps={{
-                                        input: {
-                                            sx: {
-                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
+                                                inputLabel: {
+                                                    sx: {
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c",
+                                                        },
+                                                    },
                                                 },
-                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                            },
-                                        },
-                                        inputLabel: {
-                                            sx: {
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c",
-                                                },
-                                            },
-                                        },
-                                    }}
-                                />
+                                            }}
+                                        />
+                                    </Grid>
+                                </Grid>
 
                             </Grid>
 
-                            {/* NESTED 1 */}
+                            <Grid>
+                                <Typography sx={{ fontWeight: 800, fontSize: 14, color: '#616161', textDecoration: 'none' }}>
+                                    Formulario socio 2
+                                </Typography>
+                            </Grid>
+
+                        </SwipeableViews>
 
 
-                            {/* BOTONES */}
-                            <Grid size={8}>
+                        {/* BOTONES */}
+                        <Grid container spacing={2}>
+                            <Grid container direction="column" size={1.3} sx={{ mt: 0 }}></Grid>
+                            <Grid size={6.7}>
                                 <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
                                     mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo gris
                                     '&:hover': {
@@ -928,7 +918,10 @@ const SignUpForm: React.FC = () => {
 
                                 <Grid size={1}>
                                     <IconButton
-                                        onClick={addUser}
+                                        // onClick={addUser}
+                                        onClick={() => {
+                                            if (nested) setActiveStep(1);
+                                        }}
                                         disabled={allTrue} // Disabled if all are true
                                         aria-label="Agregar socio"
                                         sx={{
@@ -962,14 +955,13 @@ const SignUpForm: React.FC = () => {
                                 </Grid>
 
                             </Grid>
-
                         </Grid>
 
                     </Form>
                 )}
             </Formik>
         </Container>
-        // </Box >
+
 
 
     );
