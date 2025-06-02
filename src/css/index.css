@@ -17,6 +17,7 @@ code {
   overflow: hidden;
   width: 100%;
   height: 85px;
+  margin-top: -20px;
 }
 
 .embla__container {
@@ -42,4 +43,22 @@ code {
   height: 85px; /* o el alto que uses en el carrusel */
   display: block;
   margin: 0 auto;
+}
+
+.embla-form {
+  overflow:hidden;
+}
+
+.embla__container-form {
+  display: flex;
+}
+
+.embla__slide-form {
+  flex: 0 0 100%;
+  display: flex;
+  justify-content: 'center';
+  align-items: 'center';
+  height: auto;
+  width:100%;
+
 }
