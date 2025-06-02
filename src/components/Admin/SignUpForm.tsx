@@ -167,6 +167,11 @@ const SignUpForm: React.FC = () => {
 
     const [discipline, setDiscipline] = useState<string[]>([]);
     const [discipline_1, setDiscipline_1] = useState<string[]>([]);
+    const [discipline_2, setDiscipline_2] = useState<string[]>([]);
+    const [discipline_3, setDiscipline_3] = useState<string[]>([]);
+    const [discipline_4, setDiscipline_4] = useState<string[]>([]);
+    const [discipline_5, setDiscipline_5] = useState<string[]>([]);
+    const [discipline_6, setDiscipline_6] = useState<string[]>([]);
 
     const [nested, setNested] = useState(initialState);
 
@@ -203,6 +208,27 @@ const SignUpForm: React.FC = () => {
             typeof value === 'string' ? value.split(',') : value,
         );
     };
+
+    const handleDiscipline_1 = (event: SelectChangeEvent<typeof discipline_1>) => {
+        const {
+            target: { value },
+        } = event;
+        setDiscipline_1(
+            typeof value === 'string' ? value.split(',') : value,
+        );
+    };
+
+    const handleDisciplineGeneric = (
+        event: SelectChangeEvent<string[] | string>,
+        setState: React.Dispatch<React.SetStateAction<string[]>>
+    ) => {
+        const {
+            target: { value },
+        } = event;
+        setState(typeof value === 'string' ? value.split(',') : value);
+    };
+
+
 
     // Validación con Yup
     const validationSchema = Yup.object({
@@ -289,27 +315,10 @@ const SignUpForm: React.FC = () => {
             admited: false,
             groupHead: true,
             familyGroup: familyGroup,
-            // familyGroup: nested.nested_1
-            //     ? [{
-            //         name: values.name_1,
-            //         lastName: values.lastName_1,
-            //         address: values.address_1,
-            //         birthDate: values.birthDate_1 ? dayjs(values.birthDate_1).toDate() : null,
-            //         dni: values.dni_1,
-            //         contactNumber: values.contactNumber_1,
-            //         avatarURL: "",
-            //         gender: values.gender_1,
-
-            //         disciplines: discipline_1,
-            //         category: values.category_1,
-
-            //         groupHead: false,
-            //     },
-            //     ] : []
         };
 
-
-        setJoinUpUser(user)
+        console.log(user)
+        // setJoinUpUser(user)
         // navigate("/");
     };
 
@@ -445,7 +454,7 @@ const SignUpForm: React.FC = () => {
                                         </Grid>
                                         <Grid direction="row" size={10.7}>
                                             <Typography sx={{ fontWeight: 800, fontSize: 18, color: '#616161', textDecoration: 'none', mb: 1 }}>
-                                                SOCIO TITULAR
+                                                SOCIO UNICO / TITULAR
                                             </Typography>
                                         </Grid>
                                         {/* AVATAR */}
@@ -481,26 +490,16 @@ const SignUpForm: React.FC = () => {
                                                 onBlur={handleBlur}
                                                 error={touched.name && Boolean(errors.name)}
                                                 helperText={touched.name && errors.name ? errors.name : " "} // 
-                                                sx={{ mb: 0 }}
-                                                slotProps={{
-                                                    input: {
-                                                        sx: {
-                                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c",
-                                                            },
-                                                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c",
-                                                            },
-                                                        },
+                                                sx={{
+                                                    mb: 0,
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
                                                     },
-                                                    inputLabel: {
-                                                        sx: {
-                                                            "&.Mui-focused": {
-                                                                color: "#b71c1c",
-                                                            },
-                                                        },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
                                                     },
                                                 }}
+
                                             />
                                             {/* ADDRESS */}
                                             <TextField
@@ -516,24 +515,13 @@ const SignUpForm: React.FC = () => {
                                                 onBlur={handleBlur}
                                                 error={touched.address && Boolean(errors.address)}
                                                 helperText={touched.address && errors.address ? errors.address : " "}
-                                                sx={{ mb: -1 }}
-                                                slotProps={{
-                                                    input: {
-                                                        sx: {
-                                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c",
-                                                            },
-                                                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c",
-                                                            },
-                                                        },
+                                                sx={{
+                                                    mb: -1,
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
                                                     },
-                                                    inputLabel: {
-                                                        sx: {
-                                                            "&.Mui-focused": {
-                                                                color: "#b71c1c",
-                                                            },
-                                                        },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
                                                     },
                                                 }}
                                             />
@@ -552,17 +540,19 @@ const SignUpForm: React.FC = () => {
                                                             textField: {
                                                                 variant: 'standard',
                                                                 onBlur: () => handleBlur({ target: { name: 'birthDate' } }),
-                                                                InputLabelProps: {
-                                                                    style: {
-                                                                        color: touched.birthDate && errors.birthDate ? "#b71c1c" : undefined,
-                                                                    },
-                                                                },
+
                                                                 sx: {
                                                                     width: '100%',
                                                                     overflow: 'hidden', // <-- Oculta scroll
                                                                     "&::-webkit-scrollbar": { display: "none" }, // Chrome/Safari
                                                                     scrollbarWidth: "none", // Firefox
                                                                     paddingRight: '4px',
+                                                                    "& label.Mui-focused": {
+                                                                        color: "green",  // color verde solo cuando está enfocado
+                                                                    },
+                                                                    '& .MuiInput-underline:after': {
+                                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                                    },
                                                                 },
                                                             },
                                                         }}
@@ -575,32 +565,23 @@ const SignUpForm: React.FC = () => {
                                                     </Typography> : <span> &nbsp; </span>
                                                 }
                                             </LocalizationProvider>
-                                            {/* CATEGORI */}
+                                            {/* CATEGORY */}
 
-                                            <FormControl fullWidth sx={{ mb: 0, mt: 0 }} variant='standard'>
+                                            <FormControl fullWidth sx={{
+                                                "& label.Mui-focused": {
+                                                    color: "green",  // color verde solo cuando está enfocado
+                                                },
+                                                '& .MuiInput-underline:after': {
+                                                    borderBottomColor: 'green', // color verde cuando está enfocado
+                                                },
+                                            }} variant='standard'>
                                                 <InputLabel
                                                     error={touched.category && Boolean(errors.category)}
                                                     id="demo-simple-select-label"
-                                                    sx={{
-                                                        "&.Mui-focused": {
-                                                            color: "#b71c1c", // Ensure label color changes when focused
-                                                        },
-                                                    }}>Categoria</InputLabel>
+                                                >Categoria</InputLabel>
                                                 <Select
                                                     name="category"
                                                     onBlur={handleBlur}
-                                                    sx={{
-                                                        "& .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: touched.category && errors.category ? "#b71c1c" : undefined,
-                                                        },
-                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c", // Change border color when focused
-                                                        },
-                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c", // Change border color on hover
-                                                        },
-                                                    }}
-
                                                     variant='standard'
                                                     labelId="demo-simple-select-label"
                                                     id="demo-simple-select"
@@ -609,6 +590,7 @@ const SignUpForm: React.FC = () => {
                                                     onChange={(event) => {
                                                         handleChange({ target: { name: 'category', value: event.target.value } }); // Correctly update Formik state
                                                     }}
+
 
                                                 >
 
@@ -650,26 +632,16 @@ const SignUpForm: React.FC = () => {
                                                 onBlur={handleBlur}
                                                 error={touched.lastName && Boolean(errors.lastName)}
                                                 helperText={touched.lastName && errors.lastName ? errors.lastName : " "} // 
-                                                sx={{ mt: 0 }}
-                                                slotProps={{
-                                                    input: {
-                                                        sx: {
-                                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c",
-                                                            },
-                                                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c",
-                                                            },
-                                                        },
+                                                sx={{
+                                                    mt: 0,
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
                                                     },
-                                                    inputLabel: {
-                                                        sx: {
-                                                            "&.Mui-focused": {
-                                                                color: "#b71c1c",
-                                                            },
-                                                        },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
                                                     },
                                                 }}
+
                                             />
 
                                             {/* CONTACT NUMBER */}
@@ -687,40 +659,30 @@ const SignUpForm: React.FC = () => {
                                                 onBlur={handleBlur}
                                                 error={touched.contactNumber && Boolean(errors.contactNumber)}
                                                 helperText={touched.contactNumber && errors.contactNumber ? errors.contactNumber : " "}
-                                                sx={{ mt: 0 }}
-                                                slotProps={{
-                                                    input: {
-                                                        sx: {
-                                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c",
-                                                            },
-                                                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c",
-                                                            },
-                                                        },
+                                                sx={{
+                                                    mt: 0,
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
                                                     },
-                                                    inputLabel: {
-                                                        sx: {
-                                                            "&.Mui-focused": {
-                                                                color: "#b71c1c",
-                                                            },
-                                                        },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
                                                     },
                                                 }}
                                             />
 
                                             {/* GENDER */}
-                                            <FormControl fullWidth variant="standard">
+                                            <FormControl fullWidth variant="standard" sx={{
+                                                "& label.Mui-focused": {
+                                                    color: "green",  // color verde solo cuando está enfocado
+                                                },
+                                                '& .MuiInput-underline:after': {
+                                                    borderBottomColor: 'green', // color verde cuando está enfocado
+                                                },
+                                            }}>
                                                 <InputLabel
-
                                                     id="demo-simple-select-label"
                                                     error={touched.gender && Boolean(errors.gender)}
-                                                    sx={{
-                                                        "&.Mui-focused": {
-                                                            color: "#b71c1c", // Ensure label color changes when focused
-
-                                                        },
-                                                    }}>Genero</InputLabel>
+                                                >Genero</InputLabel>
                                                 <Select
 
                                                     labelId="gender-label"
@@ -751,15 +713,15 @@ const SignUpForm: React.FC = () => {
                                                 }
                                             </FormControl>
                                             {/* DISCIPLINE */}
-                                            <FormControl fullWidth variant="standard" >
-                                                <InputLabel
-                                                    id="demo-multiple-chip-label"
-                                                    sx={{
-                                                        "&.Mui-focused": {
-                                                            color: "#b71c1c", // color cuando está enfocado
-                                                        },
-                                                    }}
-                                                >
+                                            <FormControl fullWidth variant="standard" sx={{
+                                                "& label.Mui-focused": {
+                                                    color: "green",  // color verde solo cuando está enfocado
+                                                },
+                                                '& .MuiInput-underline:after': {
+                                                    borderBottomColor: 'green', // color verde cuando está enfocado
+                                                },
+                                            }} >
+                                                <InputLabel id="demo-multiple-chip-label">
                                                     Disciplinas
                                                 </InputLabel>
                                                 <Select
@@ -768,19 +730,10 @@ const SignUpForm: React.FC = () => {
                                                     multiple
                                                     value={discipline}
                                                     onChange={(event) => {
-                                                        handleDiscipline(event);
+                                                        handleDisciplineGeneric(event, setDiscipline)
                                                         handleChange({ target: { name: "discipline", value: event.target.value } });
                                                     }}
-                                                    sx={{
-                                                        // Elimina estilos de borde
-                                                        "&.Mui-focused": {
-                                                            borderColor: "transparent",
-                                                        },
-                                                        "&:hover": {
-                                                            borderColor: "transparent",
-                                                        },
 
-                                                    }}
                                                     // Cambiar input a Input para variante standard sin borde
                                                     input={<Input id="select-multiple-chip" />}
                                                     renderValue={(selected) => (
@@ -840,26 +793,15 @@ const SignUpForm: React.FC = () => {
                                                     onBlur={handleBlur}
                                                     error={touched.dni && Boolean(errors.dni)}
                                                     helperText={touched.dni && errors.dni ? errors.dni : " "}
-                                                    sx={{ mt: 0 }}
-                                                    slotProps={{
-                                                        input: {
-                                                            sx: {
-                                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                            },
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
                                                         },
-                                                        inputLabel: {
-                                                            sx: {
-                                                                "&.Mui-focused": {
-                                                                    color: "#b71c1c",
-                                                                },
-                                                            },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
                                                         },
                                                     }}
+
                                                 />
                                                 {/* EMAIL */}
                                                 <TextField
@@ -874,24 +816,12 @@ const SignUpForm: React.FC = () => {
                                                     onBlur={handleBlur}
                                                     error={touched.email && Boolean(errors.email)}
                                                     helperText={touched.email && errors.email ? errors.email : " "} //
-                                                    sx={{ mt: 0 }}
-                                                    slotProps={{
-                                                        input: {
-                                                            sx: {
-                                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                            },
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
                                                         },
-                                                        inputLabel: {
-                                                            sx: {
-                                                                "&.Mui-focused": {
-                                                                    color: "#b71c1c",
-                                                                },
-                                                            },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
                                                         },
                                                     }}
                                                 />
@@ -933,34 +863,22 @@ const SignUpForm: React.FC = () => {
                                                 <TextField
                                                     variant="standard"
                                                     fullWidth
-                                                    name="name"
+                                                    name="name_1"
                                                     label="Nombre"
-                                                    type="name"
-                                                    id="name"
-                                                    autoComplete="name"
-                                                    value={values.name}
+                                                    type="name_1"
+                                                    id="name_1"
+                                                    autoComplete="name_1"
+                                                    value={values.name_1}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    error={touched.name && Boolean(errors.name)}
-                                                    helperText={touched.name && errors.name ? errors.name : " "} // 
-                                                    sx={{ mb: 0 }}
-                                                    slotProps={{
-                                                        input: {
-                                                            sx: {
-                                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                            },
+                                                    error={touched.name_1 && Boolean(errors.name_1)}
+                                                    helperText={touched.name_1 && errors.name ? errors.name_1 : " "} // 
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
                                                         },
-                                                        inputLabel: {
-                                                            sx: {
-                                                                "&.Mui-focused": {
-                                                                    color: "#b71c1c",
-                                                                },
-                                                            },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
                                                         },
                                                     }}
                                                 />
@@ -968,34 +886,23 @@ const SignUpForm: React.FC = () => {
                                                 <TextField
                                                     variant="standard"
                                                     fullWidth
-                                                    name="address"
+                                                    name="address_1"
                                                     label="Domicilio"
-                                                    type="address"
-                                                    id="address"
-                                                    autoComplete="address"
-                                                    value={values.address}
+                                                    type="address_1"
+                                                    id="address_1"
+                                                    autoComplete="address_1"
+                                                    value={values.address_1}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    error={touched.address && Boolean(errors.address)}
-                                                    helperText={touched.address && errors.address ? errors.address : " "}
-                                                    sx={{ mb: -1 }}
-                                                    slotProps={{
-                                                        input: {
-                                                            sx: {
-                                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                            },
+                                                    error={touched.address_1 && Boolean(errors.address_1)}
+                                                    helperText={touched.address_1 && errors.address_1 ? errors.address_1 : " "}
+                                                    sx={{
+                                                        mb: -1,
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
                                                         },
-                                                        inputLabel: {
-                                                            sx: {
-                                                                "&.Mui-focused": {
-                                                                    color: "#b71c1c",
-                                                                },
-                                                            },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
                                                         },
                                                     }}
                                                 />
@@ -1006,17 +913,17 @@ const SignUpForm: React.FC = () => {
                                                         <DatePicker
                                                             format="DD/MM/YYYY"
                                                             label="Fecha de Nacimiento"
-                                                            value={values.birthDate} // This should now be a Dayjs object
+                                                            value={values.birthDate_1} // This should now be a Dayjs object
                                                             onChange={(newValue) => {
-                                                                handleChange({ target: { name: 'birthDate', value: newValue } }); // Update Formik state
+                                                                handleChange({ target: { name: 'birthDate_1', value: newValue } }); // Update Formik state
                                                             }}
                                                             slotProps={{
                                                                 textField: {
                                                                     variant: 'standard',
-                                                                    onBlur: () => handleBlur({ target: { name: 'birthDate' } }),
+                                                                    onBlur: () => handleBlur({ target: { name: 'birthDate_1' } }),
                                                                     InputLabelProps: {
                                                                         style: {
-                                                                            color: touched.birthDate && errors.birthDate ? "#b71c1c" : undefined,
+                                                                            color: touched.birthDate_1 && errors.birthDate_1 ? "#b71c1c" : undefined,
                                                                         },
                                                                     },
                                                                     sx: {
@@ -1025,55 +932,50 @@ const SignUpForm: React.FC = () => {
                                                                         "&::-webkit-scrollbar": { display: "none" }, // Chrome/Safari
                                                                         scrollbarWidth: "none", // Firefox
                                                                         paddingRight: '4px',
+                                                                        "& label.Mui-focused": {
+                                                                            color: "green",  // color verde solo cuando está enfocado
+                                                                        },
+                                                                        '& .MuiInput-underline:after': {
+                                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                                        },
                                                                     },
                                                                 },
                                                             }}
                                                         />
 
                                                     </DemoContainer>
-                                                    {touched.birthDate && errors.birthDate ?
+                                                    {touched.birthDate_1 && errors.birthDate_1 ?
                                                         <Typography color="error" variant="caption" sx={{ fontSize: '0.75rem' }} >
-                                                            {errors.birthDate as string}
+                                                            {errors.birthDate_1 as string}
                                                         </Typography> : <span> &nbsp; </span>
                                                     }
                                                 </LocalizationProvider>
-                                                {/* CATEGORI */}
+                                                {/* CATEGORY */}
 
-                                                <FormControl fullWidth sx={{ mb: 0, mt: 0 }} variant='standard'>
+                                                <FormControl fullWidth variant='standard' sx={{
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                    },
+                                                }} >
                                                     <InputLabel
-                                                        error={touched.category && Boolean(errors.category)}
-                                                        id="demo-simple-select-label"
-                                                        sx={{
-                                                            "&.Mui-focused": {
-                                                                color: "#b71c1c", // Ensure label color changes when focused
-                                                            },
-                                                        }}>Categoria</InputLabel>
+                                                        error={touched.category_1 && Boolean(errors.category_1)}
+                                                        id="demo-simple-select-label">Categoria</InputLabel>
                                                     <Select
-                                                        name="category"
+                                                        name="category_1"
                                                         onBlur={handleBlur}
-                                                        sx={{
-                                                            "& .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: touched.category && errors.category ? "#b71c1c" : undefined,
-                                                            },
-                                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c", // Change border color when focused
-                                                            },
-                                                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c", // Change border color on hover
-                                                            },
-                                                        }}
-
                                                         variant='standard'
                                                         labelId="demo-simple-select-label"
                                                         id="demo-simple-select"
-                                                        value={values.category} // Bind Formik value
+                                                        value={values.category_1} // Bind Formik value
                                                         label="Categoria" // Update label to match the field
                                                         onChange={(event) => {
-                                                            handleChange({ target: { name: 'category', value: event.target.value } }); // Correctly update Formik state
+                                                            handleChange({ target: { name: 'category_1', value: event.target.value } }); // Correctly update Formik state
                                                         }}
 
                                                     >
-
                                                         {categories?.length > 0 ? (
                                                             categories.map(({ id, name }) => (
                                                                 <MenuItem key={id} value={name}>
@@ -1085,9 +987,9 @@ const SignUpForm: React.FC = () => {
                                                         )}
 
                                                     </Select>
-                                                    {touched.category && errors.category ?
+                                                    {touched.category_1 && errors.category_1 ?
                                                         <Typography color="error" variant="caption">
-                                                            {errors.category}
+                                                            {errors.category_1}
                                                         </Typography> : <span> &nbsp; </span>
                                                     }
                                                 </FormControl>
@@ -1099,98 +1001,73 @@ const SignUpForm: React.FC = () => {
                                             <Grid direction="column" size={3.35} sx={{ mt: 0 }}>
                                                 {/* LASTNAME */}
                                                 <TextField
-                                                    // margin="normal"
                                                     variant="standard"
                                                     fullWidth
-                                                    name="lastName"
+                                                    name="lastName_1"
                                                     label="Apellido/s"
-                                                    type="lastName"
-                                                    id="lastName"
-                                                    autoComplete="lastName"
-                                                    value={values.lastName}
+                                                    type="lastName_1"
+                                                    id="lastName_1"
+                                                    autoComplete="lastName_1"
+                                                    value={values.lastName_1}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    error={touched.lastName && Boolean(errors.lastName)}
-                                                    helperText={touched.lastName && errors.lastName ? errors.lastName : " "} // 
-                                                    sx={{ mt: 0 }}
-                                                    slotProps={{
-                                                        input: {
-                                                            sx: {
-                                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                            },
+                                                    error={touched.lastName_1 && Boolean(errors.lastName_1)}
+                                                    helperText={touched.lastName_1 && errors.lastName_1 ? errors.lastName_1 : " "} // 
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
                                                         },
-                                                        inputLabel: {
-                                                            sx: {
-                                                                "&.Mui-focused": {
-                                                                    color: "#b71c1c",
-                                                                },
-                                                            },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
                                                         },
                                                     }}
                                                 />
 
                                                 {/* CONTACT NUMBER */}
                                                 <TextField
-                                                    // margin="normal"
                                                     variant="standard"
                                                     fullWidth
-                                                    name="contactNumber"
+                                                    name="contactNumber_1"
                                                     label="Número de Contacto"
-                                                    type="contactNumber"
-                                                    id="contactNumber"
-                                                    autoComplete="contactNumber"
-                                                    value={values.contactNumber}
+                                                    type="contactNumber_1"
+                                                    id="contactNumber_1"
+                                                    autoComplete="contactNumber_1"
+                                                    value={values.contactNumber_1}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    error={touched.contactNumber && Boolean(errors.contactNumber)}
-                                                    helperText={touched.contactNumber && errors.contactNumber ? errors.contactNumber : " "}
-                                                    sx={{ mt: 0 }}
-                                                    slotProps={{
-                                                        input: {
-                                                            sx: {
-                                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                            },
+                                                    error={touched.contactNumber_1 && Boolean(errors.contactNumber_1)}
+                                                    helperText={touched.contactNumber_1 && errors.contactNumber_1 ? errors.contactNumber_1 : " "}
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
                                                         },
-                                                        inputLabel: {
-                                                            sx: {
-                                                                "&.Mui-focused": {
-                                                                    color: "#b71c1c",
-                                                                },
-                                                            },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
                                                         },
                                                     }}
                                                 />
 
                                                 {/* GENDER */}
-                                                <FormControl fullWidth variant="standard">
+                                                <FormControl fullWidth variant="standard" sx={{
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                    },
+                                                }} >
                                                     <InputLabel
-
                                                         id="demo-simple-select-label"
-                                                        error={touched.gender && Boolean(errors.gender)}
-                                                        sx={{
-                                                            "&.Mui-focused": {
-                                                                color: "#b71c1c", // Ensure label color changes when focused
-
-                                                            },
-                                                        }}>Genero</InputLabel>
+                                                        error={touched.gender_1 && Boolean(errors.gender_1)}
+                                                    >Genero</InputLabel>
                                                     <Select
 
                                                         labelId="gender-label"
-                                                        id="gender"
-                                                        name="gender"
-                                                        value={values.gender}
+                                                        id="gender_1"
+                                                        name="gender_1"
+                                                        value={values.gender_1}
                                                         onChange={(event) => {
-                                                            handleChange({ target: { name: 'gender', value: event.target.value } }); // Correctly update Formik state
+                                                            handleChange({ target: { name: 'gender_1', value: event.target.value } }); // Correctly update Formik state
                                                         }}
                                                         onBlur={handleBlur}
                                                         label="Género"
@@ -1206,42 +1083,32 @@ const SignUpForm: React.FC = () => {
                                                         )}
 
                                                     </Select>
-                                                    {touched.gender && errors.gender ?
+                                                    {touched.gender_1 && errors.gender_1 ?
                                                         <Typography color="error" variant="caption">
-                                                            {errors.gender}
+                                                            {errors.gender_1}
                                                         </Typography> : <span> &nbsp; </span>
                                                     }
                                                 </FormControl>
                                                 {/* DISCIPLINE */}
-                                                <FormControl fullWidth variant="standard" >
-                                                    <InputLabel
-                                                        id="demo-multiple-chip-label"
-                                                        sx={{
-                                                            "&.Mui-focused": {
-                                                                color: "#b71c1c", // color cuando está enfocado
-                                                            },
-                                                        }}
-                                                    >
+                                                <FormControl fullWidth variant="standard" sx={{
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                    },
+                                                }} >
+                                                    <InputLabel id="demo-multiple-chip-label">
                                                         Disciplinas
                                                     </InputLabel>
                                                     <Select
                                                         labelId="demo-multiple-chip-label"
                                                         id="demo-multiple-chip"
                                                         multiple
-                                                        value={discipline}
+                                                        value={discipline_1}
                                                         onChange={(event) => {
-                                                            handleDiscipline(event);
-                                                            handleChange({ target: { name: "discipline", value: event.target.value } });
-                                                        }}
-                                                        sx={{
-                                                            // Elimina estilos de borde
-                                                            "&.Mui-focused": {
-                                                                borderColor: "transparent",
-                                                            },
-                                                            "&:hover": {
-                                                                borderColor: "transparent",
-                                                            },
-
+                                                            handleDisciplineGeneric(event, setDiscipline_1)
+                                                            handleChange({ target: { name: "discipline_1", value: event.target.value } });
                                                         }}
                                                         // Cambiar input a Input para variante standard sin borde
                                                         input={<Input id="select-multiple-chip" />}
@@ -1259,9 +1126,9 @@ const SignUpForm: React.FC = () => {
                                                                 <MenuItem
                                                                     key={item.id}
                                                                     value={item.name}
-                                                                    style={getStyles(item.name, discipline, theme)}
+                                                                    style={getStyles(item.name, discipline_1, theme)}
                                                                 >
-                                                                    <Checkbox checked={discipline.indexOf(item.name) > -1} />
+                                                                    <Checkbox checked={discipline_1.indexOf(item.name) > -1} />
                                                                     <ListItemText
                                                                         primary={
                                                                             item.name.charAt(0).toUpperCase() +
@@ -1274,7 +1141,7 @@ const SignUpForm: React.FC = () => {
                                                             <p>Cargando disciplinas...</p>
                                                         )}
                                                     </Select>
-                                                    {touched.disciplines && errors.disciplines ? (
+                                                    {touched.disciplines_1 && errors.disciplines_1 ? (
                                                         <Typography color="error" variant="caption">
                                                             {/* {errors.disciplines} */}
                                                         </Typography>
@@ -1292,71 +1159,26 @@ const SignUpForm: React.FC = () => {
                                                         variant="standard"
                                                         // margin="none"
                                                         fullWidth
-                                                        name="dni"
+                                                        name="dni_1"
                                                         label="DNI"
-                                                        type="dni"
-                                                        id="dni"
-                                                        autoComplete="dni"
-                                                        value={values.dni}
+                                                        type="dni_1"
+                                                        id="dni_1"
+                                                        autoComplete="dni_1"
+                                                        value={values.dni_1}
                                                         onChange={handleChange}
                                                         onBlur={handleBlur}
-                                                        error={touched.dni && Boolean(errors.dni)}
-                                                        helperText={touched.dni && errors.dni ? errors.dni : " "}
-                                                        sx={{ mt: 0 }}
-                                                        slotProps={{
-                                                            input: {
-                                                                sx: {
-                                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                        borderColor: "#b71c1c",
-                                                                    },
-                                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                        borderColor: "#b71c1c",
-                                                                    },
-                                                                },
+                                                        error={touched.dni_1 && Boolean(errors.dni_1)}
+                                                        helperText={touched.dni_1 && errors.dni_1 ? errors.dni_1 : " "}
+                                                        sx={{
+                                                            "& label.Mui-focused": {
+                                                                color: "green",  // color verde solo cuando está enfocado
                                                             },
-                                                            inputLabel: {
-                                                                sx: {
-                                                                    "&.Mui-focused": {
-                                                                        color: "#b71c1c",
-                                                                    },
-                                                                },
+                                                            '& .MuiInput-underline:after': {
+                                                                borderBottomColor: 'green', // color verde cuando está enfocado
                                                             },
                                                         }}
                                                     />
-                                                    {/* EMAIL */}
-                                                    <TextField
-                                                        variant='standard'
-                                                        fullWidth
-                                                        id="email"
-                                                        label="Dirección de correo"
-                                                        name="email"
-                                                        autoComplete="email"
-                                                        value={values.email}
-                                                        onChange={handleChange}
-                                                        onBlur={handleBlur}
-                                                        error={touched.email && Boolean(errors.email)}
-                                                        helperText={touched.email && errors.email ? errors.email : " "} //
-                                                        sx={{ mt: 0 }}
-                                                        slotProps={{
-                                                            input: {
-                                                                sx: {
-                                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                        borderColor: "#b71c1c",
-                                                                    },
-                                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                        borderColor: "#b71c1c",
-                                                                    },
-                                                                },
-                                                            },
-                                                            inputLabel: {
-                                                                sx: {
-                                                                    "&.Mui-focused": {
-                                                                        color: "#b71c1c",
-                                                                    },
-                                                                },
-                                                            },
-                                                        }}
-                                                    />
+
                                                 </Grid>
                                             </Grid>
 
@@ -1396,34 +1218,22 @@ const SignUpForm: React.FC = () => {
                                                 <TextField
                                                     variant="standard"
                                                     fullWidth
-                                                    name="name"
+                                                    name="name_2"
                                                     label="Nombre"
-                                                    type="name"
-                                                    id="name"
-                                                    autoComplete="name"
-                                                    value={values.name}
+                                                    type="name_2"
+                                                    id="name_2"
+                                                    autoComplete="name_2"
+                                                    value={values.name_2}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    error={touched.name && Boolean(errors.name)}
-                                                    helperText={touched.name && errors.name ? errors.name : " "} // 
-                                                    sx={{ mb: 0 }}
-                                                    slotProps={{
-                                                        input: {
-                                                            sx: {
-                                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                            },
+                                                    error={touched.name_2 && Boolean(errors.name_2)}
+                                                    helperText={touched.name_2 && errors.name_2 ? errors.name_2 : " "} // 
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
                                                         },
-                                                        inputLabel: {
-                                                            sx: {
-                                                                "&.Mui-focused": {
-                                                                    color: "#b71c1c",
-                                                                },
-                                                            },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
                                                         },
                                                     }}
                                                 />
@@ -1431,34 +1241,23 @@ const SignUpForm: React.FC = () => {
                                                 <TextField
                                                     variant="standard"
                                                     fullWidth
-                                                    name="address"
+                                                    name="address_2"
                                                     label="Domicilio"
-                                                    type="address"
-                                                    id="address"
-                                                    autoComplete="address"
-                                                    value={values.address}
+                                                    type="address_2"
+                                                    id="address_2"
+                                                    autoComplete="address_2"
+                                                    value={values.address_2}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    error={touched.address && Boolean(errors.address)}
-                                                    helperText={touched.address && errors.address ? errors.address : " "}
-                                                    sx={{ mb: -1 }}
-                                                    slotProps={{
-                                                        input: {
-                                                            sx: {
-                                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                            },
+                                                    error={touched.address_2 && Boolean(errors.address_2)}
+                                                    helperText={touched.address_2 && errors.address_2 ? errors.address_2 : " "}
+                                                    sx={{
+                                                        mb: -1,
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
                                                         },
-                                                        inputLabel: {
-                                                            sx: {
-                                                                "&.Mui-focused": {
-                                                                    color: "#b71c1c",
-                                                                },
-                                                            },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
                                                         },
                                                     }}
                                                 />
@@ -1469,17 +1268,17 @@ const SignUpForm: React.FC = () => {
                                                         <DatePicker
                                                             format="DD/MM/YYYY"
                                                             label="Fecha de Nacimiento"
-                                                            value={values.birthDate} // This should now be a Dayjs object
+                                                            value={values.birthDate_2} // This should now be a Dayjs object
                                                             onChange={(newValue) => {
-                                                                handleChange({ target: { name: 'birthDate', value: newValue } }); // Update Formik state
+                                                                handleChange({ target: { name: 'birthDate_2', value: newValue } }); // Update Formik state
                                                             }}
                                                             slotProps={{
                                                                 textField: {
                                                                     variant: 'standard',
-                                                                    onBlur: () => handleBlur({ target: { name: 'birthDate' } }),
+                                                                    onBlur: () => handleBlur({ target: { name: 'birthDate_2' } }),
                                                                     InputLabelProps: {
                                                                         style: {
-                                                                            color: touched.birthDate && errors.birthDate ? "#b71c1c" : undefined,
+                                                                            color: touched.birthDate_2 && errors.birthDate_2 ? "#b71c1c" : undefined,
                                                                         },
                                                                     },
                                                                     sx: {
@@ -1488,55 +1287,50 @@ const SignUpForm: React.FC = () => {
                                                                         "&::-webkit-scrollbar": { display: "none" }, // Chrome/Safari
                                                                         scrollbarWidth: "none", // Firefox
                                                                         paddingRight: '4px',
+                                                                        "& label.Mui-focused": {
+                                                                            color: "green",  // color verde solo cuando está enfocado
+                                                                        },
+                                                                        '& .MuiInput-underline:after': {
+                                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                                        },
                                                                     },
                                                                 },
                                                             }}
                                                         />
 
                                                     </DemoContainer>
-                                                    {touched.birthDate && errors.birthDate ?
+                                                    {touched.birthDate_2 && errors.birthDate_2 ?
                                                         <Typography color="error" variant="caption" sx={{ fontSize: '0.75rem' }} >
-                                                            {errors.birthDate as string}
+                                                            {errors.birthDate_2 as string}
                                                         </Typography> : <span> &nbsp; </span>
                                                     }
                                                 </LocalizationProvider>
-                                                {/* CATEGORI */}
+                                                {/* CATEGORY */}
 
-                                                <FormControl fullWidth sx={{ mb: 0, mt: 0 }} variant='standard'>
+                                                <FormControl fullWidth variant='standard' sx={{
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                    },
+                                                }} >
                                                     <InputLabel
-                                                        error={touched.category && Boolean(errors.category)}
+                                                        error={touched.category_2 && Boolean(errors.category_2)}
                                                         id="demo-simple-select-label"
-                                                        sx={{
-                                                            "&.Mui-focused": {
-                                                                color: "#b71c1c", // Ensure label color changes when focused
-                                                            },
-                                                        }}>Categoria</InputLabel>
+                                                    >Categoria</InputLabel>
                                                     <Select
-                                                        name="category"
+                                                        name="category_2"
                                                         onBlur={handleBlur}
-                                                        sx={{
-                                                            "& .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: touched.category && errors.category ? "#b71c1c" : undefined,
-                                                            },
-                                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c", // Change border color when focused
-                                                            },
-                                                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c", // Change border color on hover
-                                                            },
-                                                        }}
-
                                                         variant='standard'
                                                         labelId="demo-simple-select-label"
                                                         id="demo-simple-select"
-                                                        value={values.category} // Bind Formik value
+                                                        value={values.category_2} // Bind Formik value
                                                         label="Categoria" // Update label to match the field
                                                         onChange={(event) => {
-                                                            handleChange({ target: { name: 'category', value: event.target.value } }); // Correctly update Formik state
+                                                            handleChange({ target: { name: 'category_2', value: event.target.value } }); // Correctly update Formik state
                                                         }}
-
                                                     >
-
                                                         {categories?.length > 0 ? (
                                                             categories.map(({ id, name }) => (
                                                                 <MenuItem key={id} value={name}>
@@ -1548,112 +1342,85 @@ const SignUpForm: React.FC = () => {
                                                         )}
 
                                                     </Select>
-                                                    {touched.category && errors.category ?
+                                                    {touched.category_2 && errors.category_2 ?
                                                         <Typography color="error" variant="caption">
-                                                            {errors.category}
+                                                            {errors.category_2}
                                                         </Typography> : <span> &nbsp; </span>
                                                     }
                                                 </FormControl>
-
                                             </Grid>
-
 
 
                                             <Grid direction="column" size={3.35} sx={{ mt: 0 }}>
                                                 {/* LASTNAME */}
                                                 <TextField
-                                                    // margin="normal"
+
                                                     variant="standard"
                                                     fullWidth
-                                                    name="lastName"
+                                                    name="lastName_2"
                                                     label="Apellido/s"
-                                                    type="lastName"
-                                                    id="lastName"
-                                                    autoComplete="lastName"
-                                                    value={values.lastName}
+                                                    type="lastName_2"
+                                                    id="lastName_2"
+                                                    autoComplete="lastName_2"
+                                                    value={values.lastName_2}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    error={touched.lastName && Boolean(errors.lastName)}
-                                                    helperText={touched.lastName && errors.lastName ? errors.lastName : " "} // 
-                                                    sx={{ mt: 0 }}
-                                                    slotProps={{
-                                                        input: {
-                                                            sx: {
-                                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                            },
+                                                    error={touched.lastName_2 && Boolean(errors.lastName_2)}
+                                                    helperText={touched.lastName_2 && errors.lastName_2 ? errors.lastName_2 : " "} // 
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
                                                         },
-                                                        inputLabel: {
-                                                            sx: {
-                                                                "&.Mui-focused": {
-                                                                    color: "#b71c1c",
-                                                                },
-                                                            },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
                                                         },
                                                     }}
                                                 />
 
                                                 {/* CONTACT NUMBER */}
                                                 <TextField
-                                                    // margin="normal"
                                                     variant="standard"
                                                     fullWidth
-                                                    name="contactNumber"
+                                                    name="contactNumber_2"
                                                     label="Número de Contacto"
-                                                    type="contactNumber"
-                                                    id="contactNumber"
-                                                    autoComplete="contactNumber"
-                                                    value={values.contactNumber}
+                                                    type="contactNumber_2"
+                                                    id="contactNumber_2"
+                                                    autoComplete="contactNumber_2"
+                                                    value={values.contactNumber_2}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    error={touched.contactNumber && Boolean(errors.contactNumber)}
-                                                    helperText={touched.contactNumber && errors.contactNumber ? errors.contactNumber : " "}
-                                                    sx={{ mt: 0 }}
-                                                    slotProps={{
-                                                        input: {
-                                                            sx: {
-                                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                            },
+                                                    error={touched.contactNumber_2 && Boolean(errors.contactNumber_2)}
+                                                    helperText={touched.contactNumber_2 && errors.contactNumber_2 ? errors.contactNumber_2 : " "}
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
                                                         },
-                                                        inputLabel: {
-                                                            sx: {
-                                                                "&.Mui-focused": {
-                                                                    color: "#b71c1c",
-                                                                },
-                                                            },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
                                                         },
                                                     }}
                                                 />
 
                                                 {/* GENDER */}
-                                                <FormControl fullWidth variant="standard">
+                                                <FormControl fullWidth variant="standard" sx={{
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                    },
+                                                }} >
                                                     <InputLabel
-
                                                         id="demo-simple-select-label"
                                                         error={touched.gender && Boolean(errors.gender)}
-                                                        sx={{
-                                                            "&.Mui-focused": {
-                                                                color: "#b71c1c", // Ensure label color changes when focused
-
-                                                            },
-                                                        }}>Genero</InputLabel>
+                                                    >Genero</InputLabel>
                                                     <Select
-
                                                         labelId="gender-label"
-                                                        id="gender"
-                                                        name="gender"
-                                                        value={values.gender}
+                                                        id="gender_2"
+                                                        name="gender_2"
+                                                        value={values.gender_2}
                                                         onChange={(event) => {
-                                                            handleChange({ target: { name: 'gender', value: event.target.value } }); // Correctly update Formik state
+                                                            handleChange({ target: { name: 'gender_2', value: event.target.value } }); // Correctly update Formik state
                                                         }}
                                                         onBlur={handleBlur}
                                                         label="Género"
@@ -1669,42 +1436,32 @@ const SignUpForm: React.FC = () => {
                                                         )}
 
                                                     </Select>
-                                                    {touched.gender && errors.gender ?
+                                                    {touched.gender_2 && errors.gender_2 ?
                                                         <Typography color="error" variant="caption">
-                                                            {errors.gender}
+                                                            {errors.gender_2}
                                                         </Typography> : <span> &nbsp; </span>
                                                     }
                                                 </FormControl>
                                                 {/* DISCIPLINE */}
-                                                <FormControl fullWidth variant="standard" >
-                                                    <InputLabel
-                                                        id="demo-multiple-chip-label"
-                                                        sx={{
-                                                            "&.Mui-focused": {
-                                                                color: "#b71c1c", // color cuando está enfocado
-                                                            },
-                                                        }}
-                                                    >
+                                                <FormControl fullWidth variant="standard" sx={{
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                    },
+                                                }} >
+                                                    <InputLabel id="demo-multiple-chip-label">
                                                         Disciplinas
                                                     </InputLabel>
                                                     <Select
                                                         labelId="demo-multiple-chip-label"
                                                         id="demo-multiple-chip"
                                                         multiple
-                                                        value={discipline}
+                                                        value={discipline_2}
                                                         onChange={(event) => {
-                                                            handleDiscipline(event);
-                                                            handleChange({ target: { name: "discipline", value: event.target.value } });
-                                                        }}
-                                                        sx={{
-                                                            // Elimina estilos de borde
-                                                            "&.Mui-focused": {
-                                                                borderColor: "transparent",
-                                                            },
-                                                            "&:hover": {
-                                                                borderColor: "transparent",
-                                                            },
-
+                                                            handleDisciplineGeneric(event, setDiscipline_2)
+                                                            handleChange({ target: { name: "discipline_2", value: event.target.value } });
                                                         }}
                                                         // Cambiar input a Input para variante standard sin borde
                                                         input={<Input id="select-multiple-chip" />}
@@ -1722,9 +1479,9 @@ const SignUpForm: React.FC = () => {
                                                                 <MenuItem
                                                                     key={item.id}
                                                                     value={item.name}
-                                                                    style={getStyles(item.name, discipline, theme)}
+                                                                    style={getStyles(item.name, discipline_2, theme)}
                                                                 >
-                                                                    <Checkbox checked={discipline.indexOf(item.name) > -1} />
+                                                                    <Checkbox checked={discipline_2.indexOf(item.name) > -1} />
                                                                     <ListItemText
                                                                         primary={
                                                                             item.name.charAt(0).toUpperCase() +
@@ -1737,13 +1494,6 @@ const SignUpForm: React.FC = () => {
                                                             <p>Cargando disciplinas...</p>
                                                         )}
                                                     </Select>
-                                                    {touched.disciplines && errors.disciplines ? (
-                                                        <Typography color="error" variant="caption">
-                                                            {/* {errors.disciplines} */}
-                                                        </Typography>
-                                                    ) : (
-                                                        <span> &nbsp; </span>
-                                                    )}
                                                 </FormControl>
 
                                             </Grid>
@@ -1753,70 +1503,1391 @@ const SignUpForm: React.FC = () => {
                                                     {/* DNI */}
                                                     <TextField
                                                         variant="standard"
-                                                        // margin="none"
                                                         fullWidth
-                                                        name="dni"
+                                                        name="dni_2"
                                                         label="DNI"
-                                                        type="dni"
-                                                        id="dni"
-                                                        autoComplete="dni"
-                                                        value={values.dni}
+                                                        type="dni_2"
+                                                        id="dni_2"
+                                                        autoComplete="dni_2"
+                                                        value={values.dni_2}
                                                         onChange={handleChange}
                                                         onBlur={handleBlur}
-                                                        error={touched.dni && Boolean(errors.dni)}
-                                                        helperText={touched.dni && errors.dni ? errors.dni : " "}
-                                                        sx={{ mt: 0 }}
-                                                        slotProps={{
-                                                            input: {
-                                                                sx: {
-                                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                        borderColor: "#b71c1c",
-                                                                    },
-                                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                        borderColor: "#b71c1c",
-                                                                    },
-                                                                },
+                                                        error={touched.dni_2 && Boolean(errors.dni_2)}
+                                                        helperText={touched.dni_2 && errors.dni_2 ? errors.dni_2 : " "}
+                                                        sx={{
+                                                            "& label.Mui-focused": {
+                                                                color: "green",  // color verde solo cuando está enfocado
                                                             },
-                                                            inputLabel: {
-                                                                sx: {
-                                                                    "&.Mui-focused": {
-                                                                        color: "#b71c1c",
-                                                                    },
-                                                                },
+                                                            '& .MuiInput-underline:after': {
+                                                                borderBottomColor: 'green', // color verde cuando está enfocado
                                                             },
                                                         }}
                                                     />
-                                                    {/* EMAIL */}
-                                                    <TextField
+                                                </Grid>
+                                            </Grid>
+
+                                        </Grid>
+                                    </Grid>
+                                ) : null}
+                                {nested.nested_3 ? (
+                                    <Grid className="embla__slide-form">
+                                        <Grid container columnSpacing={2} direction="row" size={12}>
+                                            <Grid direction="row" size={1.3}>
+                                            </Grid>
+                                            <Grid direction="row" size={10.7}>
+                                                <Typography sx={{ fontWeight: 800, fontSize: 18, color: '#616161', textDecoration: 'none', mb: 1 }}>
+                                                    FAMILIAR 3
+                                                </Typography>
+                                            </Grid>
+                                            {/* AVATAR */}
+
+                                            <Grid direction="column" size={1.3}>
+                                                <Avatar
+                                                    alt="Avatar"
+                                                    src={avatar1}
+                                                    sx={{
+                                                        width: 110,
+                                                        height: 110,
+                                                        boxShadow: 4,
+                                                        border: "3px solid #fff",
+                                                        bgcolor: "#fff",
+                                                        ml: 1,
+                                                        mt: -3,
+                                                    }}
+                                                />
+                                            </Grid>
+
+                                            <Grid direction="column" size={3.35}>
+                                                {/* NAME */}
+                                                <TextField
+                                                    variant="standard"
+                                                    fullWidth
+                                                    name="name_3"
+                                                    label="Nombre"
+                                                    type="name_3"
+                                                    id="name_3"
+                                                    autoComplete="name_3"
+                                                    value={values.name_3}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    error={touched.name_3 && Boolean(errors.name_3)}
+                                                    helperText={touched.name_3 && errors.name_3 ? errors.name_3 : " "} // 
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
+                                                        },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                        },
+                                                    }}
+                                                />
+                                                {/* ADDRESS */}
+                                                <TextField
+                                                    variant="standard"
+                                                    fullWidth
+                                                    name="address_3"
+                                                    label="Domicilio"
+                                                    type="address_3"
+                                                    id="address_3"
+                                                    autoComplete="address_3"
+                                                    value={values.address_3}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    error={touched.address_3 && Boolean(errors.address_3)}
+                                                    helperText={touched.address_3 && errors.address_3 ? errors.address_3 : " "}
+                                                    sx={{
+                                                        mb: -1,
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
+                                                        },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                        },
+                                                    }}
+                                                />
+
+                                                {/* BIRTHDATE */}
+                                                <LocalizationProvider dateAdapter={AdapterDayjs} >
+                                                    <DemoContainer components={['DatePicker']}  >
+                                                        <DatePicker
+                                                            format="DD/MM/YYYY"
+                                                            label="Fecha de Nacimiento"
+                                                            value={values.birthDate_3} // This should now be a Dayjs object
+                                                            onChange={(newValue) => {
+                                                                handleChange({ target: { name: 'birthDate_3', value: newValue } }); // Update Formik state
+                                                            }}
+                                                            slotProps={{
+                                                                textField: {
+                                                                    variant: 'standard',
+                                                                    onBlur: () => handleBlur({ target: { name: 'birthDate_3' } }),
+                                                                    InputLabelProps: {
+                                                                        style: {
+                                                                            color: touched.birthDate_3 && errors.birthDate_3 ? "#b71c1c" : undefined,
+                                                                        },
+                                                                    },
+                                                                    sx: {
+                                                                        width: '100%',
+                                                                        overflow: 'hidden', // <-- Oculta scroll
+                                                                        "&::-webkit-scrollbar": { display: "none" }, // Chrome/Safari
+                                                                        scrollbarWidth: "none", // Firefox
+                                                                        paddingRight: '4px',
+                                                                        "& label.Mui-focused": {
+                                                                            color: "green",  // color verde solo cuando está enfocado
+                                                                        },
+                                                                        '& .MuiInput-underline:after': {
+                                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                                        },
+                                                                    },
+                                                                },
+                                                            }}
+                                                        />
+
+                                                    </DemoContainer>
+                                                    {touched.birthDate_3 && errors.birthDate_3 ?
+                                                        <Typography color="error" variant="caption" sx={{ fontSize: '0.75rem' }} >
+                                                            {errors.birthDate_3 as string}
+                                                        </Typography> : <span> &nbsp; </span>
+                                                    }
+                                                </LocalizationProvider>
+                                                {/* CATEGORY */}
+
+                                                <FormControl fullWidth variant='standard' sx={{
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                    },
+                                                }} >
+                                                    <InputLabel
+                                                        error={touched.category_3 && Boolean(errors.category_3)}
+                                                        id="demo-simple-select-label"
+                                                    >Categoria</InputLabel>
+                                                    <Select
+                                                        name="category_3"
+                                                        onBlur={handleBlur}
                                                         variant='standard'
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        value={values.category_3} // Bind Formik value
+                                                        label="Categoria" // Update label to match the field
+                                                        onChange={(event) => {
+                                                            handleChange({ target: { name: 'category_3', value: event.target.value } }); // Correctly update Formik state
+                                                        }}
+                                                    >
+                                                        {categories?.length > 0 ? (
+                                                            categories.map(({ id, name }) => (
+                                                                <MenuItem key={id} value={name}>
+                                                                    {name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()}
+                                                                </MenuItem>
+                                                            ))
+                                                        ) : (
+                                                            <p>Cargando Categorias...</p>
+                                                        )}
+
+                                                    </Select>
+                                                    {touched.category_3 && errors.category_3 ?
+                                                        <Typography color="error" variant="caption">
+                                                            {errors.category_3}
+                                                        </Typography> : <span> &nbsp; </span>
+                                                    }
+                                                </FormControl>
+                                            </Grid>
+
+
+                                            <Grid direction="column" size={3.35} sx={{ mt: 0 }}>
+                                                {/* LASTNAME */}
+                                                <TextField
+                                                    variant="standard"
+                                                    fullWidth
+                                                    name="lastName_3"
+                                                    label="Apellido/s"
+                                                    type="lastName_3"
+                                                    id="lastName_3"
+                                                    autoComplete="lastName_3"
+                                                    value={values.lastName_3}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    error={touched.lastName_3 && Boolean(errors.lastName_3)}
+                                                    helperText={touched.lastName_3 && errors.lastName_3 ? errors.lastName_3 : " "} // 
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
+                                                        },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                        },
+                                                    }}
+                                                />
+
+                                                {/* CONTACT NUMBER */}
+                                                <TextField
+                                                    variant="standard"
+                                                    fullWidth
+                                                    name="contactNumber_3"
+                                                    label="Número de Contacto"
+                                                    type="contactNumber_3"
+                                                    id="contactNumber_3"
+                                                    autoComplete="contactNumber_3"
+                                                    value={values.contactNumber_3}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    error={touched.contactNumber_3 && Boolean(errors.contactNumber_3)}
+                                                    helperText={touched.contactNumber_3 && errors.contactNumber_3 ? errors.contactNumber_3 : " "}
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
+                                                        },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                        },
+                                                    }}
+                                                />
+
+                                                {/* GENDER */}
+                                                <FormControl fullWidth variant="standard" sx={{
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                    },
+                                                }} >
+                                                    <InputLabel
+                                                        id="demo-simple-select-label"
+                                                        error={touched.gender_3 && Boolean(errors.gender_3)}
+                                                    >Genero</InputLabel>
+                                                    <Select
+                                                        labelId="gender-label"
+                                                        id="gender_3"
+                                                        name="gender_3"
+                                                        value={values.gender_3}
+                                                        onChange={(event) => {
+                                                            handleChange({ target: { name: 'gender_3', value: event.target.value } }); // Correctly update Formik state
+                                                        }}
+                                                        onBlur={handleBlur}
+                                                        label="Género"
+                                                    >
+                                                        {genders?.length > 0 ? (
+                                                            genders.map((name) => (
+                                                                <MenuItem key={name} value={name}>
+                                                                    {name}
+                                                                </MenuItem>
+                                                            ))
+                                                        ) : (
+                                                            <p>Cargando Generos...</p>
+                                                        )}
+
+                                                    </Select>
+                                                    {touched.gender_3 && errors.gender_3 ?
+                                                        <Typography color="error" variant="caption">
+                                                            {errors.gender_3}
+                                                        </Typography> : <span> &nbsp; </span>
+                                                    }
+                                                </FormControl>
+                                                {/* DISCIPLINE */}
+                                                <FormControl fullWidth variant="standard" sx={{
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                    },
+                                                }} >
+                                                    <InputLabel id="demo-multiple-chip-label">
+                                                        Disciplinas
+                                                    </InputLabel>
+                                                    <Select
+                                                        labelId="demo-multiple-chip-label"
+                                                        id="demo-multiple-chip"
+                                                        multiple
+                                                        value={discipline_3}
+                                                        onChange={(event) => {
+                                                            handleDisciplineGeneric(event, setDiscipline_3)
+                                                            handleChange({ target: { name: "discipline_3", value: event.target.value } });
+                                                        }}
+                                                        // Cambiar input a Input para variante standard sin borde
+                                                        input={<Input id="select-multiple-chip" />}
+                                                        renderValue={(selected) => (
+                                                            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                                                                {selected.map((value) => (
+                                                                    <Chip key={value} label={value} />
+                                                                ))}
+                                                            </Box>
+                                                        )}
+                                                        MenuProps={MenuProps}
+                                                    >
+                                                        {disciplines?.length > 0 ? (
+                                                            disciplines.map((item: any) => (
+                                                                <MenuItem
+                                                                    key={item.id}
+                                                                    value={item.name}
+                                                                    style={getStyles(item.name, discipline_3, theme)}
+                                                                >
+                                                                    <Checkbox checked={discipline_3.indexOf(item.name) > -1} />
+                                                                    <ListItemText
+                                                                        primary={
+                                                                            item.name.charAt(0).toUpperCase() +
+                                                                            item.name.slice(1).toLowerCase()
+                                                                        }
+                                                                    />
+                                                                </MenuItem>
+                                                            ))
+                                                        ) : (
+                                                            <p>Cargando disciplinas...</p>
+                                                        )}
+                                                    </Select>
+                                                </FormControl>
+
+                                            </Grid>
+
+                                            <Grid container direction="column" size={4} sx={{ mt: 0 }}>
+                                                <Grid container direction="column" size={10} >
+                                                    {/* DNI */}
+                                                    <TextField
+                                                        variant="standard"
                                                         fullWidth
-                                                        id="email"
-                                                        label="Dirección de correo"
-                                                        name="email"
-                                                        autoComplete="email"
-                                                        value={values.email}
+                                                        name="dni_3"
+                                                        label="DNI"
+                                                        type="dni_3"
+                                                        id="dni_3"
+                                                        autoComplete="dni_3"
+                                                        value={values.dni_3}
                                                         onChange={handleChange}
                                                         onBlur={handleBlur}
-                                                        error={touched.email && Boolean(errors.email)}
-                                                        helperText={touched.email && errors.email ? errors.email : " "} //
-                                                        sx={{ mt: 0 }}
-                                                        slotProps={{
-                                                            input: {
-                                                                sx: {
-                                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                        borderColor: "#b71c1c",
-                                                                    },
-                                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                        borderColor: "#b71c1c",
-                                                                    },
-                                                                },
+                                                        error={touched.dni_3 && Boolean(errors.dni_3)}
+                                                        helperText={touched.dni_3 && errors.dni_3 ? errors.dni_3 : " "}
+                                                        sx={{
+                                                            "& label.Mui-focused": {
+                                                                color: "green",  // color verde solo cuando está enfocado
                                                             },
-                                                            inputLabel: {
-                                                                sx: {
-                                                                    "&.Mui-focused": {
-                                                                        color: "#b71c1c",
+                                                            '& .MuiInput-underline:after': {
+                                                                borderBottomColor: 'green', // color verde cuando está enfocado
+                                                            },
+                                                        }}
+                                                    />
+                                                </Grid>
+                                            </Grid>
+
+                                        </Grid>
+                                    </Grid>
+                                ) : null}
+                                {nested.nested_4 ? (
+                                    <Grid className="embla__slide-form">
+                                        <Grid container columnSpacing={2} direction="row" size={12}>
+                                            <Grid direction="row" size={1.3}>
+                                            </Grid>
+                                            <Grid direction="row" size={10.7}>
+                                                <Typography sx={{ fontWeight: 800, fontSize: 18, color: '#616161', textDecoration: 'none', mb: 1 }}>
+                                                    FAMILIAR 4
+                                                </Typography>
+                                            </Grid>
+                                            {/* AVATAR */}
+                                            <Grid direction="column" size={1.3}>
+                                                <Avatar
+                                                    alt="Avatar"
+                                                    src={avatar1}
+                                                    sx={{
+                                                        width: 110,
+                                                        height: 110,
+                                                        boxShadow: 4,
+                                                        border: "3px solid #fff",
+                                                        bgcolor: "#fff",
+                                                        ml: 1,
+                                                        mt: -3,
+                                                    }}
+                                                />
+                                            </Grid>
+
+                                            <Grid direction="column" size={3.35}>
+                                                {/* NAME */}
+                                                <TextField
+                                                    variant="standard"
+                                                    fullWidth
+                                                    name="name_4"
+                                                    label="Nombre"
+                                                    type="name_4"
+                                                    id="name_4"
+                                                    autoComplete="name_4"
+                                                    value={values.name_4}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    error={touched.name_4 && Boolean(errors.name_4)}
+                                                    helperText={touched.name_4 && errors.name_4 ? errors.name_4 : " "} // 
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
+                                                        },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                        },
+                                                    }}
+                                                />
+                                                {/* ADDRESS */}
+                                                <TextField
+                                                    variant="standard"
+                                                    fullWidth
+                                                    name="address_4"
+                                                    label="Domicilio"
+                                                    type="address_4"
+                                                    id="address_4"
+                                                    autoComplete="address_4"
+                                                    value={values.address_4}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    error={touched.address_4 && Boolean(errors.address_4)}
+                                                    helperText={touched.address_4 && errors.address_4 ? errors.address_4 : " "}
+                                                    sx={{
+                                                        mb: -1,
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
+                                                        },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                        },
+                                                    }}
+                                                />
+
+                                                {/* BIRTHDATE */}
+                                                <LocalizationProvider dateAdapter={AdapterDayjs} >
+                                                    <DemoContainer components={['DatePicker']}  >
+                                                        <DatePicker
+                                                            format="DD/MM/YYYY"
+                                                            label="Fecha de Nacimiento"
+                                                            value={values.birthDate_4} // This should now be a Dayjs object
+                                                            onChange={(newValue) => {
+                                                                handleChange({ target: { name: 'birthDate_4', value: newValue } }); // Update Formik state
+                                                            }}
+                                                            slotProps={{
+                                                                textField: {
+                                                                    variant: 'standard',
+                                                                    onBlur: () => handleBlur({ target: { name: 'birthDate_4' } }),
+                                                                    InputLabelProps: {
+                                                                        style: {
+                                                                            color: touched.birthDate_4 && errors.birthDate_4 ? "#b71c1c" : undefined,
+                                                                        },
+                                                                    },
+                                                                    sx: {
+                                                                        width: '100%',
+                                                                        overflow: 'hidden', // <-- Oculta scroll
+                                                                        "&::-webkit-scrollbar": { display: "none" }, // Chrome/Safari
+                                                                        scrollbarWidth: "none", // Firefox
+                                                                        paddingRight: '4px',
+                                                                        "& label.Mui-focused": {
+                                                                            color: "green",  // color verde solo cuando está enfocado
+                                                                        },
+                                                                        '& .MuiInput-underline:after': {
+                                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                                        },
                                                                     },
                                                                 },
+                                                            }}
+                                                        />
+
+                                                    </DemoContainer>
+                                                    {touched.birthDate_4 && errors.birthDate_4 ?
+                                                        <Typography color="error" variant="caption" sx={{ fontSize: '0.75rem' }} >
+                                                            {errors.birthDate_4 as string}
+                                                        </Typography> : <span> &nbsp; </span>
+                                                    }
+                                                </LocalizationProvider>
+                                                {/* CATEGORY */}
+
+                                                <FormControl fullWidth variant='standard' sx={{
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                    },
+                                                }} >
+                                                    <InputLabel
+                                                        error={touched.category_4 && Boolean(errors.category_4)}
+                                                        id="demo-simple-select-label"
+                                                    >Categoria</InputLabel>
+                                                    <Select
+                                                        name="category_4"
+                                                        onBlur={handleBlur}
+                                                        variant='standard'
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        value={values.category_4} // Bind Formik value
+                                                        label="Categoria" // Update label to match the field
+                                                        onChange={(event) => {
+                                                            handleChange({ target: { name: 'category_4', value: event.target.value } }); // Correctly update Formik state
+                                                        }}
+                                                    >
+                                                        {categories?.length > 0 ? (
+                                                            categories.map(({ id, name }) => (
+                                                                <MenuItem key={id} value={name}>
+                                                                    {name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()}
+                                                                </MenuItem>
+                                                            ))
+                                                        ) : (
+                                                            <p>Cargando Categorias...</p>
+                                                        )}
+
+                                                    </Select>
+                                                    {touched.category_4 && errors.category_4 ?
+                                                        <Typography color="error" variant="caption">
+                                                            {errors.category_4}
+                                                        </Typography> : <span> &nbsp; </span>
+                                                    }
+                                                </FormControl>
+                                            </Grid>
+
+
+                                            <Grid direction="column" size={3.35} sx={{ mt: 0 }}>
+                                                {/* LASTNAME */}
+                                                <TextField
+                                                    variant="standard"
+                                                    fullWidth
+                                                    name="lastName_4"
+                                                    label="Apellido/s"
+                                                    type="lastName_4"
+                                                    id="lastName_4"
+                                                    autoComplete="lastName_4"
+                                                    value={values.lastName_4}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    error={touched.lastName_4 && Boolean(errors.lastName_4)}
+                                                    helperText={touched.lastName_4 && errors.lastName_4 ? errors.lastName_4 : " "} // 
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
+                                                        },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                        },
+                                                    }}
+                                                />
+
+                                                {/* CONTACT NUMBER */}
+                                                <TextField
+                                                    variant="standard"
+                                                    fullWidth
+                                                    name="contactNumber_4"
+                                                    label="Número de Contacto"
+                                                    type="contactNumber_4"
+                                                    id="contactNumber_4"
+                                                    autoComplete="contactNumber_4"
+                                                    value={values.contactNumber_4}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    error={touched.contactNumber_4 && Boolean(errors.contactNumber_4)}
+                                                    helperText={touched.contactNumber_4 && errors.contactNumber_4 ? errors.contactNumber_4 : " "}
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
+                                                        },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                        },
+                                                    }}
+                                                />
+
+                                                {/* GENDER */}
+                                                <FormControl fullWidth variant="standard" sx={{
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                    },
+                                                }} >
+                                                    <InputLabel
+                                                        id="demo-simple-select-label"
+                                                        error={touched.gender_4 && Boolean(errors.gender_4)}
+                                                    >Genero</InputLabel>
+                                                    <Select
+                                                        labelId="gender-label"
+                                                        id="gender_4"
+                                                        name="gender_4"
+                                                        value={values.gender_4}
+                                                        onChange={(event) => {
+                                                            handleChange({ target: { name: 'gender_4', value: event.target.value } }); // Correctly update Formik state
+                                                        }}
+                                                        onBlur={handleBlur}
+                                                        label="Género"
+                                                    >
+                                                        {genders?.length > 0 ? (
+                                                            genders.map((name) => (
+                                                                <MenuItem key={name} value={name}>
+                                                                    {name}
+                                                                </MenuItem>
+                                                            ))
+                                                        ) : (
+                                                            <p>Cargando Generos...</p>
+                                                        )}
+
+                                                    </Select>
+                                                    {touched.gender_4 && errors.gender_4 ?
+                                                        <Typography color="error" variant="caption">
+                                                            {errors.gender_4}
+                                                        </Typography> : <span> &nbsp; </span>
+                                                    }
+                                                </FormControl>
+                                                {/* DISCIPLINE */}
+                                                <FormControl fullWidth variant="standard" sx={{
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                    },
+                                                }} >
+                                                    <InputLabel id="demo-multiple-chip-label">
+                                                        Disciplinas
+                                                    </InputLabel>
+                                                    <Select
+                                                        labelId="demo-multiple-chip-label"
+                                                        id="demo-multiple-chip"
+                                                        multiple
+                                                        value={discipline_4}
+                                                        onChange={(event) => {
+                                                            handleDisciplineGeneric(event, setDiscipline_4)
+                                                            handleChange({ target: { name: "discipline_4", value: event.target.value } });
+                                                        }}
+                                                        // Cambiar input a Input para variante standard sin borde
+                                                        input={<Input id="select-multiple-chip" />}
+                                                        renderValue={(selected) => (
+                                                            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                                                                {selected.map((value) => (
+                                                                    <Chip key={value} label={value} />
+                                                                ))}
+                                                            </Box>
+                                                        )}
+                                                        MenuProps={MenuProps}
+                                                    >
+                                                        {disciplines?.length > 0 ? (
+                                                            disciplines.map((item: any) => (
+                                                                <MenuItem
+                                                                    key={item.id}
+                                                                    value={item.name}
+                                                                    style={getStyles(item.name, discipline_4, theme)}
+                                                                >
+                                                                    <Checkbox checked={discipline_4.indexOf(item.name) > -1} />
+                                                                    <ListItemText
+                                                                        primary={
+                                                                            item.name.charAt(0).toUpperCase() +
+                                                                            item.name.slice(1).toLowerCase()
+                                                                        }
+                                                                    />
+                                                                </MenuItem>
+                                                            ))
+                                                        ) : (
+                                                            <p>Cargando disciplinas...</p>
+                                                        )}
+                                                    </Select>
+                                                </FormControl>
+
+                                            </Grid>
+
+                                            <Grid container direction="column" size={4} sx={{ mt: 0 }}>
+                                                <Grid container direction="column" size={10} >
+                                                    {/* DNI */}
+                                                    <TextField
+                                                        variant="standard"
+                                                        fullWidth
+                                                        name="dni_4"
+                                                        label="DNI"
+                                                        type="dni_4"
+                                                        id="dni_4"
+                                                        autoComplete="dni_4"
+                                                        value={values.dni_4}
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        error={touched.dni_4 && Boolean(errors.dni_4)}
+                                                        helperText={touched.dni_4 && errors.dni_4 ? errors.dni_4 : " "}
+                                                        sx={{
+                                                            "& label.Mui-focused": {
+                                                                color: "green",  // color verde solo cuando está enfocado
+                                                            },
+                                                            '& .MuiInput-underline:after': {
+                                                                borderBottomColor: 'green', // color verde cuando está enfocado
+                                                            },
+                                                        }}
+                                                    />
+                                                </Grid>
+                                            </Grid>
+
+                                        </Grid>
+                                    </Grid>
+                                ) : null}
+                                {nested.nested_5 ? (
+                                    <Grid className="embla__slide-form">
+                                        <Grid container columnSpacing={2} direction="row" size={12}>
+                                            <Grid direction="row" size={1.3}>
+                                            </Grid>
+                                            <Grid direction="row" size={10.7}>
+                                                <Typography sx={{ fontWeight: 800, fontSize: 18, color: '#616161', textDecoration: 'none', mb: 1 }}>
+                                                    FAMILIAR 5
+                                                </Typography>
+                                            </Grid>
+                                            {/* AVATAR */}
+                                            <Grid direction="column" size={1.3}>
+                                                <Avatar
+                                                    alt="Avatar"
+                                                    src={avatar1}
+                                                    sx={{
+                                                        width: 110,
+                                                        height: 110,
+                                                        boxShadow: 4,
+                                                        border: "3px solid #fff",
+                                                        bgcolor: "#fff",
+                                                        ml: 1,
+                                                        mt: -3,
+                                                    }}
+                                                />
+                                            </Grid>
+
+                                            <Grid direction="column" size={3.35}>
+                                                {/* NAME */}
+                                                <TextField
+                                                    variant="standard"
+                                                    fullWidth
+                                                    name="name_5"
+                                                    label="Nombre"
+                                                    type="name_5"
+                                                    id="name_5"
+                                                    autoComplete="name_5"
+                                                    value={values.name_5}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    error={touched.name_5 && Boolean(errors.name_5)}
+                                                    helperText={touched.name_5 && errors.name_5 ? errors.name_5 : " "} // 
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
+                                                        },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                        },
+                                                    }}
+                                                />
+                                                {/* ADDRESS */}
+                                                <TextField
+                                                    variant="standard"
+                                                    fullWidth
+                                                    name="address_5"
+                                                    label="Domicilio"
+                                                    type="address_5"
+                                                    id="address_5"
+                                                    autoComplete="address_5"
+                                                    value={values.address_5}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    error={touched.address_5 && Boolean(errors.address_5)}
+                                                    helperText={touched.address_5 && errors.address_5 ? errors.address_5 : " "}
+                                                    sx={{
+                                                        mb: -1,
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
+                                                        },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                        },
+                                                    }}
+                                                />
+
+                                                {/* BIRTHDATE */}
+                                                <LocalizationProvider dateAdapter={AdapterDayjs} >
+                                                    <DemoContainer components={['DatePicker']}  >
+                                                        <DatePicker
+                                                            format="DD/MM/YYYY"
+                                                            label="Fecha de Nacimiento"
+                                                            value={values.birthDate_5} // This should now be a Dayjs object
+                                                            onChange={(newValue) => {
+                                                                handleChange({ target: { name: 'birthDate_5', value: newValue } }); // Update Formik state
+                                                            }}
+                                                            slotProps={{
+                                                                textField: {
+                                                                    variant: 'standard',
+                                                                    onBlur: () => handleBlur({ target: { name: 'birthDate_5' } }),
+                                                                    InputLabelProps: {
+                                                                        style: {
+                                                                            color: touched.birthDate_5 && errors.birthDate_5 ? "#b71c1c" : undefined,
+                                                                        },
+                                                                    },
+                                                                    sx: {
+                                                                        width: '100%',
+                                                                        overflow: 'hidden', // <-- Oculta scroll
+                                                                        "&::-webkit-scrollbar": { display: "none" }, // Chrome/Safari
+                                                                        scrollbarWidth: "none", // Firefox
+                                                                        paddingRight: '4px',
+                                                                        "& label.Mui-focused": {
+                                                                            color: "green",  // color verde solo cuando está enfocado
+                                                                        },
+                                                                        '& .MuiInput-underline:after': {
+                                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                                        },
+                                                                    },
+                                                                },
+                                                            }}
+                                                        />
+
+                                                    </DemoContainer>
+                                                    {touched.birthDate_5 && errors.birthDate_5 ?
+                                                        <Typography color="error" variant="caption" sx={{ fontSize: '0.75rem' }} >
+                                                            {errors.birthDate_5 as string}
+                                                        </Typography> : <span> &nbsp; </span>
+                                                    }
+                                                </LocalizationProvider>
+                                                {/* CATEGORY */}
+
+                                                <FormControl fullWidth variant='standard' sx={{
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                    },
+                                                }} >
+                                                    <InputLabel
+                                                        error={touched.category_5 && Boolean(errors.category_5)}
+                                                        id="demo-simple-select-label"
+                                                    >Categoria</InputLabel>
+                                                    <Select
+                                                        name="category_5"
+                                                        onBlur={handleBlur}
+                                                        variant='standard'
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        value={values.category_5} // Bind Formik value
+                                                        label="Categoria" // Update label to match the field
+                                                        onChange={(event) => {
+                                                            handleChange({ target: { name: 'category_5', value: event.target.value } }); // Correctly update Formik state
+                                                        }}
+                                                    >
+                                                        {categories?.length > 0 ? (
+                                                            categories.map(({ id, name }) => (
+                                                                <MenuItem key={id} value={name}>
+                                                                    {name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()}
+                                                                </MenuItem>
+                                                            ))
+                                                        ) : (
+                                                            <p>Cargando Categorias...</p>
+                                                        )}
+
+                                                    </Select>
+                                                    {touched.category_5 && errors.category_5 ?
+                                                        <Typography color="error" variant="caption">
+                                                            {errors.category_5}
+                                                        </Typography> : <span> &nbsp; </span>
+                                                    }
+                                                </FormControl>
+                                            </Grid>
+
+
+                                            <Grid direction="column" size={3.35} sx={{ mt: 0 }}>
+                                                {/* LASTNAME */}
+                                                <TextField
+                                                    variant="standard"
+                                                    fullWidth
+                                                    name="lastName_5"
+                                                    label="Apellido/s"
+                                                    type="lastName_5"
+                                                    id="lastName_5"
+                                                    autoComplete="lastName_5"
+                                                    value={values.lastName_5}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    error={touched.lastName_5 && Boolean(errors.lastName_5)}
+                                                    helperText={touched.lastName_5 && errors.lastName_5 ? errors.lastName_5 : " "} // 
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
+                                                        },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                        },
+                                                    }}
+                                                />
+
+                                                {/* CONTACT NUMBER */}
+                                                <TextField
+                                                    variant="standard"
+                                                    fullWidth
+                                                    name="contactNumber_5"
+                                                    label="Número de Contacto"
+                                                    type="contactNumber_5"
+                                                    id="contactNumber_5"
+                                                    autoComplete="contactNumber_5"
+                                                    value={values.contactNumber_5}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    error={touched.contactNumber_5 && Boolean(errors.contactNumber_5)}
+                                                    helperText={touched.contactNumber_5 && errors.contactNumber_5 ? errors.contactNumber_5 : " "}
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
+                                                        },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                        },
+                                                    }}
+                                                />
+
+                                                {/* GENDER */}
+                                                <FormControl fullWidth variant="standard" sx={{
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                    },
+                                                }} >
+                                                    <InputLabel
+                                                        id="demo-simple-select-label"
+                                                        error={touched.gender_5 && Boolean(errors.gender_5)}
+                                                    >Genero</InputLabel>
+                                                    <Select
+                                                        labelId="gender-label"
+                                                        id="gender_5"
+                                                        name="gender_5"
+                                                        value={values.gender_5}
+                                                        onChange={(event) => {
+                                                            handleChange({ target: { name: 'gender_5', value: event.target.value } }); // Correctly update Formik state
+                                                        }}
+                                                        onBlur={handleBlur}
+                                                        label="Género"
+                                                    >
+                                                        {genders?.length > 0 ? (
+                                                            genders.map((name) => (
+                                                                <MenuItem key={name} value={name}>
+                                                                    {name}
+                                                                </MenuItem>
+                                                            ))
+                                                        ) : (
+                                                            <p>Cargando Generos...</p>
+                                                        )}
+
+                                                    </Select>
+                                                    {touched.gender_5 && errors.gender_5 ?
+                                                        <Typography color="error" variant="caption">
+                                                            {errors.gender_5}
+                                                        </Typography> : <span> &nbsp; </span>
+                                                    }
+                                                </FormControl>
+                                                {/* DISCIPLINE */}
+                                                <FormControl fullWidth variant="standard" sx={{
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                    },
+                                                }} >
+                                                    <InputLabel id="demo-multiple-chip-label">
+                                                        Disciplinas
+                                                    </InputLabel>
+                                                    <Select
+                                                        labelId="demo-multiple-chip-label"
+                                                        id="demo-multiple-chip"
+                                                        multiple
+                                                        value={discipline_5}
+                                                        onChange={(event) => {
+                                                            handleDisciplineGeneric(event, setDiscipline_5)
+                                                            handleChange({ target: { name: "discipline_5", value: event.target.value } });
+                                                        }}
+                                                        // Cambiar input a Input para variante standard sin borde
+                                                        input={<Input id="select-multiple-chip" />}
+                                                        renderValue={(selected) => (
+                                                            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                                                                {selected.map((value) => (
+                                                                    <Chip key={value} label={value} />
+                                                                ))}
+                                                            </Box>
+                                                        )}
+                                                        MenuProps={MenuProps}
+                                                    >
+                                                        {disciplines?.length > 0 ? (
+                                                            disciplines.map((item: any) => (
+                                                                <MenuItem
+                                                                    key={item.id}
+                                                                    value={item.name}
+                                                                    style={getStyles(item.name, discipline_5, theme)}
+                                                                >
+                                                                    <Checkbox checked={discipline_5.indexOf(item.name) > -1} />
+                                                                    <ListItemText
+                                                                        primary={
+                                                                            item.name.charAt(0).toUpperCase() +
+                                                                            item.name.slice(1).toLowerCase()
+                                                                        }
+                                                                    />
+                                                                </MenuItem>
+                                                            ))
+                                                        ) : (
+                                                            <p>Cargando disciplinas...</p>
+                                                        )}
+                                                    </Select>
+                                                </FormControl>
+
+                                            </Grid>
+
+                                            <Grid container direction="column" size={4} sx={{ mt: 0 }}>
+                                                <Grid container direction="column" size={10} >
+                                                    {/* DNI */}
+                                                    <TextField
+                                                        variant="standard"
+                                                        fullWidth
+                                                        name="dni_5"
+                                                        label="DNI"
+                                                        type="dni_5"
+                                                        id="dni_5"
+                                                        autoComplete="dni_5"
+                                                        value={values.dni_5}
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        error={touched.dni_5 && Boolean(errors.dni_5)}
+                                                        helperText={touched.dni_5 && errors.dni_5 ? errors.dni_5 : " "}
+                                                        sx={{
+                                                            "& label.Mui-focused": {
+                                                                color: "green",  // color verde solo cuando está enfocado
+                                                            },
+                                                            '& .MuiInput-underline:after': {
+                                                                borderBottomColor: 'green', // color verde cuando está enfocado
+                                                            },
+                                                        }}
+                                                    />
+                                                </Grid>
+                                            </Grid>
+
+                                        </Grid>
+                                    </Grid>
+                                ) : null}
+                                {nested.nested_6 ? (
+                                    <Grid className="embla__slide-form">
+                                        <Grid container columnSpacing={2} direction="row" size={12}>
+                                            <Grid direction="row" size={1.3}>
+                                            </Grid>
+                                            <Grid direction="row" size={10.7}>
+                                                <Typography sx={{ fontWeight: 800, fontSize: 18, color: '#616161', textDecoration: 'none', mb: 1 }}>
+                                                    FAMILIAR 6
+                                                </Typography>
+                                            </Grid>
+                                            {/* AVATAR */}
+                                            <Grid direction="column" size={1.3}>
+                                                <Avatar
+                                                    alt="Avatar"
+                                                    src={avatar1}
+                                                    sx={{
+                                                        width: 110,
+                                                        height: 110,
+                                                        boxShadow: 4,
+                                                        border: "3px solid #fff",
+                                                        bgcolor: "#fff",
+                                                        ml: 1,
+                                                        mt: -3,
+                                                    }}
+                                                />
+                                            </Grid>
+
+                                            <Grid direction="column" size={3.35}>
+                                                {/* NAME */}
+                                                <TextField
+                                                    variant="standard"
+                                                    fullWidth
+                                                    name="name_6"
+                                                    label="Nombre"
+                                                    type="name_6"
+                                                    id="name_6"
+                                                    autoComplete="name_6"
+                                                    value={values.name_6}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    error={touched.name_6 && Boolean(errors.name_6)}
+                                                    helperText={touched.name_6 && errors.name_6 ? errors.name_6 : " "} // 
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
+                                                        },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                        },
+                                                    }}
+                                                />
+                                                {/* ADDRESS */}
+                                                <TextField
+                                                    variant="standard"
+                                                    fullWidth
+                                                    name="address_6"
+                                                    label="Domicilio"
+                                                    type="address_6"
+                                                    id="address_6"
+                                                    autoComplete="address_6"
+                                                    value={values.address_6}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    error={touched.address_6 && Boolean(errors.address_6)}
+                                                    helperText={touched.address_6 && errors.address_6 ? errors.address_6 : " "}
+                                                    sx={{
+                                                        mb: -1,
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
+                                                        },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                        },
+                                                    }}
+                                                />
+
+                                                {/* BIRTHDATE */}
+                                                <LocalizationProvider dateAdapter={AdapterDayjs} >
+                                                    <DemoContainer components={['DatePicker']}  >
+                                                        <DatePicker
+                                                            format="DD/MM/YYYY"
+                                                            label="Fecha de Nacimiento"
+                                                            value={values.birthDate_6} // This should now be a Dayjs object
+                                                            onChange={(newValue) => {
+                                                                handleChange({ target: { name: 'birthDate_6', value: newValue } }); // Update Formik state
+                                                            }}
+                                                            slotProps={{
+                                                                textField: {
+                                                                    variant: 'standard',
+                                                                    onBlur: () => handleBlur({ target: { name: 'birthDate_6' } }),
+                                                                    InputLabelProps: {
+                                                                        style: {
+                                                                            color: touched.birthDate_6 && errors.birthDate_6 ? "#b71c1c" : undefined,
+                                                                        },
+                                                                    },
+                                                                    sx: {
+                                                                        width: '100%',
+                                                                        overflow: 'hidden', // <-- Oculta scroll
+                                                                        "&::-webkit-scrollbar": { display: "none" }, // Chrome/Safari
+                                                                        scrollbarWidth: "none", // Firefox
+                                                                        paddingRight: '4px',
+                                                                        "& label.Mui-focused": {
+                                                                            color: "green",  // color verde solo cuando está enfocado
+                                                                        },
+                                                                        '& .MuiInput-underline:after': {
+                                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                                        },
+                                                                    },
+                                                                },
+                                                            }}
+                                                        />
+
+                                                    </DemoContainer>
+                                                    {touched.birthDate_6 && errors.birthDate_6 ?
+                                                        <Typography color="error" variant="caption" sx={{ fontSize: '0.75rem' }} >
+                                                            {errors.birthDate_6 as string}
+                                                        </Typography> : <span> &nbsp; </span>
+                                                    }
+                                                </LocalizationProvider>
+                                                {/* CATEGORY */}
+                                                <FormControl fullWidth variant='standard' sx={{
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                    },
+                                                }} >
+                                                    <InputLabel
+                                                        error={touched.category_6 && Boolean(errors.category_6)}
+                                                        id="demo-simple-select-label"
+                                                    >Categoria</InputLabel>
+                                                    <Select
+                                                        name="category_6"
+                                                        onBlur={handleBlur}
+                                                        variant='standard'
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        value={values.category_6} // Bind Formik value
+                                                        label="Categoria" // Update label to match the field
+                                                        onChange={(event) => {
+                                                            handleChange({ target: { name: 'category_6', value: event.target.value } }); // Correctly update Formik state
+                                                        }}
+                                                    >
+                                                        {categories?.length > 0 ? (
+                                                            categories.map(({ id, name }) => (
+                                                                <MenuItem key={id} value={name}>
+                                                                    {name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()}
+                                                                </MenuItem>
+                                                            ))
+                                                        ) : (
+                                                            <p>Cargando Categorias...</p>
+                                                        )}
+
+                                                    </Select>
+                                                    {touched.category_6 && errors.category_6 ?
+                                                        <Typography color="error" variant="caption">
+                                                            {errors.category_6}
+                                                        </Typography> : <span> &nbsp; </span>
+                                                    }
+                                                </FormControl>
+                                            </Grid>
+
+
+                                            <Grid direction="column" size={3.35} sx={{ mt: 0 }}>
+                                                {/* LASTNAME */}
+                                                <TextField
+                                                    variant="standard"
+                                                    fullWidth
+                                                    name="lastName_6"
+                                                    label="Apellido/s"
+                                                    type="lastName_6"
+                                                    id="lastName_6"
+                                                    autoComplete="lastName_6"
+                                                    value={values.lastName_6}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    error={touched.lastName_6 && Boolean(errors.lastName_6)}
+                                                    helperText={touched.lastName_6 && errors.lastName_6 ? errors.lastName_6 : " "} // 
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
+                                                        },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                        },
+                                                    }}
+                                                />
+
+                                                {/* CONTACT NUMBER */}
+                                                <TextField
+                                                    variant="standard"
+                                                    fullWidth
+                                                    name="contactNumber_6"
+                                                    label="Número de Contacto"
+                                                    type="contactNumber_6"
+                                                    id="contactNumber_6"
+                                                    autoComplete="contactNumber_6"
+                                                    value={values.contactNumber_6}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    error={touched.contactNumber_6 && Boolean(errors.contactNumber_6)}
+                                                    helperText={touched.contactNumber_6 && errors.contactNumber_6 ? errors.contactNumber_6 : " "}
+                                                    sx={{
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
+                                                        },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                        },
+                                                    }}
+                                                />
+
+                                                {/* GENDER */}
+                                                <FormControl fullWidth variant="standard" sx={{
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                    },
+                                                }} >
+                                                    <InputLabel
+                                                        id="demo-simple-select-label"
+                                                        error={touched.gender_6 && Boolean(errors.gender_6)}
+                                                    >Genero</InputLabel>
+                                                    <Select
+                                                        labelId="gender-label"
+                                                        id="gender_6"
+                                                        name="gender_6"
+                                                        value={values.gender_6}
+                                                        onChange={(event) => {
+                                                            handleChange({ target: { name: 'gender_6', value: event.target.value } }); // Correctly update Formik state
+                                                        }}
+                                                        onBlur={handleBlur}
+                                                        label="Género"
+                                                    >
+                                                        {genders?.length > 0 ? (
+                                                            genders.map((name) => (
+                                                                <MenuItem key={name} value={name}>
+                                                                    {name}
+                                                                </MenuItem>
+                                                            ))
+                                                        ) : (
+                                                            <p>Cargando Generos...</p>
+                                                        )}
+
+                                                    </Select>
+                                                    {touched.gender_6 && errors.gender_6 ?
+                                                        <Typography color="error" variant="caption">
+                                                            {errors.gender_6}
+                                                        </Typography> : <span> &nbsp; </span>
+                                                    }
+                                                </FormControl>
+                                                {/* DISCIPLINE */}
+                                                <FormControl fullWidth variant="standard" sx={{
+                                                    "& label.Mui-focused": {
+                                                        color: "green",  // color verde solo cuando está enfocado
+                                                    },
+                                                    '& .MuiInput-underline:after': {
+                                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                                    },
+                                                }} >
+                                                    <InputLabel id="demo-multiple-chip-label">
+                                                        Disciplinas
+                                                    </InputLabel>
+                                                    <Select
+                                                        labelId="demo-multiple-chip-label"
+                                                        id="demo-multiple-chip"
+                                                        multiple
+                                                        value={discipline_6}
+                                                        onChange={(event) => {
+                                                            handleDisciplineGeneric(event, setDiscipline_6)
+                                                            handleChange({ target: { name: "discipline_6", value: event.target.value } });
+                                                        }}
+                                                        // Cambiar input a Input para variante standard sin borde
+                                                        input={<Input id="select-multiple-chip" />}
+                                                        renderValue={(selected) => (
+                                                            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                                                                {selected.map((value) => (
+                                                                    <Chip key={value} label={value} />
+                                                                ))}
+                                                            </Box>
+                                                        )}
+                                                        MenuProps={MenuProps}
+                                                    >
+                                                        {disciplines?.length > 0 ? (
+                                                            disciplines.map((item: any) => (
+                                                                <MenuItem
+                                                                    key={item.id}
+                                                                    value={item.name}
+                                                                    style={getStyles(item.name, discipline_6, theme)}
+                                                                >
+                                                                    <Checkbox checked={discipline_6.indexOf(item.name) > -1} />
+                                                                    <ListItemText
+                                                                        primary={
+                                                                            item.name.charAt(0).toUpperCase() +
+                                                                            item.name.slice(1).toLowerCase()
+                                                                        }
+                                                                    />
+                                                                </MenuItem>
+                                                            ))
+                                                        ) : (
+                                                            <p>Cargando disciplinas...</p>
+                                                        )}
+                                                    </Select>
+                                                </FormControl>
+
+                                            </Grid>
+
+                                            <Grid container direction="column" size={4} sx={{ mt: 0 }}>
+                                                <Grid container direction="column" size={10} >
+                                                    {/* DNI */}
+                                                    <TextField
+                                                        variant="standard"
+                                                        fullWidth
+                                                        name="dni_6"
+                                                        label="DNI"
+                                                        type="dni_6"
+                                                        id="dni_6"
+                                                        autoComplete="dni_6"
+                                                        value={values.dni_6}
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        error={touched.dni_6 && Boolean(errors.dni_6)}
+                                                        helperText={touched.dni_6 && errors.dni_6 ? errors.dni_6 : " "}
+                                                        sx={{
+                                                            "& label.Mui-focused": {
+                                                                color: "green",  // color verde solo cuando está enfocado
+                                                            },
+                                                            '& .MuiInput-underline:after': {
+                                                                borderBottomColor: 'green', // color verde cuando está enfocado
                                                             },
                                                         }}
                                                     />
@@ -1828,10 +2899,6 @@ const SignUpForm: React.FC = () => {
                                 ) : null}
                             </Grid>
                         </Grid>
-
-
-
-
 
 
 
@@ -1866,23 +2933,7 @@ const SignUpForm: React.FC = () => {
                                     </Button>
                                 </Grid>
 
-                                <Grid size={1}>
-                                    <IconButton
-                                        onClick={addUser}
-                                        disabled={allTrue} // Disabled if all are true
-                                        aria-label="Agregar socio"
-                                        sx={{
-                                            mt: 3,
-                                            backgroundColor: '#b71c1c',
-                                            color: '#fff',
-                                            '&:hover': {
-                                                backgroundColor: 'darkred',
-                                            },
-                                        }}
-                                    >
-                                        <PersonAddIcon sx={{ fontSize: "medium" }} />
-                                    </IconButton>
-                                </Grid>
+
                                 <Grid size={1}>
                                     <IconButton
                                         onClick={removeUser}
@@ -1898,6 +2949,23 @@ const SignUpForm: React.FC = () => {
                                         }}
                                     >
                                         <PersonRemoveIcon sx={{ fontSize: "medium" }} />
+                                    </IconButton>
+                                </Grid>
+                                <Grid size={1}>
+                                    <IconButton
+                                        onClick={addUser}
+                                        disabled={allTrue} // Disabled if all are true
+                                        aria-label="Agregar socio"
+                                        sx={{
+                                            mt: 3,
+                                            backgroundColor: '#b71c1c',
+                                            color: '#fff',
+                                            '&:hover': {
+                                                backgroundColor: 'darkred',
+                                            },
+                                        }}
+                                    >
+                                        <PersonAddIcon sx={{ fontSize: "medium" }} />
                                     </IconButton>
                                 </Grid>
 
