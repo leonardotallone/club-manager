@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useNavigate } from "react-router-dom";
-import { useLocation } from 'react-router-dom';
+
+import { useNavigate, useLocation } from "react-router-dom";
+
 import { Avatar, Box, Paper, Card, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 
@@ -782,7 +783,7 @@ const EditUserForm: React.FC = () => {
                                     </Grid>
                                 </Grid>
 
-                                {user.familyGroup.length > 0 && user.familyGroup.length < 2?
+                                {user.familyGroup.length > 0 && user.familyGroup.length < 2 ?
                                     <Grid size={12} sx={{ mt: 2 }}>
                                         <Form>
                                             <Grid container columnSpacing={2} direction="row">

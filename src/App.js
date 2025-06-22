@@ -6,6 +6,7 @@ import JoinUpForm from "./screens/JoinUpScreen";
 import DashboardAdminScreen from "./screens/Admin/DashboardAdminScreen";
 import UsersListScreen from "./screens/Admin/UsersListScreen";
 import ApplicationsListScreen from "./screens/Admin/ApplicationsListScreen";
+import DisplayApplicationScreen from "./screens/Admin/DisplayApplicationScreen";
 
 import SignUpScreen from "./screens/Admin/SignUpScreen";
 import EditUserScreen from "./screens/Admin/EditUserScreen";
@@ -31,6 +32,7 @@ function App() {
         />
         <Route path="/admin-users-list" element={<UsersListScreen />} />
         <Route path="/admin-applications" element={<ApplicationsListScreen />} />
+        <Route path="/admin-display-application/:user" element={<DisplayApplicationScreen />} />
 
         <Route path="/edit-user/:user" element={<EditUserScreen />} />
         <Route path="/signup/:type" element={<SignUpScreen />} />

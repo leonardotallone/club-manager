@@ -216,7 +216,7 @@ const ApplicationsList = () => {
                                     }}>
                                         <Button
                                             startIcon={<RemoveRedEyeOutlinedIcon sx={{ fontSize: 24, color: "black" }} />}
-                                            onClick={() => navigate(`/edit-user/${application}`, { state: application })}
+                                            onClick={() => navigate(`/admin-display-application/${application}`, { state: application })}
                                         >
                                             <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none', mr: 1 }}>
                                                 VER SOLICITUD
