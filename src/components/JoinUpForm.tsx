@@ -1,169 +1,291 @@
-import React, { useEffect, useContext, useState } from 'react';
-import Link from '@mui/material/Link';
+import { useContext } from 'react';
+import { useNavigate } from "react-router-dom";
+import { Container, Typography, Button, TextField, InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 import Grid from '@mui/material/Grid2';
-import Modal from '@mui/material/Modal';
-import { FormControlLabel, Avatar, Box, Paper, Card, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
-import { Formik, Form, FormikHelpers } from "formik";
+
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Dayjs } from 'dayjs';
+import dayjs from "dayjs";
+import { Formik, Form } from "formik";
+
 import * as Yup from "yup";
 
-import { useNavigate } from "react-router-dom";
-import { joinUpContext } from '../Context/JoinUpContext';
+import { useParams } from "react-router-dom";
+import { getAllCategoriesContext } from "../Context/GetAllCategoriesContext"
 
 
 
-// Componente Copyright
+import { joinUpContext } from "../Context/JoinUpContext"
 
-interface JoinUpFormValues {
-    email: string;
-    password: string;
+interface SignUpFormValues {
+
     name: string;
     lastName: string;
+    address: string;
+    birthDate: Dayjs;
     dni: string;
-    phone: string;
-    groupHead: boolean;
+    contactNumber: string;
+    gender: string;
+    disciplines: object;
+    category: string;
+    full: boolean;
+    avatarURL: string;
+    email: string;
+    admin: boolean;
+    blockade: boolean;
+    familyGroup: object;
 }
-
-// Validación con Yup
-const validationSchema = Yup.object({
-    email: Yup.string()
-        .email("Correo electrónico inválido")
-        .required("El campo es requerido"),
-    name: Yup.string()
-        .matches(/^[a-zA-ZÀ-ÿ\s]+$/, "Formato de nombre incorrecto")
-        .required("El campo es requerido"),
-    lastName: Yup.string()
-        .matches(/^[a-zA-ZÀ-ÿ\s]+$/, "Formato de apellido incorrecto")
-        .required("El campo es requerido"),
-    dni: Yup.string()
-        .matches(/^\d+$/, "El DNI debe contener solo números")
-        .test(
-            "longitud-dni",
-            "El DNI debe tener entre 7 y 8 dígitos",
-            (value) => value && value.length >= 7 && value.length <= 8
-        )
-        .required("El campo es requerido"),
-    phone: Yup.string()
-        .matches(
-            /^\d{10}$/,
-            "Número de teléfono inválido"
-        )
-        .required("El campo es requerido"),
-});
-
 
 const JoinUpForm: React.FC = () => {
 
-    const { setJoinUpUser, joinUpSuccess, joinUpError, setJoinUpError } = useContext(joinUpContext);
-    const [open, setOpen] = React.useState(false);
-  
-    useEffect(() => {
-        if (joinUpSuccess) {
-            setOpen(true);
-        }
-    }, [joinUpSuccess])
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const handleSubmit = (
-        values: JoinUpFormValues,
-        formikHelpers: FormikHelpers<JoinUpFormValues>
-    ) => {
-        const user = {
-            email: values.email,
-            name: values.name, lastName: values.lastName,
-            dni: values.dni,
-            phone: values.phone,
-            date: new Date().toLocaleDateString('en-GB', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            }),
-            groupHead: values.groupHead
-        };
-        setOpen(true)
-        setJoinUpUser(user);
-    };
+    const { categories } = useContext(getAllCategoriesContext)
+    const { setJoinUpUser } = useContext(joinUpContext)
 
 
+
+    const genders = ["Masculino", "Femenino", "Otro"]
+
+    const { type } = useParams();
     const navigate = useNavigate();
 
+    // Validación con Yup
+    const validationSchema = Yup.object({
+        name: Yup.string()
+            .matches(/^[a-zA-ZÀ-ÿ\s]+$/, "Formato de nombre incorrecto")
+            .required("El campo es requerido"),
+        lastName: Yup.string()
+            .matches(/^[a-zA-ZÀ-ÿ\s]+$/, "Formato de apellido incorrecto")
+            .required("El campo es requerido"),
+        birthDate: Yup.date()
+            .nullable()
+            .transform((value, originalValue) => {
+                if (originalValue === null || originalValue === '') {
+                    return null;
+                }
+                return value;
+            })
+            .max(new Date(), "La fecha de nacimiento no puede ser en el futuro")
+            .required("El campo es requerido")
+            .test(
+                "is-18",
+                "Debes tener al menos 18 años",
+                function (value) {
+                    if (!value) return false;
+                    const today = new Date();
+                    const birthDate = new Date(value);
+                    let age = today.getFullYear() - birthDate.getFullYear();
+                    const monthDiff = today.getMonth() - birthDate.getMonth();
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+                    return age >= 18;
+                }
+            ),
+        gender: Yup.string()
+            .required("El campo es requerido"),
+        dni: Yup.string()
+            .matches(/^\d+$/, "El DNI debe contener solo números")
+            .test(
+                "longitud-dni",
+                "El DNI debe tener entre 7 y 8 dígitos",
+                (value) => value && value.length >= 7 && value.length <= 8
+            )
+            .required("El campo es requerido"),
+        address: Yup.string()
+            .min(5, "La dirección debe tener como mínimo 5 caracteres")
+            .required("El campo es requerido"),
+        contactNumber: Yup.string()
+            .matches(/^\+?\d{7,15}$/, "Número de contacto inválido")
+            .required("El campo es requerido"),
+        email: Yup.string()
+            .when([], {
+                is: () => type === "grouphead" || type === "unique",
+                then: (schema) =>
+                    schema
+                        .required("El email es requerido")
+                        .email("Dirección de correo electrónico inválida"),
+                otherwise: (schema) => schema.notRequired(),
+            }),
+    });
+
+    const handleSubmit = (
+        values: SignUpFormValues,
+    ) => {
+
+        const user = {
+            name: values.name,
+            lastName: values.lastName,
+            address: values.address,
+            birthDate: values.birthDate ? dayjs(values.birthDate).toDate() : null,
+            dni: values.dni,
+            contactNumber: values.contactNumber,
+            gender: values.gender,
+            email: values.email,
+
+            avatarURL: "",
+            admin: false,
+            disciplines: [],
+            category: categories.find((cat: { id: string; }) => cat.id === "Activo")?.id || null,
+            full: false,
+            blockade: false,
+            familyGroup: [],
+
+            applicationDate: new Date(),
+        };
+
+        console.log("USER", user)
+        setJoinUpUser(user)
+        navigate("/");
+    };
+
+
+    const capitalizeFirstLetter = (str: string) => {
+        if (!str) return str;
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    };
+
+
     return (
-        <Box
-            component={Paper}
-            elevation={6}
-            sx={{
 
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                // justifyContent: 'center',
-                px: 4,
-                py: 8,
-                backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                borderRadius: 2,
-                width: 650,
-                height: 450,
-            }}
-        >
+        <Container maxWidth="xl"  >
+            <Formik<SignUpFormValues>
+                initialValues={{
+                    name: "",
+                    lastName: "",
+                    address: "",
+                    birthDate: null,
+                    gender: "",
+                    dni: "",
+                    contactNumber: "",
+                    avatarURL: "",
+                    email: "",
+                    admin: false,
+                    disciplines: [],
+                    category: "",
+                    full: false,
+                    blockade: false,
+                    familyGroup: [],
+                }}
 
-            <Typography component="h1" variant="h5">Solicitud de Nuevo Socio</Typography>
-
-            <Formik<JoinUpFormValues>
-                initialValues={{ email: "", password: "", name: "", lastName: "", dni: "", phone: "", groupHead: false }}
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
             >
-                {({ handleChange, handleBlur, values, errors, touched, isValid, dirty }) => (
+                {({ handleChange, handleBlur, values, errors, touched, }) => (
                     <Form>
-                        <Grid container spacing={2}
-                        >
-                            <Grid size={6}>
+                        <Grid container columnSpacing={2} direction="row" size={12}>
+
+                            <Grid direction="row" size={12}>
+                                <Typography sx={{ fontWeight: 800, fontSize: 18, color: '#616161', textDecoration: 'none', mb: 1 }}>
+                                    DATOS DEL SOCIO
+                                </Typography>
+                            </Grid>
+
+
+                            <Grid direction="column" size={4}>
+                                {/* NAME */}
                                 <TextField
-                                    margin="normal"
-                                    required
+                                    variant="standard"
                                     fullWidth
                                     name="name"
                                     label="Nombre"
                                     type="name"
                                     id="name"
-                                    autoFocus
-                                    autoComplete="current-name"
+                                    autoComplete="name"
                                     value={values.name}
-                                    onChange={handleChange}
+                                    onChange={(e) => {
+                                        const capitalizedValue = capitalizeFirstLetter(e.target.value);
+                                        handleChange({ target: { name: e.target.name, value: capitalizedValue } });
+                                    }}
                                     onBlur={handleBlur}
                                     error={touched.name && Boolean(errors.name)}
-                                    helperText={touched.name && errors.name}
-                                    slotProps={{
-                                        input: {
-                                            sx: {
-                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                            },
+                                    helperText={touched.name && errors.name ? errors.name : " "} // 
+                                    sx={{
+                                        mb: 0,
+                                        "& label.Mui-focused": {
+                                            color: "green",  // color verde solo cuando está enfocado
                                         },
-                                        inputLabel: {
-                                            sx: {
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c",
-                                                },
-                                            },
+                                        '& .MuiInput-underline:after': {
+                                            borderBottomColor: 'green', // color verde cuando está enfocado
                                         },
-                                    }} />
-
-                            </Grid>
-
-
-                            <Grid size={6}>
+                                    }}
+                                />
+                                {/* ADDRESS */}
                                 <TextField
-                                    margin="normal"
-                                    required
+                                    variant="standard"
+                                    fullWidth
+                                    name="address"
+                                    label="Domicilio"
+                                    type="address"
+                                    id="address"
+                                    autoComplete="address"
+                                    value={values.address}
+                                    onChange={(e) => {
+                                        const capitalizedValue = capitalizeFirstLetter(e.target.value);
+                                        handleChange({ target: { name: e.target.name, value: capitalizedValue } });
+                                    }}
+                                    onBlur={handleBlur}
+                                    error={touched.address && Boolean(errors.address)}
+                                    helperText={touched.address && errors.address ? errors.address : " "}
+                                    sx={{
+                                        mb: -1,
+                                        "& label.Mui-focused": {
+                                            color: "green",  // color verde solo cuando está enfocado
+                                        },
+                                        '& .MuiInput-underline:after': {
+                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                        },
+                                    }}
+                                />
+                                {/* BIRTHDATE */}
+                                <LocalizationProvider dateAdapter={AdapterDayjs} >
+                                    <DemoContainer components={['DatePicker']}  >
+                                        <DatePicker
+                                            format="DD/MM/YYYY"
+                                            label="Fecha de Nacimiento"
+                                            value={values.birthDate} // This should now be a Dayjs object
+                                            onChange={(newValue) => {
+                                                const safeValue = newValue && dayjs(newValue).isValid() ? newValue : null;
+                                                handleChange({ target: { name: "birthDate", value: safeValue } });
+                                            }}
+                                            slotProps={{
+                                                textField: {
+                                                    variant: 'standard',
+                                                    onBlur: () => handleBlur({ target: { name: 'birthDate' } }),
+
+                                                    sx: {
+                                                        width: '100%',
+                                                        overflow: 'hidden', // <-- Oculta scroll
+                                                        "&::-webkit-scrollbar": { display: "none" }, // Chrome/Safari
+                                                        scrollbarWidth: "none", // Firefox
+                                                        paddingRight: '4px',
+                                                        "& label.Mui-focused": {
+                                                            color: "green",  // color verde solo cuando está enfocado
+                                                        },
+                                                        '& .MuiInput-underline:after': {
+                                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                                        },
+                                                    },
+                                                },
+                                            }}
+                                        />
+
+                                    </DemoContainer>
+                                    {touched.birthDate && errors.birthDate ?
+                                        <Typography color="error" variant="caption" sx={{ fontSize: '0.75rem' }} >
+                                            {errors.birthDate as string}
+                                        </Typography> : <span> &nbsp; </span>
+                                    }
+                                </LocalizationProvider>
+                            </Grid>
+                            <Grid direction="column" size={4} sx={{ mt: 0 }}>
+                                {/* LASTNAME */}
+                                <TextField
+
+                                    variant="standard"
                                     fullWidth
                                     name="lastName"
                                     label="Apellido/s"
@@ -171,111 +293,99 @@ const JoinUpForm: React.FC = () => {
                                     id="lastName"
                                     autoComplete="lastName"
                                     value={values.lastName}
-                                    onChange={handleChange}
+                                    onChange={(e) => {
+                                        const capitalizedValue = capitalizeFirstLetter(e.target.value);
+                                        handleChange({ target: { name: e.target.name, value: capitalizedValue } });
+                                    }}
                                     onBlur={handleBlur}
                                     error={touched.lastName && Boolean(errors.lastName)}
-                                    helperText={touched.lastName && errors.lastName}
-                                    slotProps={{
-                                        input: {
-                                            sx: {
-                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                            },
+                                    helperText={touched.lastName && errors.lastName ? errors.lastName : " "} // 
+                                    sx={{
+                                        mt: 0,
+                                        "& label.Mui-focused": {
+                                            color: "green",  // color verde solo cuando está enfocado
                                         },
-                                        inputLabel: {
-                                            sx: {
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c",
-                                                },
-                                            },
+                                        '& .MuiInput-underline:after': {
+                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                        },
+                                    }}
+
+                                />
+
+                                {/* CONTACT NUMBER */}
+                                <TextField
+                                    // margin="normal"
+                                    variant="standard"
+                                    fullWidth
+                                    name="contactNumber"
+                                    label="Número de Contacto"
+                                    type="contactNumber"
+                                    id="contactNumber"
+                                    autoComplete="contactNumber"
+                                    value={values.contactNumber}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={touched.contactNumber && Boolean(errors.contactNumber)}
+                                    helperText={touched.contactNumber && errors.contactNumber ? errors.contactNumber : " "}
+                                    sx={{
+                                        mt: 0,
+                                        "& label.Mui-focused": {
+                                            color: "green",  // color verde solo cuando está enfocado
+                                        },
+                                        '& .MuiInput-underline:after': {
+                                            borderBottomColor: 'green', // color verde cuando está enfocado
                                         },
                                     }}
                                 />
 
-                            </Grid>
-                            <Grid size={6}>
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    id="email"
-                                    label="Dirección de correo"
-                                    name="email"
-                                    autoComplete="email"
-                                    // autoFocus
-                                    value={values.email}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={touched.email && Boolean(errors.email)}
-                                    helperText={touched.email && errors.email}
-                                    slotProps={{
-                                        input: {
-                                            sx: {
-                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                            },
-                                        },
-                                        inputLabel: {
-                                            sx: {
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c",
-                                                },
-                                            },
-                                        },
-                                    }}
-                                />
+                                {/* GENDER */}
+                                <FormControl fullWidth variant="standard" sx={{
+                                    "& label.Mui-focused": {
+                                        color: "green",  // color verde solo cuando está enfocado
+                                    },
+                                    '& .MuiInput-underline:after': {
+                                        borderBottomColor: 'green', // color verde cuando está enfocado
+                                    },
+                                }}>
+                                    <InputLabel
+                                        id="demo-simple-select-label"
+                                        error={touched.gender && Boolean(errors.gender)}
+                                    >Genero</InputLabel>
+                                    <Select
+
+                                        labelId="gender-label"
+                                        id="gender"
+                                        name="gender"
+                                        value={values.gender}
+                                        onChange={(event) => {
+                                            handleChange({ target: { name: 'gender', value: event.target.value } }); // Correctly update Formik state
+                                        }}
+                                        onBlur={handleBlur}
+                                        label="Género"
+                                    >
+                                        {genders?.length > 0 ? (
+                                            genders.map((name) => (
+                                                <MenuItem key={name} value={name}>
+                                                    {name}
+                                                </MenuItem>
+                                            ))
+                                        ) : (
+                                            <p>Cargando Generos...</p>
+                                        )}
+
+                                    </Select>
+                                    {touched.gender && errors.gender ?
+                                        <Typography color="error" variant="caption">
+                                            {errors.gender}
+                                        </Typography> : <span> &nbsp; </span>
+                                    }
+                                </FormControl>
 
                             </Grid>
-
-                            <Grid size={3}>
+                            <Grid direction="column" size={4} sx={{ mt: 0 }}>
+                                {/* DNI */}
                                 <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="phone"
-                                    label="Telefono"
-                                    type="phone"
-                                    id="phone"
-                                    autoComplete="phone"
-                                    value={values.phone}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={touched.phone && Boolean(errors.phone)}
-                                    helperText={touched.phone && errors.phone}
-                                    slotProps={{
-                                        input: {
-                                            sx: {
-                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                            },
-                                        },
-                                        inputLabel: {
-                                            sx: {
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c",
-                                                },
-                                            },
-                                        },
-                                    }} />
-
-                            </Grid>
-
-                            <Grid size={3}>
-                                <TextField
-                                    margin="normal"
-                                    required
+                                    variant="standard"
                                     fullWidth
                                     name="dni"
                                     label="DNI"
@@ -286,172 +396,87 @@ const JoinUpForm: React.FC = () => {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     error={touched.dni && Boolean(errors.dni)}
-                                    helperText={touched.dni && errors.dni}
-                                    slotProps={{
-                                        input: {
-                                            sx: {
-                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                    borderColor: "#b71c1c",
-                                                },
-                                            },
+                                    helperText={touched.dni && errors.dni ? errors.dni : " "}
+                                    sx={{
+                                        "& label.Mui-focused": {
+                                            color: "green",  // color verde solo cuando está enfocado
                                         },
-                                        inputLabel: {
-                                            sx: {
-                                                "&.Mui-focused": {
-                                                    color: "#b71c1c",
-                                                },
-                                            },
+                                        '& .MuiInput-underline:after': {
+                                            borderBottomColor: 'green', // color verde cuando está enfocado
+                                        },
+                                    }}
+                                />
+                                {/* EMAIL */}
+                                <TextField
+                                    variant='standard'
+                                    fullWidth
+                                    id="email"
+                                    label="Dirección de correo"
+                                    name="email"
+                                    autoComplete="email"
+                                    value={values.email}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    error={touched.email && Boolean(errors.email)}
+                                    helperText={touched.email && errors.email ? errors.email : " "} //
+                                    sx={{
+                                        "& label.Mui-focused": {
+                                            color: "green",  // color verde solo cuando está enfocado
+                                        },
+                                        '& .MuiInput-underline:after': {
+                                            borderBottomColor: 'green', // color verde cuando está enfocado
                                         },
                                     }}
                                 />
                             </Grid>
-                            <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12 }}>
-                                <FormControl fullWidth sx={{ mb: 0 }}>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                            name="groupHead"
-                                            checked={values.groupHead}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            />
-                                        }
-                                        label="Grupo Familiar"
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
-                                <Button
-                                    type="button"
-                                    onClick={(e) => {
-                                        e.preventDefault(); // Prevenir el envío del formulario
-                                        navigate('/')
-                                    }}
-                                    fullWidth variant="contained" sx={{
-                                        mt: 3,
-                                        mb: 2,
-                                        backgroundColor: "grey",
-                                        '&:hover': {
-                                            backgroundColor: 'darkred', // Color al pasar el mouse
-                                        },
-                                    }}>
+                        </Grid>
+
+                        {/* BOTONES */}
+                        <Grid container spacing={2}>
+
+                            <Grid size={8}>
+                                <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
+                                    mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo gris
+                                    '&:hover': {
+                                        backgroundColor: 'darkgrey', // Color al pasar el mouse
+                                    },
+                                }}>
                                     CANCELAR
                                 </Button>
                             </Grid>
+                            <Grid size={4}>
 
-                            <Grid size={{ xs: 6, sm: 6, md: 6, lg: 6 }}>
-                                <Button type="submit" fullWidth variant="contained" disabled={!isValid || !dirty} sx={{
-                                    mt: 3,
-                                    mb: 2,
-                                    backgroundColor: '#b71c1c',
-                                    '&:hover': {
-                                        backgroundColor: 'darkred', // Color al pasar el mouse
-                                    },
-                                }}>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    fullWidth
+                                    sx={{
+                                        mt: 3, mb: 0, backgroundColor: '#b71c1c', // Color de fondo rojo
+                                        '&:hover': {
+                                            backgroundColor: 'darkred', // Color al pasar el mouse
+                                        },
+                                    }}
+                                >
                                     ENVIAR SOLICITUD
                                 </Button>
-                            </Grid>
 
+
+
+                            </Grid>
                         </Grid>
+
                     </Form>
                 )}
             </Formik>
+        </Container>
 
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="child-modal-title"
-                aria-describedby="child-modal-description"
-            >
-                <Box sx={{
-                    maxWidth: 300,
-                    // maxHeight: 200,
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    bgcolor: 'rgba(29, 29, 29, 0.75)', // Fondo oscuro semitransparente
-                    borderRadius: '20px', // Esquinas redondeadas
-                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', // Sombra sutil
-                    display: 'flex', // Usar flexbox para centrar
-                    flexDirection: 'column', // Colocar elementos en columna
-                    alignItems: 'center', // Centrar horizontalmente
-                    textAlign: 'center' // Centrar texto
-                }}>
-                    <Typography id="child-modal-title"
-                        sx={{ fontSize: 17, color: "white", fontWeight: "700", display: 'flex', fontFamily: 'San Francisco, -apple-system, BlinkMacSystemFont', pt: 3, mr: 2, ml: 2 }} >
-                        Solicitud Enviada Exitosamente
-                    </Typography>
 
-                    <Typography id="child-modal-description"
-                        sx={{ fontSize: 13, color: "white", fontWeight: "400", display: 'flex', fontFamily: 'San Francisco, -apple-system, BlinkMacSystemFont', pt: 1, pb: 3, mr: 2, ml: 2 }} >
-                        Te contactaremos a la brevedad! Muchas gracias.
-                    </Typography>
 
-                    {/* Línea divisoria horizontal */}
-                    <Box sx={{
-                        width: '100%', // Ancho completo
-                        height: '1px', // Altura de la línea horizontal
-                        backgroundColor: 'rgba(255, 255, 255, 0.15)', // Color blanco suave
-                    }} />
-
-                    {/* Contenedor para los botones y la línea vertical */}
-                    <Box sx={{
-                        display: 'flex',
-                        alignItems: 'center', // Alinear verticalmente
-                        height: 50,
-                        // backgroundColor: "red",
-                        width: '100%', // Ancho completo para alinear correctamente
-                        justifyContent: 'center' // Espacio entre los botones y la línea vertical
-                    }}>
-                        {/* Botón Izquierdo */}
-                        {/* <Button
-                            onClick={handleClose}
-                            sx={{
-
-                                backgroundColor: 'transparent', // Sin fondo
-                                color: '#007aff', // Color azul predeterminado de iOS
-                                ml: 4,
-                                textTransform: 'none', // Sin mayúsculas
-                                fontSize: 17,
-                                fontWeight: "400",
-                            }}
-                        >
-                            Cancelar
-                        </Button> */}
-
-                        {/* Línea divisoria vertical */}
-                        {/* <Box sx={{
-                            width: '1px', // Ancho de la línea vertical
-                            height: '50px', // Altura de la línea vertical
-                            backgroundColor: 'rgba(255, 255, 255, 0.15)', // Color blanco suave
-
-                        }} /> */}
-
-                        {/* Botón Derecho */}
-                        <Button
-                            onClick={handleClose}
-                            sx={{
-
-                                backgroundColor: 'transparent', // Sin fondo
-                                color: '#007aff', // Color azul predeterminado de iOS
-                                // mr: 5,
-                                textTransform: 'none', // Sin mayúsculas
-                                fontSize: 17,
-                                fontWeight: "400",
-                            }}
-                        >
-                            Aceptar
-                        </Button>
-                    </Box>
-                </Box>
-            </Modal>
-        </Box >
     );
 };
 
 export default JoinUpForm;
+
+
+
 

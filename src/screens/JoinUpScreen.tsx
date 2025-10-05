@@ -16,7 +16,6 @@ import { joinUpContext } from '../Context/JoinUpContext';
 const JoinUpScreen = () => {
 
   const { loading, accessToken, userRole } = useContext(signInContext);
-
   const { loadingJU } = useContext(joinUpContext);
 
 

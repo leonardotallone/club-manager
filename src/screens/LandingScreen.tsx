@@ -3,20 +3,20 @@ import { useNavigate } from "react-router-dom";
 import Grid from '@mui/material/Grid2';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Box, Container, Typography } from "@mui/material";
-import Background from "../assets/backgroundImages/Background.jpg"
+// import Background from "../assets/backgroundImages/Background.jpg"
 import Navbar from '../components/Navbar';
 import SignInForm from "../components/SignInForm";
 import Advertising from "../components/Advertising";
 import Footer from "../components/Footer";
 
 import { signInContext } from '../Context/SignInContext';
-import { joinUpContext } from '../Context/JoinUpContext';
+// import { joinUpContext } from '../Context/JoinUpContext';
 import { getAllUsersContext } from '../Context/GetAllUsersContext';
 
 const LandingScreen = () => {
 
   const { loading } = useContext(signInContext);
-  const { loadingJU } = useContext(joinUpContext);
+  // const { loadingJU } = useContext(joinUpContext);
   const { loguedUserInformation } = useContext(getAllUsersContext);
 
   console.log("Informacion de Usuario Conectado", loguedUserInformation)
@@ -80,6 +80,7 @@ const LandingScreen = () => {
               alignItems: 'center',
             }}>
               {!loguedUserInformation ? <SignInForm /> : null}
+              
 
 
             </Grid>
@@ -92,7 +93,9 @@ const LandingScreen = () => {
             <Footer />
           </Grid>
 
-          {loading || loadingJU ? (
+          {loading 
+          // || loadingJU 
+          ? (
             <Box sx={{
               position: 'absolute',
               top: 0,

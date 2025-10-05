@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import Grid from '@mui/material/Grid2';
-import SignUpForm from "../../components/Admin/SignUpForm"
+import SignUpForm from "../../components/JoinUpForm"
 import Navbar from '../../components/Navbar';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Box, Container } from "@mui/material";

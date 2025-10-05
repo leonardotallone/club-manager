@@ -18,11 +18,14 @@ const JoinUpProvider = ({ children }) => {
   const [joinUpError, setJoinUpError] = useState("")
   const [loadingJU, setLoadingJU] = useState(false)
 
-  const [deleteApplication, setDeleteApplication] = useState(null)
-  const [deleteApplicationAfterRegister, setDeleteApplicationAfterRegister] = useState(null)
-  const [deleteSuccess, setDeleteSuccess] = useState("")
-  const [deleteError, setDeleteError] = useState("")
-  const [loadingDelete, setLoadingDelete] = useState(false)
+  const [deleteApplication, setDeleteApplication] = useState<string | null>(null);
+  const [deleteSuccess, setDeleteSuccess] = useState("");
+  const [deleteError, setDeleteError] = useState("");
+  const [loadingDelete, setLoadingDelete] = useState(false);
+
+
+  console.log("DELETE APPLICATION CONTEXT", deleteApplication)
+  console.log("DELETE ERROR", deleteError)
 
   const db = getFirestore(FIREBASE_APP);
 
@@ -43,47 +46,34 @@ const JoinUpProvider = ({ children }) => {
     }
   }, [joinUpUser, db]);
 
-  useEffect(() => {
 
-    if (deleteApplication) {
-      // Immediate deletion for regular case
-      const deleteApplicationDoc = async () => {
-        try {
-          setLoadingDelete(true);
-          const docRef = doc(db, "joinUp", deleteApplication);
-          await deleteDoc(docRef);
-          setDeleteSuccess("Application deleted successfully");
-        } catch (error) {
-          setDeleteError(error.message || "An error occurred");
-        } finally {
-          setLoadingDelete(false);
-        }
-      };
-      deleteApplicationDoc();
+useEffect(() => {
+  if (!deleteApplication) return;
+
+  const deleteApplicationDoc = async () => {
+    try {
+      setLoadingDelete(true);
+      const docRef = doc(db, "joinUp", deleteApplication);
+      await deleteDoc(docRef);
+      setDeleteSuccess("Application deleted successfully");
+      setDeleteApplication(null); // Clear id after successful delete to allow future deletes
+    } catch (error: any) {
+      setDeleteError(error.message || "An error occurred");
+      console.error("Error deleting document:", error);
+    } finally {
+      setLoadingDelete(false);
     }
-  }, [db, deleteApplication]);
+  };
 
-  //Usado por si existe un delay en la creacion de usuario, antes de q se borre el documento.
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      const deleteDocAsync = async () => {
-        try {
-          setLoadingDelete(true);
-          const docRef = doc(db, "joinUp", deleteApplicationAfterRegister);
-          await deleteDoc(docRef);
-          setDeleteSuccess("Application deleted successfully");
-        } catch (error: any) {
-          setDeleteError(error.message || "An error occurred");
-        } finally {
-          setLoadingDelete(false);
-        }
-      };
-      deleteDocAsync();
+  deleteApplicationDoc();
+}, [deleteApplication, db]);
 
-    }, 5000); // 5 segundos
 
-    return () => clearTimeout(timeoutId); // Limpieza
-  }, [deleteApplicationAfterRegister, db]);
+
+
+
+
+
 
   return (
     <joinUpContext.Provider value={{
@@ -94,10 +84,10 @@ const JoinUpProvider = ({ children }) => {
       loadingJU,
 
       setDeleteApplication,
-      setDeleteApplicationAfterRegister,
       deleteSuccess,
       deleteError,
-      loadingDelete
+      loadingDelete,
+
 
     }}>
       {children}

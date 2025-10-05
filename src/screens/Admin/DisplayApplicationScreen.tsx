@@ -5,7 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import Navbar from '../../components/Navbar';
 import BlackBanner from '../../components/BlackBanner';
-import DisplayApplication from '../../components/Admin/DisplayApplication';
+import SignUpForm from '../../components/Admin/SignUpForm';
 
 import Footer from '../../components/Footer';
 import Advertising from '../../components/Advertising';
@@ -54,7 +54,7 @@ const DisplayApplicationScreen = () => {
                 }}>
                     <CircularProgress color="inherit" />
                 </Box>
-            ) : <DisplayApplication />}
+            ) : <SignUpForm />}
             </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12 }} sx={{ mt: 2 }}>
                     <Advertising />

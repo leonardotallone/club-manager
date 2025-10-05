@@ -10,7 +10,7 @@ import SignUpProvider from "./Context/SignUpContext";
 import GetAllUsersProvider from "./Context/GetAllUsersContext";
 import GetAllCategoriesProvider from "./Context/GetAllCategoriesContext";
 import GetAllDisciplinesProvider from "./Context/GetAllDisciplinesContext";
-import GetAllGendersProvider from "./Context/GetAllGendersContext";
+
 
 import GetAllJoinUpProvider from "./Context/GetAllJoinUpContext";
 import UpdateUserProfileProvider from "./Context/UpdateUserProfileContext";
@@ -44,11 +44,11 @@ root.render(
                       <GetAllUsersProvider>
                         <GetAllCategoriesProvider>
                           <GetAllDisciplinesProvider>
-                            <GetAllGendersProvider>
+                        
                               <UpdateUserProfileProvider>
                                 <App />
                               </UpdateUserProfileProvider>
-                            </GetAllGendersProvider>
+                          
                           </GetAllDisciplinesProvider>
                         </GetAllCategoriesProvider>
                       </GetAllUsersProvider>

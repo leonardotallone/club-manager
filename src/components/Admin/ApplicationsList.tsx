@@ -50,7 +50,7 @@ const ApplicationsList = () => {
     ];
 
     const handleDelete = (id: string) => {
-        setDeleteApplication({ id }); // Pass the document ID to context
+        setDeleteApplication(id); // Pass the document ID to context
     };
 
     return (
@@ -147,7 +147,7 @@ const ApplicationsList = () => {
                                             TELEFONO
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                            {application.phone}
+                                            {application.contactNumber}
                                         </Typography>
                                     </Grid>
 
@@ -156,7 +156,7 @@ const ApplicationsList = () => {
                                             FECHA DE SOLICITUD
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                            {application.date}
+                                            {application.applicationDate ? new Date(application.applicationDate.seconds * 1000).toLocaleDateString() : ''}
                                         </Typography>
                                     </Grid>
 
@@ -187,7 +187,7 @@ const ApplicationsList = () => {
                                         </Typography>
                                     </Grid> */}
 
-                                    {/* <Grid size={{ xs: 1, sm: 3, md: 3, lg: 3, xl: 3 }} direction="column" sx={{
+                                    <Grid size={{ xs: 1, sm: 3, md: 3, lg: 3, xl: 3 }} direction="column" sx={{
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'flex-end',
@@ -204,7 +204,7 @@ const ApplicationsList = () => {
                                                 ELIMINAR SOLICITUD
                                             </Typography>
                                         </Button>
-                                    </Grid> */}
+                                    </Grid>
                                     <Grid size={{ xs: 1, sm: 3, md: 3, lg: 3, xl: 3 }} direction="column" sx={{
                                         display: 'flex',
                                         flexDirection: 'column',

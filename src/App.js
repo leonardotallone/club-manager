@@ -8,7 +8,7 @@ import UsersListScreen from "./screens/Admin/UsersListScreen";
 import ApplicationsListScreen from "./screens/Admin/ApplicationsListScreen";
 import DisplayApplicationScreen from "./screens/Admin/DisplayApplicationScreen";
 
-import SignUpScreen from "./screens/Admin/SignUpScreen";
+// import SignUpScreen from "./screens/Admin/SignUpScreen";
 import EditUserScreen from "./screens/Admin/EditUserScreen";
 
 import PasswordRecoverScreen from "./screens/PasswordRecoverScreen";
@@ -16,6 +16,7 @@ import EmailRecoverScreen from "./screens/EmailRecoverScreen";
 import DashboardUserScreen from "./screens/DashboardUserScreen";
 
 import { signInContext } from "./Context/SignInContext";
+import JoinUpScreen from "./screens/JoinUpScreen";
 
 function App() {
   const { setDecodedToken, accessToken } = useContext(signInContext);
@@ -23,26 +24,20 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingScreen />} />
-        <Route path="/join" element={<JoinUpForm />} />
+        <Route path="/" element={<LandingScreen />} /> 
 
-        <Route
-          path="/dashboard-admin-screen"
-          element={<DashboardAdminScreen />}
-        />
+        <Route path="/dashboard-admin-screen" element={<DashboardAdminScreen />}/>
         <Route path="/admin-users-list" element={<UsersListScreen />} />
         <Route path="/admin-applications" element={<ApplicationsListScreen />} />
         <Route path="/admin-display-application/:user" element={<DisplayApplicationScreen />} />
+        {/* <Route path="/signup/:type" element={<SignUpScreen />} /> */}
 
+        <Route path="/joinup" element={<JoinUpScreen />} />
         <Route path="/edit-user/:user" element={<EditUserScreen />} />
-        <Route path="/signup/:type" element={<SignUpScreen />} />
         <Route path="/password-recover" element={<PasswordRecoverScreen />} />
         <Route path="/reset-password" element={<PasswordRecoverScreen />} />
         <Route path="/email-recover" element={<EmailRecoverScreen />} />
-        <Route
-          path="/dashboard-user-screen"
-          element={<DashboardUserScreen />}
-        />
+        <Route path="/dashboard-user-screen" element={<DashboardUserScreen />}/>
       </Routes>
     </BrowserRouter>
   );

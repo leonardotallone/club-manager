@@ -31,7 +31,7 @@ const UsersList = () => {
     const [selectedCategory, setSelectedCategory] = React.useState('');
     const { allUsers } = useContext(getAllUsersContext);
 
-    // console.log(allUsers)
+    console.log(allUsers)
 
     const navigate = useNavigate();
 
@@ -56,7 +56,7 @@ const UsersList = () => {
                 }}
             >
                 <Container maxWidth="xl">
-                    <Grid container direction="column">
+                    {/* <Grid container direction="column">
                         <Grid size={{ xs: 6, sm: 6, md: 6, lg: 12 }} >
                             <Typography
                                 sx={{
@@ -91,7 +91,7 @@ const UsersList = () => {
 
                             </FormControl>
                         </Grid>
-                    </Grid>
+                    </Grid> */}
 
 
 
@@ -139,14 +139,14 @@ const UsersList = () => {
                                         </Typography>
                                     </Grid>
 
-                                    <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }} direction="column">
+                                    {/* <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }} direction="column">
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             CATEGORIA
                                         </Typography>
                                         <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
                                             {user.category}
                                         </Typography>
-                                    </Grid>
+                                    </Grid> */}
 
                                     <Grid size={{ xs: 1.5, sm: 1.5, md: 1.5, lg: 1.5, xl: 1.2 }} direction="column">
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
@@ -156,14 +156,14 @@ const UsersList = () => {
                                             <LockOutlinedIcon sx={{ fontSize: 24, color: 'Red', ml: 5 }} />}
                                     </Grid>
 
-                                    <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 0.7 }} direction="column">
+                                    {/* <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 0.7 }} direction="column">
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             GRUPO
                                         </Typography>
                                         {user.groupHead ?
                                             <FamilyRestroomOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} /> :
                                             <ManOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} />}
-                                    </Grid>
+                                    </Grid> */}
                                     <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }} direction="column" >
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             ESTADO DE CUENTA

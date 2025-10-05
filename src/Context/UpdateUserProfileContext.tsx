@@ -15,6 +15,7 @@ const UpdateUserProfileProvider = ({ children }) => {
   const [updateUserData, setUpdateUserData] = useState<any>();
   const [successmsj, setSuccessmsj] = useState<string>("");
   const [errormsj, setErrormsj] = useState<string>("");
+  
   const [updatedUser, setUpdatedUser] = useState<any>(null);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [realTimeLocation, setRealTimeLocation] = useState<any>();
@@ -27,7 +28,7 @@ const UpdateUserProfileProvider = ({ children }) => {
   // const { subscription } = useContext( payPalSubscriptionSubscribeContext);
   // const { subscriptionDetails} = useContext( paypalSubscriptionDetailsContext);
   // const { subscriptionCancelSuccess } = useContext(paypalSubscriptionCancelContext);
-
+  console.log("UPDATE USER DATA EN CONTEXT", updateUserData)
 
   const db = getFirestore(FIREBASE_APP);
 
