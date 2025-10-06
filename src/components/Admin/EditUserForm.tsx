@@ -94,7 +94,7 @@ const EditUserForm: React.FC = () => {
 
     const { categories } = useContext(getAllCategoriesContext)
     const { disciplines } = useContext(getAllDisciplinesContext)
-    const { setUpdateUserData } = useContext(updateUserProfileContext)
+    const { setUpdateUserData, setDocId } = useContext(updateUserProfileContext)
 
     const [discipline, setDiscipline] = React.useState<string[]>([]);
     const [editMode, setEditMode] = React.useState<boolean>(false);
@@ -104,6 +104,13 @@ const EditUserForm: React.FC = () => {
 
     const location = useLocation();
     const user = location.state;
+
+       useEffect(() => {
+        if (user && user.id) {
+            setDocId(user.id);
+        }
+    }, [user])
+    
     console.log("USER FROM", user)
 
 
@@ -140,7 +147,7 @@ const EditUserForm: React.FC = () => {
     const handleSubmit = (
         values: SignUpFormValues,
     ) => {
-        const user = {
+        const editedUser = {
             name: values.name,
             lastName: values.lastName,
             address: values.address,
@@ -158,10 +165,12 @@ const EditUserForm: React.FC = () => {
             blockade: false,
 
             familyGroup: values.familyGroup,
-            applicationDate: values.applicationDate,
+            applicationDate: values.applicationDate ? dayjs(values.applicationDate).toDate() : null,
+            
         };
-        setUpdateUserData(user)
-        console.log("SUBMITED USER", user);
+        setUpdateUserData(editedUser)
+        // setEditMode(false);
+        console.log("SUBMITED USER", editedUser);
         // navigate("/home");
     };
 

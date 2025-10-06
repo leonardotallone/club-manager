@@ -1,9 +1,6 @@
-import React, { useState, createContext, useEffect, useContext } from "react";
+import React, { useState, createContext, useEffect } from "react";
 import { FIREBASE_APP } from "../Firebase/Firebase"
 import { getFirestore, doc, updateDoc } from "firebase/firestore";
-
-import { getAllUsersContext } from "./GetAllUsersContext";
-
 
 export const updateUserProfileContext = createContext(null);
 
@@ -12,16 +9,17 @@ interface UserInformation {
 }
 const UpdateUserProfileProvider = ({ children }) => {
 
-  const [updateUserData, setUpdateUserData] = useState<any>();
+  const [updateUserData, setUpdateUserData] = useState()
+  const [docId, setDocId] = useState()
   const [successmsj, setSuccessmsj] = useState<string>("");
   const [errormsj, setErrormsj] = useState<string>("");
-  
+
   const [updatedUser, setUpdatedUser] = useState<any>(null);
-  const [loadingUpdate, setLoadingUpdate] = useState(false);
-  const [realTimeLocation, setRealTimeLocation] = useState<any>();
+  const [loading, setLoading] = useState(false);
+
 
   // const { loguedUserInformation } = useContext(getAllUsersContext);
-  const { loguedUserInformation } = useContext(getAllUsersContext) as unknown as { loguedUserInformation: UserInformation };
+  // const { loguedUserInformation } = useContext(getAllUsersContext) as unknown as { loguedUserInformation: UserInformation };
 
   // const { imageURL } = useContext(avatarUploaderContext);
 
@@ -29,27 +27,54 @@ const UpdateUserProfileProvider = ({ children }) => {
   // const { subscriptionDetails} = useContext( paypalSubscriptionDetailsContext);
   // const { subscriptionCancelSuccess } = useContext(paypalSubscriptionCancelContext);
   console.log("UPDATE USER DATA EN CONTEXT", updateUserData)
+  console.log("DOC ID", docId)
 
   const db = getFirestore(FIREBASE_APP);
 
-  useEffect(() => {
-    const updateUserProfile = async () => {
-      if (updateUserData && loguedUserInformation) {
-        setLoadingUpdate(true);
-        const userDocRef = doc(db, "users", loguedUserInformation.id);
-        try {
-          await updateDoc(userDocRef, updateUserData);
-          setSuccessmsj("User profile updated successfully!");
-          setUpdatedUser(updateUserData); // Update updatedUser state with new data
-        } catch (error) {
-          setErrormsj("Error updating user profile");
-        } finally {
-          setLoadingUpdate(false);
-        }
+  // useEffect(() => {
+  //   const updateUserProfile = async () => {
+  //     if (updateUserData && loguedUserInformation) {
+  //       setLoadingUpdate(true);
+  //       const userDocRef = doc(db, "users", loguedUserInformation.id);
+  //       try {
+  //         await updateDoc(userDocRef, updateUserData);
+  //         setSuccessmsj("User profile updated successfully!");
+  //         setUpdatedUser(updateUserData); // Update updatedUser state with new data
+  //       } catch (error) {
+  //         setErrormsj("Error updating user profile");
+  //       } finally {
+  //         setLoadingUpdate(false);
+  //       }
+  //     }
+  //   };
+  //   updateUserProfile();
+  // }, [updateUserData, db, loguedUserInformation]);
+
+useEffect(() => {
+  const updateUserProfile = async () => {
+    if (updateUserData && docId) {
+      setLoading(true);
+      const userDocRef = doc(db, "users", docId);
+      try {
+        await updateDoc(userDocRef, updateUserData);
+        console.log("🔥 Actualización exitosa!");
+        setSuccessmsj("User profile updated successfully!");
+      } catch (error) {
+        setErrormsj("Error updating user profile");
+      } finally {
+        setLoading(false);
       }
-    };
-    updateUserProfile();
-  }, [updateUserData, db, loguedUserInformation]);
+    }
+  };
+  updateUserProfile();
+}, [updateUserData, db, docId]);
+
+
+
+
+
+
+
 
   // useEffect(() => {
   //   const updateUserProfile = async () => {
@@ -71,30 +96,30 @@ const UpdateUserProfileProvider = ({ children }) => {
   //   updateUserProfile();
   // }, [imageURL]);
 
-  useEffect(() => {
-    const updateUserProfile = async () => {
-      if (
-        realTimeLocation &&
-        loguedUserInformation &&
-        loguedUserInformation.id
-      ) {
-        const RTLocation = {
-          realTimeLocation: realTimeLocation,
-        };
-        // console.log("location", RTLocation);
+  // useEffect(() => {
+  //   const updateUserProfile = async () => {
+  //     if (
+  //       realTimeLocation &&
+  //       loguedUserInformation &&
+  //       loguedUserInformation.id
+  //     ) {
+  //       const RTLocation = {
+  //         realTimeLocation: realTimeLocation,
+  //       };
+  //       // console.log("location", RTLocation);
 
-        const userDocRef = doc(db, "users", loguedUserInformation.id);
-        try {
-          await updateDoc(userDocRef, RTLocation);
-          // setSuccessmsj("User profile updated successfully!");
-          setUpdatedUser(RTLocation); // Update updatedUser state with new data
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    };
-    updateUserProfile();
-  }, [realTimeLocation]);
+  //       const userDocRef = doc(db, "users", loguedUserInformation.id);
+  //       try {
+  //         await updateDoc(userDocRef, RTLocation);
+  //         // setSuccessmsj("User profile updated successfully!");
+  //         setUpdatedUser(RTLocation); // Update updatedUser state with new data
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     }
+  //   };
+  //   updateUserProfile();
+  // }, [realTimeLocation, db,loguedUserInformation]);
 
 
   // Subscription
@@ -146,13 +171,14 @@ const UpdateUserProfileProvider = ({ children }) => {
     <updateUserProfileContext.Provider
       value={{
         setUpdateUserData,
+        setDocId,
+        loading,
         successmsj,
         errormsj,
         setSuccessmsj,
         setErrormsj,
         updatedUser,
-        loadingUpdate,
-        setRealTimeLocation,
+
       }}
     >
       {children}

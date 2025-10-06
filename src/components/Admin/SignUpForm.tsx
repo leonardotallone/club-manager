@@ -70,7 +70,7 @@ interface SignUpFormValues {
     admin: boolean;
     blockade: boolean;
     familyGroup: object;
-    applicationDate: Date;
+    applicationDate: Dayjs;
 }
 
 const initialState = {
@@ -174,7 +174,7 @@ const SignUpForm: React.FC = () => {
             admition: "admited",
             familyGroup: [],
 
-             applicationDate: values.applicationDate,
+            applicationDate: values.applicationDate ? dayjs(values.applicationDate).toDate() : null,
         };
 
         console.log("USER EN UI", user)
