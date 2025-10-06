@@ -1,6 +1,6 @@
 import React, { useState, createContext, useEffect } from "react";
 import { FIREBASE_APP } from "../Firebase/Firebase"
-import { getFirestore, doc, updateDoc } from "firebase/firestore";
+import { getFirestore, doc, updateDoc, arrayUnion } from "firebase/firestore";
 
 export const updateUserProfileContext = createContext(null);
 
@@ -11,6 +11,7 @@ const UpdateUserProfileProvider = ({ children }) => {
 
   const [updateUserData, setUpdateUserData] = useState()
   const [docId, setDocId] = useState()
+  const [familyUser, setFamilyUser] = useState()
   const [successmsj, setSuccessmsj] = useState<string>("");
   const [errormsj, setErrormsj] = useState<string>("");
 
@@ -26,29 +27,11 @@ const UpdateUserProfileProvider = ({ children }) => {
   // const { subscription } = useContext( payPalSubscriptionSubscribeContext);
   // const { subscriptionDetails} = useContext( paypalSubscriptionDetailsContext);
   // const { subscriptionCancelSuccess } = useContext(paypalSubscriptionCancelContext);
-  console.log("UPDATE USER DATA EN CONTEXT", updateUserData)
-  console.log("DOC ID", docId)
+  // console.log("UPDATE USER DATA EN CONTEXT", updateUserData)
+  // console.log("DOC ID", docId)
+  console.log("FAMILY USER", familyUser)
 
   const db = getFirestore(FIREBASE_APP);
-
-  // useEffect(() => {
-  //   const updateUserProfile = async () => {
-  //     if (updateUserData && loguedUserInformation) {
-  //       setLoadingUpdate(true);
-  //       const userDocRef = doc(db, "users", loguedUserInformation.id);
-  //       try {
-  //         await updateDoc(userDocRef, updateUserData);
-  //         setSuccessmsj("User profile updated successfully!");
-  //         setUpdatedUser(updateUserData); // Update updatedUser state with new data
-  //       } catch (error) {
-  //         setErrormsj("Error updating user profile");
-  //       } finally {
-  //         setLoadingUpdate(false);
-  //       }
-  //     }
-  //   };
-  //   updateUserProfile();
-  // }, [updateUserData, db, loguedUserInformation]);
 
 useEffect(() => {
   const updateUserProfile = async () => {
@@ -60,6 +43,7 @@ useEffect(() => {
         console.log("🔥 Actualización exitosa!");
         setSuccessmsj("User profile updated successfully!");
       } catch (error) {
+        console.error("Error updating document: ", error);
         setErrormsj("Error updating user profile");
       } finally {
         setLoading(false);
@@ -70,11 +54,30 @@ useEffect(() => {
 }, [updateUserData, db, docId]);
 
 
+useEffect(() => {
+  const addFamilyUser = async () => {
+    if (familyUser && docId) {
+      setLoading(true);
+      const userDocRef = doc(db, "users", docId);
 
+      try {
+        await updateDoc(userDocRef, {
+          familyGroup: arrayUnion(familyUser),
+        });
 
+        console.log("👨‍👩‍👧‍👦 Family user agregado correctamente!");
+        setSuccessmsj("Family user added successfully!");
+      } catch (error) {
+        console.error("❌ Error agregando family user: ", error);
+        setErrormsj("Error adding family user");
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
 
-
-
+  addFamilyUser();
+}, [familyUser, docId, db]);
 
   // useEffect(() => {
   //   const updateUserProfile = async () => {
@@ -172,6 +175,7 @@ useEffect(() => {
       value={{
         setUpdateUserData,
         setDocId,
+        setFamilyUser,
         loading,
         successmsj,
         errormsj,

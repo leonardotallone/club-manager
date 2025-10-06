@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, use } from 'react';
+import React, { useEffect, useContext } from 'react';
 
 import { useNavigate, useLocation } from "react-router-dom";
 import { Input, Avatar, Box, Paper, Card, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
@@ -105,7 +105,7 @@ const SignUpForm: React.FC = () => {
 
     useEffect(() => {
         if (user) { setIdForDeleteApplication(user.id) }
-    }, [user])
+    }, [user, setIdForDeleteApplication])
 
 
 
