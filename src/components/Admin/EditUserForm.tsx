@@ -1,11 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect,  useContext } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import { Modal, Avatar, Box, Paper, Card, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
 import Grid from '@mui/material/Grid2';
-
-
-
-
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -20,6 +17,8 @@ import * as Yup from "yup";
 import { getAllCategoriesContext } from "../../Context/GetAllCategoriesContext"
 import { getAllDisciplinesContext } from "../../Context/GetAllDisciplinesContext"
 import { updateUserProfileContext } from "../../Context/UpdateUserProfileContext"
+import { removeUserContext } from "../../Context/RemoveUserContext"
+
 
 
 
@@ -139,16 +138,22 @@ const ModalStyle = {
 };
 
 
+
 const EditUserForm: React.FC = () => {
 
+    const location = useLocation();
+    const user = location.state;
+
+    console.log("IN EDITON USER", user)
     const { categories } = useContext(getAllCategoriesContext)
     const { disciplines } = useContext(getAllDisciplinesContext)
     const { setUpdateUserData, setDocId, setFamilyUser } = useContext(updateUserProfileContext)
+    const { setUserConsent } = useContext(removeUserContext)
 
     const [discipline, setDiscipline] = React.useState<string[]>([]);
     const [disciplineFamily, setDisciplineFamily] = React.useState<string[]>([]);
     const [editMode, setEditMode] = React.useState<boolean>(false);
-    const [lockUser, setLockUser] = React.useState<boolean>(false);
+    const [lockUser, setLockUser] = React.useState<boolean>(user.blockade);
 
     const [open, setOpen] = React.useState(false);
 
@@ -157,16 +162,16 @@ const EditUserForm: React.FC = () => {
 
     const genders = ["Masculino", "Femenino", "Otro"]
 
-    const location = useLocation();
-    const user = location.state;
+    const familyGroupNames = user.familyGroup
+        .map((member: { name: any; lastName: any; }) => `${member.name} ${member.lastName}`)
+        .join(", ");
 
-    console.log("USER TO EDIT", user)
-    
+
     useEffect(() => {
         if (user && user.id) {
-            setDocId(user.id);
+            setDocId(user.id)
         }
-    }, [user])
+    }, [user, setDocId])
 
     const theme = useTheme();
     const navigate = useNavigate();
@@ -178,9 +183,9 @@ const EditUserForm: React.FC = () => {
         event.preventDefault();
         setLockUser(prevEditMode => !prevEditMode);
     }
-    console.log("LOCK USER", lockUser)
+
     const handleRemoveUser = () => {
-        console.log("Removing user")
+        setUserConsent(true);
     }
 
     useEffect(() => {
@@ -199,7 +204,7 @@ const EditUserForm: React.FC = () => {
         );
     };
 
-       const handleFamilyDiscipline = (event: SelectChangeEvent<typeof discipline>) => {
+    const handleFamilyDiscipline = (event: SelectChangeEvent<typeof discipline>) => {
         const {
             target: { value },
         } = event;
@@ -232,7 +237,7 @@ const EditUserForm: React.FC = () => {
             applicationDate: values.applicationDate ? dayjs(values.applicationDate).toDate() : null,
 
         };
-        // setUpdateUserData(editedUser)
+        setUpdateUserData(editedUser)
         // setEditMode(false);
         console.log("SUBMITED USER", editedUser);
         // navigate("/home");
@@ -289,12 +294,12 @@ const EditUserForm: React.FC = () => {
                         avatarURL: user.avatarURL || "",
                         gender: user.gender || "",
                         email: user.email || "",
-                        admin: user.admin || false,
+                        admin: false,
                         disciplines: user.disciplines || {},
                         category: categories?.find((c: { name: string }) => c.name === user.category)?.name || "",
 
-                        blockade: user.blockade,
-                        familyGroup: user.familyGroup || [],
+                        blockade: lockUser,
+                        familyGroup: familyGroupNames || [],
                         applicationDate: user.applicationDate?.seconds ? dayjs(user.applicationDate.seconds * 1000) : dayjs(),
                     }}
 
@@ -801,6 +806,44 @@ const EditUserForm: React.FC = () => {
                                                     },
                                                 } : null}
                                             />
+
+
+
+                                            {/* FAMILY GROUP */}
+                                            <TextField
+                                                disabled
+                                                fullWidth
+                                                id="familyGroup"
+                                                label="Grupo Familiar"
+                                                name="familyGroup"
+                                                autoComplete="familyGroup"
+                                                value={values.familyGroup}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                error={touched.email && Boolean(errors.email)}
+                                                helperText={touched.email && errors.email ? errors.email : " "} // 
+                                                sx={{ mt: 0.85 }}
+                                                slotProps={editMode ? {
+                                                    input: {
+                                                        sx: editMode
+                                                            ? {
+                                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                                    borderColor: "#b71c1c",
+                                                                },
+                                                            }
+                                                            : {},
+                                                    },
+                                                    inputLabel: {
+                                                        sx: !editMode
+                                                            ? {
+                                                                "&.Mui-focused": {
+                                                                    color: "#b71c1c",
+                                                                },
+                                                            }
+                                                            : {},
+                                                    },
+                                                } : null}
+                                            />
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -854,16 +897,20 @@ const EditUserForm: React.FC = () => {
                                             </Button>}
                                     </Grid>
                                     <Grid size={6}>
-                                        <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
+                                        <Button variant="contained" fullWidth sx={{
                                             mt: 3, mb: 0, backgroundColor: '#b71c1c', // Color de fondo gris
                                             '&:hover': {
                                                 backgroundColor: 'darkred', // Color al pasar el mouse
                                             },
                                         }}
+                                            startIcon={<DeleteIcon sx={{ fontSize: 1, color: "grey" }} />}
                                             onClick={handleRemoveUser}
                                             disabled={!editMode}
                                         >
-                                            ELIMINAR SOCIO
+
+                                            <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none', mr: 1 }}>
+                                                ELIMINAR SOCIO
+                                            </Typography>
                                         </Button>
                                     </Grid>
                                 </Grid>
@@ -913,10 +960,7 @@ const EditUserForm: React.FC = () => {
                                                 },
                                             }}>AGREGAR SOCIO</Button>
                                     </> : null}
-
                                 </Grid>
-
-
                             </Grid>
                         </Form>
                     )}
@@ -933,7 +977,7 @@ const EditUserForm: React.FC = () => {
             >
                 <Box sx={ModalStyle}>
                     <Formik<AddFamilyFormValues>
-                        enableReinitialize={true}
+                        // enableReinitialize={true}
                         initialValues={{
                             name: "",
                             lastName: "",
@@ -1189,7 +1233,7 @@ const EditUserForm: React.FC = () => {
                                         </Grid>
                                     </Grid>
                                     {/* DISCIPLINE */}
-                                    <FormControl fullWidth  sx={{ mb: 0, mt: 1 }}>
+                                    <FormControl fullWidth sx={{ mb: 0, mt: 1 }}>
                                         <InputLabel
                                             id="discipline-label"
                                             shrink={true}
@@ -1252,61 +1296,55 @@ const EditUserForm: React.FC = () => {
                                                 <p>Cargando disciplinas...</p>
                                             )}
                                         </Select>
-                                        {/* {touched.disciplines && errors.disciplines ? (
-                                            <Typography color="error" variant="caption">
-                                                {typeof errors.disciplines === "string" ? errors.disciplines : JSON.stringify(errors.disciplines)}
-                                            </Typography>
-                                        ) : (
-                                            <span>&nbsp;</span>
-                                        )} */}
+
                                     </FormControl>
 
                                     {/* CATEGORY */}
                                     <FormControl fullWidth variant="outlined" sx={{ mb: 0, mt: 4 }}>
-  <InputLabel
-    id="category-label"
-    shrink={true}
-    sx={{
-      color: !editMode ? 'rgba(0, 0, 0, 0.38)' : undefined,
-      '&.Mui-focused': { color: '#b71c1c' },
-    }}
-  >
-    Categoria
-  </InputLabel>
-  <Select
-    labelId="category-label"
-    id="category-select"
-    value={values.category}
-    label="Categoria"
-    disabled={!editMode}
-    onChange={(event) => {
-      handleChange({ target: { name: 'category', value: event.target.value } });
-    }}
-    input={<OutlinedInput label="Categoria" notched={true} />}
-    sx={
-      editMode
-        ? {
-            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#b71c1c',
-            },
-            '&:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#b71c1c',
-            },
-          }
-        : {}
-    }
-  >
-    {categories?.length > 0 ? (
-      categories.map(({ id, name }) => (
-        <MenuItem key={id} value={name}>
-          {name}
-        </MenuItem>
-      ))
-    ) : (
-      <p>Cargando Categorias...</p>
-    )}
-  </Select>
-</FormControl>
+                                        <InputLabel
+                                            id="category-label"
+                                            shrink={true}
+                                            sx={{
+                                                color: !editMode ? 'rgba(0, 0, 0, 0.38)' : undefined,
+                                                '&.Mui-focused': { color: '#b71c1c' },
+                                            }}
+                                        >
+                                            Categoria
+                                        </InputLabel>
+                                        <Select
+                                            labelId="category-label"
+                                            id="category-select"
+                                            value={values.category}
+                                            label="Categoria"
+                                            disabled={!editMode}
+                                            onChange={(event) => {
+                                                handleChange({ target: { name: 'category', value: event.target.value } });
+                                            }}
+                                            input={<OutlinedInput label="Categoria" notched={true} />}
+                                            sx={
+                                                editMode
+                                                    ? {
+                                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                                            borderColor: '#b71c1c',
+                                                        },
+                                                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                                                            borderColor: '#b71c1c',
+                                                        },
+                                                    }
+                                                    : {}
+                                            }
+                                        >
+                                            {categories?.length > 0 ? (
+                                                categories.map(({ id, name }) => (
+                                                    <MenuItem key={id} value={name}>
+                                                        {name}
+                                                    </MenuItem>
+                                                ))
+                                            ) : (
+                                                <p>Cargando Categorias...</p>
+                                            )}
+                                        </Select>
+                                    </FormControl>
 
                                     {/* BOTONES */}
                                     <Grid container size={12}>

@@ -17,7 +17,7 @@ import ClubSocial from "../assets/svg/ClubSocial.png"
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import avatar from "../assets/backgroundImages/Background.jpg";
 
-import { signInContext } from '../Context/SignInContext';
+import { signInUserContext } from '../Context/SignInUserContext';
 import { getAllUsersContext } from '../Context/GetAllUsersContext';
 import { signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "../Firebase/Firebase";
@@ -47,7 +47,7 @@ const Navbar = () => {
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
     const [anchorElAltaSocio, setAnchorElAltaSocio] = React.useState<null | HTMLElement>(null);
 
-    const { setLoguedUser } = useContext(signInContext);
+    const { setLoguedUser } = useContext(signInUserContext);
     const { loguedUserInformation, setLoguedUserInformation } = useContext(getAllUsersContext);
 
 

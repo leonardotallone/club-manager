@@ -2,13 +2,13 @@ import { useState, createContext, useEffect } from "react";
 import { FIREBASE_AUTH } from "../Firebase/Firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
-export const signInContext = createContext(null);
+export const signInUserContext = createContext(null);
 
 interface SignIn {
   email: string;
   password: string;
 }
-const SignInProvider = ({ children }) => {
+const SignInUserProvider = ({ children }) => {
 
   const [credentials, setCredentials] = useState<SignIn>();
   const [loguedUser, setLoguedUser] = useState(JSON.parse(localStorage.getItem("LoguedUser")));
@@ -51,11 +51,11 @@ const SignInProvider = ({ children }) => {
   }, [credentials,auth]);
 
   return (
-    <signInContext.Provider value={{ setCredentials, setSignInError, signInError, loading, loguedUser, setLoguedUser }}>
+    <signInUserContext.Provider value={{ setCredentials, setSignInError, signInError, loading, loguedUser, setLoguedUser }}>
       {children}
-    </signInContext.Provider>
+    </signInUserContext.Provider>
   );
 };
-export default SignInProvider;
+export default SignInUserProvider;
 
 

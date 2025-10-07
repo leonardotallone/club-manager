@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
-import { signInContext } from '../Context/SignInContext';
+import { signInUserContext } from '../Context/SignInUserContext';
 
 
 const emailRegex = /^[a-zA-Z0-9\u00E0-\u00FC._%+!#$&'*+/=?^_`{|}~-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -29,7 +29,7 @@ const validationSchema = Yup.object().shape({
 
 const SignInForm: React.FC = () => {
 
-    const { setCredentials, signInError, setSignInError } = useContext(signInContext);
+    const { setCredentials, signInError, setSignInError } = useContext(signInUserContext);
 
     const navigate = useNavigate();
 

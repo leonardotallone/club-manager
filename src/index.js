@@ -4,21 +4,21 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 // Context
-import SignInProvider from "./Context/SignInContext";
+import SignInUserProvider from "./Context/SignInUserContext";
 import JoinUpProvider from "./Context/JoinUpContext";
 import SignUpProvider from "./Context/SignUpContext";
 import GetAllUsersProvider from "./Context/GetAllUsersContext";
 import GetAllCategoriesProvider from "./Context/GetAllCategoriesContext";
 import GetAllDisciplinesProvider from "./Context/GetAllDisciplinesContext";
 
-
 import GetAllJoinUpProvider from "./Context/GetAllJoinUpContext";
 import UpdateUserProfileProvider from "./Context/UpdateUserProfileContext";
+import RemoveUserProvider from "./Context/RemoveUserContext";
 
 import SignedUserProvider from "./Context/SignedUserContext";
 import RecoverPasswordProvider from "./Context/RecoverPasswordContext";
 import NewPasswordProvider from "./Context/NewPasswordContext";
-import RecoverUserProvider from "./Context/RecoverUserContext";
+// import RecoverUserProvider from "./Context/RecoverUserContext";
 
 import App from "./App";
 
@@ -33,33 +33,33 @@ root.render(
   <React.StrictMode>
     <CssBaseline />
     <ThemeProvider theme={theme}>
-      <SignInProvider>
+      <SignInUserProvider>
         <GetAllJoinUpProvider>
           <RecoverPasswordProvider>
             <NewPasswordProvider>
-              <RecoverUserProvider>
+              {/* <RecoverUserProvider> */}
                 <SignedUserProvider>
                   <SignUpProvider>
                     <JoinUpProvider>
                       <GetAllUsersProvider>
                         <GetAllCategoriesProvider>
                           <GetAllDisciplinesProvider>
-                        
+                            <RemoveUserProvider>
                               <UpdateUserProfileProvider>
                                 <App />
                               </UpdateUserProfileProvider>
-                          
+                            </RemoveUserProvider>
                           </GetAllDisciplinesProvider>
                         </GetAllCategoriesProvider>
                       </GetAllUsersProvider>
                     </JoinUpProvider>
                   </SignUpProvider>
                 </SignedUserProvider>
-              </RecoverUserProvider>
+              {/* </RecoverUserProvider> */}
             </NewPasswordProvider>
           </RecoverPasswordProvider>
         </GetAllJoinUpProvider>
-      </SignInProvider>
+      </SignInUserProvider>
     </ThemeProvider>
   </React.StrictMode>
 );

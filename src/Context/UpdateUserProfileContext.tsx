@@ -12,6 +12,10 @@ const UpdateUserProfileProvider = ({ children }) => {
   const [updateUserData, setUpdateUserData] = useState()
   const [docId, setDocId] = useState()
   const [familyUser, setFamilyUser] = useState()
+
+
+
+
   const [successmsj, setSuccessmsj] = useState<string>("");
   const [errormsj, setErrormsj] = useState<string>("");
 
@@ -29,55 +33,55 @@ const UpdateUserProfileProvider = ({ children }) => {
   // const { subscriptionCancelSuccess } = useContext(paypalSubscriptionCancelContext);
   // console.log("UPDATE USER DATA EN CONTEXT", updateUserData)
   // console.log("DOC ID", docId)
-  console.log("FAMILY USER", familyUser)
+  // console.log("FAMILY USER", familyUser)
 
   const db = getFirestore(FIREBASE_APP);
 
-useEffect(() => {
-  const updateUserProfile = async () => {
-    if (updateUserData && docId) {
-      setLoading(true);
-      const userDocRef = doc(db, "users", docId);
-      try {
-        await updateDoc(userDocRef, updateUserData);
-        console.log("🔥 Actualización exitosa!");
-        setSuccessmsj("User profile updated successfully!");
-      } catch (error) {
-        console.error("Error updating document: ", error);
-        setErrormsj("Error updating user profile");
-      } finally {
-        setLoading(false);
+  useEffect(() => {
+    const updateUserProfile = async () => {
+      if (updateUserData && docId) {
+        setLoading(true);
+        const userDocRef = doc(db, "users", docId);
+        try {
+          await updateDoc(userDocRef, updateUserData);
+          console.log("🔥 Actualización exitosa!");
+          setSuccessmsj("User profile updated successfully!");
+        } catch (error) {
+          console.error("Error updating document: ", error);
+          setErrormsj("Error updating user profile");
+        } finally {
+          setLoading(false);
+        }
       }
-    }
-  };
-  updateUserProfile();
-}, [updateUserData, db, docId]);
+    };
+    updateUserProfile();
+  }, [updateUserData, db, docId]);
 
 
-useEffect(() => {
-  const addFamilyUser = async () => {
-    if (familyUser && docId) {
-      setLoading(true);
-      const userDocRef = doc(db, "users", docId);
+  useEffect(() => {
+    const addFamilyUser = async () => {
+      if (familyUser && docId) {
+        setLoading(true);
+        const userDocRef = doc(db, "users", docId);
 
-      try {
-        await updateDoc(userDocRef, {
-          familyGroup: arrayUnion(familyUser),
-        });
+        try {
+          await updateDoc(userDocRef, {
+            familyGroup: arrayUnion(familyUser),
+          });
 
-        console.log("👨‍👩‍👧‍👦 Family user agregado correctamente!");
-        setSuccessmsj("Family user added successfully!");
-      } catch (error) {
-        console.error("❌ Error agregando family user: ", error);
-        setErrormsj("Error adding family user");
-      } finally {
-        setLoading(false);
+          console.log("👨‍👩‍👧‍👦 Family user agregado correctamente!");
+          setSuccessmsj("Family user added successfully!");
+        } catch (error) {
+          console.error("❌ Error agregando family user: ", error);
+          setErrormsj("Error adding family user");
+        } finally {
+          setLoading(false);
+        }
       }
-    }
-  };
+    };
 
-  addFamilyUser();
-}, [familyUser, docId, db]);
+    addFamilyUser();
+  }, [familyUser, docId, db]);
 
   // useEffect(() => {
   //   const updateUserProfile = async () => {
@@ -176,6 +180,7 @@ useEffect(() => {
         setUpdateUserData,
         setDocId,
         setFamilyUser,
+     
         loading,
         successmsj,
         errormsj,

@@ -15,11 +15,11 @@ import PasswordRecoverScreen from "./screens/PasswordRecoverScreen";
 import EmailRecoverScreen from "./screens/EmailRecoverScreen";
 import DashboardUserScreen from "./screens/DashboardUserScreen";
 
-import { signInContext } from "./Context/SignInContext";
+import { signInUserContext } from "./Context/SignInUserContext";
 import JoinUpScreen from "./screens/JoinUpScreen";
 
 function App() {
-  const { setDecodedToken, accessToken } = useContext(signInContext);
+  const { setDecodedToken, accessToken } = useContext(signInUserContext);
 
   return (
     <BrowserRouter>

@@ -159,34 +159,6 @@ const ApplicationsList = () => {
                                             {application.applicationDate ? new Date(application.applicationDate.seconds * 1000).toLocaleDateString() : ''}
                                         </Typography>
                                     </Grid>
-
-                                    {/* <Grid size={{ xs: 1.5, sm: 1.5, md: 1.5, lg: 1.5, xl: 1.2 }} direction="column">
-                                        <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
-                                            BLOQUEAR USUARIO
-                                        </Typography>
-                                        {socio.blockade === false ? <LockOpenIcon sx={{ fontSize: 24, color: 'Green', ml: 5 }} /> :
-                                            <LockOutlinedIcon sx={{ fontSize: 24, color: 'Red', ml: 5 }} />}
-                                    </Grid> */}
-
-                                    <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 0.7 }} direction="column">
-                                        <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
-                                            GRUPO
-                                        </Typography>
-                                        {application.familyGroup.length === 0 ?
-                                            <ManOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} /> :
-                                            <FamilyRestroomOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} />
-                                        }
-                                    </Grid>
-
-                                    {/* <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }} direction="column" >
-                                        <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
-                                            ESTADO DE CUENTA
-                                        </Typography>
-                                        <Typography sx={{ fontWeight: 600, fontSize: 14, color: socio.countState === "Sin Deuda" ? 'Green' : 'Red', textDecoration: 'none' }}>
-                                            {socio.countState}
-                                        </Typography>
-                                    </Grid> */}
-
                                     <Grid size={{ xs: 1, sm: 3, md: 3, lg: 3, xl: 3 }} direction="column" sx={{
                                         display: 'flex',
                                         flexDirection: 'column',
@@ -194,7 +166,6 @@ const ApplicationsList = () => {
                                         justifyContent: 'center',
                                         fontSize: 24,
                                         color: 'black',
-
                                     }}>
                                         <Button
                                             startIcon={<DeleteIcon sx={{ fontSize: 24, color: "black" }} />}

@@ -9,13 +9,13 @@ import SignInForm from "../components/SignInForm";
 import Advertising from "../components/Advertising";
 import Footer from "../components/Footer";
 
-import { signInContext } from '../Context/SignInContext';
+import { signInUserContext } from '../Context/SignInUserContext';
 // import { joinUpContext } from '../Context/JoinUpContext';
 import { getAllUsersContext } from '../Context/GetAllUsersContext';
 
 const LandingScreen = () => {
 
-  const { loading } = useContext(signInContext);
+  const { loading } = useContext(signInUserContext);
   // const { loadingJU } = useContext(joinUpContext);
   const { loguedUserInformation } = useContext(getAllUsersContext);
 

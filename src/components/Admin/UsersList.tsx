@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid2';
-import { Box, Container, Typography, Button, useRadioGroup } from "@mui/material";
+import { Box, Container, Typography, Button } from "@mui/material";
 
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -28,19 +28,12 @@ import { getAllUsersContext } from '../../Context/GetAllUsersContext';
 
 
 const UsersList = () => {
-    const [selectedCategory, setSelectedCategory] = React.useState('');
+
     const { allUsers } = useContext(getAllUsersContext);
 
     console.log(allUsers)
 
     const navigate = useNavigate();
-
-    const category = [
-        'Afabetico',
-        'Categoria',
-        'Edad',
-        'Estado de Cuenta',
-    ];
 
     return (
         <>
@@ -52,7 +45,7 @@ const UsersList = () => {
                     // position: "fixed", // Asegura que ocupe toda la pantalla
                     width: '100%', // Asegura que tome todo el ancho del viewport
 
-           
+
                 }}
             >
                 <Container maxWidth="xl">
@@ -100,7 +93,7 @@ const UsersList = () => {
 
             <Container maxWidth="xl">
                 <Grid container>
-                    {allUsers?.map((user:any, index:any) => (
+                    {allUsers?.map((user: any, index: any) => (
                         <Grid key={index} size={{ xs: 12, sm: 6, md: 6, lg: 12 }} sx={{ mb: 1.5 }}>
                             <Box
                                 sx={{
@@ -156,14 +149,21 @@ const UsersList = () => {
                                             <LockOutlinedIcon sx={{ fontSize: 24, color: 'Red', ml: 5 }} />}
                                     </Grid>
 
-                                    {/* <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 0.7 }} direction="column">
-                                        <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
-                                            GRUPO
-                                        </Typography>
-                                        {user.groupHead ?
-                                            <FamilyRestroomOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} /> :
-                                            <ManOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} />}
-                                    </Grid> */}
+                                    <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 0.7 }} direction="column">
+                                        {user.familyGroup.length === 0 ?
+                                            <>
+                                                <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none',ml:-1 }}>
+                                                    INDIVIDUO
+                                                </Typography>
+
+                                                <ManOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} />
+                                            </> : <>
+                                                <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
+                                                    GRUPO
+                                                </Typography>
+                                                <FamilyRestroomOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} /></>
+                                        }
+                                    </Grid>
                                     <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }} direction="column" >
                                         <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
                                             ESTADO DE CUENTA

@@ -6,19 +6,18 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { FIREBASE_APP } from "../Firebase/Firebase";
-import { signInContext } from "./SignInContext"
+import { signInUserContext } from "./SignInUserContext"
 
 export const getAllUsersContext = createContext(null);
 
 const GetAllUsersProvider = ({ children }) => {
 
-  const { loguedUser } = useContext(signInContext);
+  const { loguedUser } = useContext(signInUserContext);
   const [allUsers, setAllUsers] = useState([]);
   const [loguedUserInformation, setLoguedUserInformation] = useState();
   const [loading, setLoading] = useState(false)
   
   const db = getFirestore(FIREBASE_APP);
-
 
   type User = {
     id: string;
