@@ -18,7 +18,7 @@ import RemoveUserProvider from "./Context/RemoveUserContext";
 import SignedUserProvider from "./Context/SignedUserContext";
 import RecoverPasswordProvider from "./Context/RecoverPasswordContext";
 import NewPasswordProvider from "./Context/NewPasswordContext";
-// import RecoverUserProvider from "./Context/RecoverUserContext";
+import ControlModalsProvider from "./Context/ControModalsContext";
 
 import App from "./App";
 
@@ -38,23 +38,25 @@ root.render(
           <RecoverPasswordProvider>
             <NewPasswordProvider>
               {/* <RecoverUserProvider> */}
-                <SignedUserProvider>
-                  <SignUpProvider>
-                    <JoinUpProvider>
-                      <GetAllUsersProvider>
-                        <GetAllCategoriesProvider>
-                          <GetAllDisciplinesProvider>
+              <SignedUserProvider>
+                <SignUpProvider>
+                  <JoinUpProvider>
+                    <GetAllUsersProvider>
+                      <GetAllCategoriesProvider>
+                        <GetAllDisciplinesProvider>
+                          <ControlModalsProvider>
                             <RemoveUserProvider>
                               <UpdateUserProfileProvider>
                                 <App />
                               </UpdateUserProfileProvider>
                             </RemoveUserProvider>
-                          </GetAllDisciplinesProvider>
-                        </GetAllCategoriesProvider>
-                      </GetAllUsersProvider>
-                    </JoinUpProvider>
-                  </SignUpProvider>
-                </SignedUserProvider>
+                          </ControlModalsProvider>
+                        </GetAllDisciplinesProvider>
+                      </GetAllCategoriesProvider>
+                    </GetAllUsersProvider>
+                  </JoinUpProvider>
+                </SignUpProvider>
+              </SignedUserProvider>
               {/* </RecoverUserProvider> */}
             </NewPasswordProvider>
           </RecoverPasswordProvider>

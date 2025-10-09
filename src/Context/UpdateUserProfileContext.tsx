@@ -1,17 +1,24 @@
 import React, { useState, createContext, useEffect } from "react";
 import { FIREBASE_APP } from "../Firebase/Firebase"
-import { getFirestore, doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { getFirestore, doc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
 
 export const updateUserProfileContext = createContext(null);
 
 interface UserInformation {
   id: string;
 }
+
+interface FamilyMember {
+  dni: string;
+  [key: string]: any; // Add other properties as needed
+}
+
 const UpdateUserProfileProvider = ({ children }) => {
 
-  const [updateUserData, setUpdateUserData] = useState()
-  const [docId, setDocId] = useState()
-  const [familyUser, setFamilyUser] = useState()
+  const [updateUserData, setUpdateUserData] = useState<any>()
+  const [docId, setDocId] = useState<string | undefined>()
+  const [familyUser, setFamilyUser] = useState<FamilyMember | undefined>()
+  const [UpdateFamilyUser, setUpdateFamilyUser] = useState<FamilyMember | undefined>()
 
 
 
@@ -82,6 +89,46 @@ const UpdateUserProfileProvider = ({ children }) => {
 
     addFamilyUser();
   }, [familyUser, docId, db]);
+
+
+  useEffect(() => {
+    const updateFamilyUser = async () => {
+      if (UpdateFamilyUser && docId) {
+        setLoading(true);
+        const userDocRef = doc(db, "users", docId);
+
+        try {
+          // 1️⃣ Obtenemos el documento actual
+          const docSnap = await getDoc(userDocRef);
+          const data = docSnap.data();
+          const currentFamily: FamilyMember[] = data.familyGroup || [];
+
+          // 2️⃣ Buscamos el familiar por su DNI (o podrías usar `id` si lo tienen)
+          const updatedFamily = currentFamily.map((member: FamilyMember) =>
+            member.dni === UpdateFamilyUser!.dni
+              ? { ...member, ...UpdateFamilyUser }
+              : member
+          );
+
+
+          console.log("UpdateFamilyUser:", UpdateFamilyUser);
+          console.log("Updated Family to upload:", updatedFamily);
+          // 3️⃣ Subimos el array actualizado a Firestore
+          await updateDoc(userDocRef, { familyGroup: updatedFamily });
+
+          console.log("👨‍👩‍👧‍👦 Familiar actualizado correctamente!");
+          setSuccessmsj("Family user updated successfully!");
+        } catch (error) {
+          console.error("❌ Error actualizando family user:", error);
+          setErrormsj("Error updating family user");
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    updateFamilyUser();
+  }, [UpdateFamilyUser, docId, db]);
 
   // useEffect(() => {
   //   const updateUserProfile = async () => {
@@ -180,7 +227,8 @@ const UpdateUserProfileProvider = ({ children }) => {
         setUpdateUserData,
         setDocId,
         setFamilyUser,
-     
+        setUpdateFamilyUser,
+
         loading,
         successmsj,
         errormsj,
