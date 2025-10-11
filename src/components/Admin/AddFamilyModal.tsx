@@ -79,7 +79,7 @@ const AddFamilyModal: React.FC = () => {
     const location = useLocation();
     const user = location.state;
 
-    console.log("IN EDITON USER", user)
+ 
     const { categories } = useContext(getAllCategoriesContext)
     const { disciplines } = useContext(getAllDisciplinesContext)
     const { setDocId, setFamilyUser } = useContext(updateUserProfileContext)

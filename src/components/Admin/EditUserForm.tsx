@@ -1,6 +1,6 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
-import { Avatar, Box, Paper, Card, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
+import { Switch, FormControlLabel, Avatar, Box, Paper, Card, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -25,26 +25,6 @@ import EditFamilyModal from './EditFamilyModal';
 
 
 
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 0;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
-
-// function getStyles(name: string, discipline: readonly string[], theme: Theme) {
-//     return {
-//         fontWeight: discipline.includes(name)
-//             ? theme.typography.fontWeightMedium
-//             : theme.typography.fontWeightRegular,
-//     };
-// }
-
 interface SignUpFormValues {
 
     name: string,
@@ -59,6 +39,7 @@ interface SignUpFormValues {
     admin: boolean,
     disciplines: object,
     category: string,
+    full:boolean,
     blockade: boolean,
     familyGroup: object,
     applicationDate: Dayjs,
@@ -101,16 +82,20 @@ const EditUserForm: React.FC = () => {
     const location = useLocation();
     const user = location.state;
 
-    console.log("IN EDITON USER", user)
+    // console.log("IN EDITON USER", user)
     const { categories } = useContext(getAllCategoriesContext)
+    // console.log("CATEGORIES CONTEXT", categories)
     const { disciplines } = useContext(getAllDisciplinesContext)
-    const { setUpdateUserData, setDocId} = useContext(updateUserProfileContext)
+    const { setUpdateUserData, setDocId } = useContext(updateUserProfileContext)
     const { setUserConsent } = useContext(removeUserContext)
     const { setOpenAdd, setOpenEdit } = useContext(controlModalsContext)
 
     const [discipline, setDiscipline] = React.useState<string[]>([]);
     const [editMode, setEditMode] = React.useState<boolean>(false);
     const [lockUser, setLockUser] = React.useState<boolean>(user.blockade);
+
+    const [full, setFull] = useState<boolean>(user.full); // Estado del toggle
+    // const [familyGroup, setFamilyGroup] = useState(user.familyGroup || []);
 
 
     const handleOpenAdd = () => setOpenAdd((prevOpen: any) => !prevOpen);
@@ -122,7 +107,6 @@ const EditUserForm: React.FC = () => {
         .map((member: { name: any; lastName: any; }) => `${member.name} ${member.lastName}`)
         .join(", ");
 
-
     useEffect(() => {
         if (user && user.id) {
             setDocId(user.id)
@@ -131,6 +115,11 @@ const EditUserForm: React.FC = () => {
 
     const theme = useTheme();
     const navigate = useNavigate();
+
+    const handleToggleFull = () => {
+        setFull(prev => !prev);
+        console.log(full)
+    }
 
     const handleEditMode = () => {
         setEditMode(prevEditMode => !prevEditMode);
@@ -178,13 +167,15 @@ const EditUserForm: React.FC = () => {
 
             disciplines: discipline,
             category: values.category,
+            full:full,
             blockade: lockUser,
 
-            familyGroup: values.familyGroup,
+            familyGroup: user.familyGroup,
             applicationDate: values.applicationDate ? dayjs(values.applicationDate).toDate() : null,
 
         };
         setUpdateUserData(editedUser)
+      
         // setEditMode(false);
         console.log("SUBMITED USER", editedUser);
         // navigate("/home");
@@ -221,6 +212,7 @@ const EditUserForm: React.FC = () => {
                         admin: false,
                         disciplines: user.disciplines || {},
                         category: categories?.find((c: { name: string }) => c.name === user.category)?.name || "",
+                        full:user.full,
 
                         blockade: lockUser,
                         familyGroup: familyGroupNames || [],
@@ -606,14 +598,14 @@ const EditUserForm: React.FC = () => {
                                                         ))}
                                                     </Box>
                                                 )}
-                                                MenuProps={MenuProps}
+
                                             >
                                                 {disciplines?.length > 0 ? (
                                                     disciplines.map((item: any) => (
                                                         <MenuItem
                                                             key={item.id}
                                                             value={item.name}
-                                                            // style={getStyles(item.name, discipline, theme)}
+                                                        // style={getStyles(item.name, discipline, theme)}
                                                         >
                                                             <Checkbox checked={discipline.indexOf(item.name) > -1} />
                                                             {/* <ListItemText primary={item.name.charAt(0).toUpperCase() + item.name.slice(1).toLowerCase()} /> */}
@@ -635,7 +627,7 @@ const EditUserForm: React.FC = () => {
 
                                         <Grid size={12} >
                                             {/* CATEGORY */}
-                                            <FormControl fullWidth sx={{ mb: 0, mt: -0.8 }}>
+                                            {/* <FormControl fullWidth sx={{ mb: 0, mt: -0.8 }}>
                                                 <InputLabel
                                                     id="demo-simple-select-label"
                                                     shrink={true} // Forzar que el label esté siempre flotando
@@ -689,7 +681,28 @@ const EditUserForm: React.FC = () => {
                                                 ) : (
                                                     <span> &nbsp; </span>
                                                 )}
-                                            </FormControl>
+                                            </FormControl> */}
+
+                                            <Grid display="flex" alignItems="center" gap={2} sx={{ mt: -0.8, mb: 3 }}>
+                                                <FormControl fullWidth>
+                                                    <TextField
+                                                        label="Categoría"
+                                                        value={values.category + (full ? " - Pleno" : "")}
+                                                        slotProps={{
+                                                            htmlInput: {
+                                                                readOnly: true,
+                                                            }
+                                                        }}
+                                                    />
+                                                </FormControl>
+                                                <FormControlLabel
+                                                    disabled={!editMode}
+                                                    control={<Switch checked={full} onChange={handleToggleFull} />}
+                                                    label="Pleno"
+                                                />
+                                            </Grid>
+
+
                                             {/* EMAIL */}
                                             <TextField
                                                 disabled
@@ -733,7 +746,7 @@ const EditUserForm: React.FC = () => {
                                                 label="Grupo Familiar"
                                                 name="familyGroup"
                                                 autoComplete="familyGroup"
-                                                value={values.familyGroup}
+                                                value={familyGroupNames}
                                                 onChange={handleChange}
                                                 onBlur={handleBlur}
                                                 error={touched.email && Boolean(errors.email)}

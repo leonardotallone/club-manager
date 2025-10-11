@@ -22,6 +22,7 @@ interface User {
   category: object;
   blockade: boolean;
   admition: string;
+  full: boolean;
   groupHead: boolean;
   familyGroup: object;
 }
@@ -51,8 +52,6 @@ const SignUpProvider = ({ children }) => {
   useEffect(() => {
     if (acceptApplication && signUpUser) {
 
-
-
       const createUserAndAddDoc = async () => {
         setLoading(true);
         setSignUpSuccess("");
@@ -71,12 +70,12 @@ const SignUpProvider = ({ children }) => {
             contactNumber: signUpUser.contactNumber,
             avatarURL: signUpUser.avatarURL,
             gender: signUpUser.gender,
-
             email: signUpUser.email,
             admin: false,
             disciplines: signUpUser.disciplines,
             category: signUpUser.category,
             blockade: false,
+            full: signUpUser.full,
             admition: signUpUser.admition,
             familyGroup: signUpUser.familyGroup,
           };
@@ -88,7 +87,7 @@ const SignUpProvider = ({ children }) => {
         } catch (error: any) {
           setSignUpError(error.message || "Error creating user");
         } finally {
-
+          // Borrar la solicitud de registro después de 5 segundos de la colección "joinUp"
           const timeoutId = setTimeout(() => {
             const deleteDocAsync = async () => {
               try {
@@ -111,60 +110,60 @@ const SignUpProvider = ({ children }) => {
 
       createUserAndAddDoc();
     }
-  }, [signUpUser, auth, db]);
+  }, [signUpUser, auth, db, idForDeleteApplication]);
 
 
-useEffect(() => {
-  if (rejectApplication && signUpUser) {
-    setLoading(true);
+  useEffect(() => {
+    if (rejectApplication && signUpUser) {
+      setLoading(true);
 
-    let timeoutId: NodeJS.Timeout | null = null;
+      let timeoutId: NodeJS.Timeout | null = null;
 
-    const rejectedApplication = async () => {
-      try {
-        const userData = {
-          name: signUpUser.name,
-          lastName: signUpUser.lastName,
-          address: signUpUser.address,
-          birthDate: signUpUser.birthDate,
-          dni: signUpUser.dni,
-          contactNumber: signUpUser.contactNumber,
-          avatarURL: signUpUser.avatarURL,
-          gender: signUpUser.gender,
-          email: signUpUser.email,
-          admin: false,
-          disciplines: signUpUser.disciplines,
-          category: signUpUser.category,
-          blockade: false,
-          admition: "rejected",
-          familyGroup: signUpUser.familyGroup,
-        };
+      const rejectedApplication = async () => {
+        try {
+          const userData = {
+            name: signUpUser.name,
+            lastName: signUpUser.lastName,
+            address: signUpUser.address,
+            birthDate: signUpUser.birthDate,
+            dni: signUpUser.dni,
+            contactNumber: signUpUser.contactNumber,
+            avatarURL: signUpUser.avatarURL,
+            gender: signUpUser.gender,
+            email: signUpUser.email,
+            admin: false,
+            disciplines: signUpUser.disciplines,
+            category: signUpUser.category,
+            blockade: false,
+            admition: "rejected",
+            familyGroup: signUpUser.familyGroup,
+          };
 
-        await addDoc(collection(db, "rejectedApplications"), userData);
-      } catch (error: any) {
-        console.log(error.message || "Error rejecting user");
-      } finally {
-        timeoutId = setTimeout(async () => {
-          if (!idForDeleteApplication) return;
+          await addDoc(collection(db, "rejectedApplications"), userData);
+        } catch (error: any) {
+          console.log(error.message || "Error rejecting user");
+        } finally {
+          timeoutId = setTimeout(async () => {
+            if (!idForDeleteApplication) return;
 
-          const docRef = doc(db, "joinUp", idForDeleteApplication);
-          try {
-            await deleteDoc(docRef);
-          } catch (error: any) {
-            console.log(error.message || "An error occurred");
-          }
-        }, 5000);
-        setLoading(false);
-        setSignUpUser(null);
-        setRejectApplication(false);
-        return () => clearTimeout(timeoutId);
-      }
-    };
+            const docRef = doc(db, "joinUp", idForDeleteApplication);
+            try {
+              await deleteDoc(docRef);
+            } catch (error: any) {
+              console.log(error.message || "An error occurred");
+            }
+          }, 5000);
+          setLoading(false);
+          setSignUpUser(null);
+          setRejectApplication(false);
+          return () => clearTimeout(timeoutId);
+        }
+      };
 
-    rejectedApplication();
+      rejectedApplication();
 
-  }
-}, [rejectApplication, signUpUser, db, idForDeleteApplication]);
+    }
+  }, [rejectApplication, signUpUser, db, idForDeleteApplication]);
 
 
 

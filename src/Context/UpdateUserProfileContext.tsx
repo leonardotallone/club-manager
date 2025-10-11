@@ -111,8 +111,8 @@ const UpdateUserProfileProvider = ({ children }) => {
           );
 
 
-          console.log("UpdateFamilyUser:", UpdateFamilyUser);
-          console.log("Updated Family to upload:", updatedFamily);
+          console.log("FAMILIAR ACTUALIZADO:", UpdateFamilyUser);
+          console.log("FAMILIA COMPLETA ACTUALIZADA:", updatedFamily);
           // 3️⃣ Subimos el array actualizado a Firestore
           await updateDoc(userDocRef, { familyGroup: updatedFamily });
 

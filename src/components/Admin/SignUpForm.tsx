@@ -169,7 +169,7 @@ const SignUpForm: React.FC = () => {
 
             disciplines: [],
             category: values.category,
-            full: false,
+            full: values.full,
             blockade: false,
             admition: "admited",
             familyGroup: [],
@@ -177,7 +177,7 @@ const SignUpForm: React.FC = () => {
             applicationDate: values.applicationDate ? dayjs(values.applicationDate).toDate() : null,
         };
 
-        console.log("USER EN UI", user)
+        console.log("USUARIO A REGISTRAR", user)
         setSignUpUser(user)
         // navigate("/");
     };
