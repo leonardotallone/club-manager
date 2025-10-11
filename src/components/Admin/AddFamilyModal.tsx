@@ -1,6 +1,6 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { useLocation } from "react-router-dom";
-import { Modal, Avatar, Box, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
+import { Modal, FormControlLabel, Switch, Avatar, Box, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -36,6 +36,7 @@ interface AddFamilyFormValues {
     gender: string
     disciplines: object,
     category: string,
+    full: boolean,
     applicationDate: Dayjs,
 }
 
@@ -79,7 +80,7 @@ const AddFamilyModal: React.FC = () => {
     const location = useLocation();
     const user = location.state;
 
- 
+
     const { categories } = useContext(getAllCategoriesContext)
     const { disciplines } = useContext(getAllDisciplinesContext)
     const { setDocId, setFamilyUser } = useContext(updateUserProfileContext)
@@ -88,6 +89,8 @@ const AddFamilyModal: React.FC = () => {
     const [discipline, setDiscipline] = React.useState<string[]>([]);
     const [disciplineFamily, setDisciplineFamily] = React.useState<string[]>([]);
     const [editMode] = React.useState<boolean>(true);
+
+    const [full, setFull] = useState<boolean>(user.full); // Estado del toggle
 
     const handleOpenAdd = () => setOpenAdd((prevOpen: any) => !prevOpen);
 
@@ -106,6 +109,11 @@ const AddFamilyModal: React.FC = () => {
             setDiscipline(user.disciplines);
         }
     }, [user]);
+
+    const handleToggleFull = () => {
+        setFull(prev => !prev);
+        console.log(full)
+    }
 
     const handleFamilyDiscipline = (event: SelectChangeEvent<typeof discipline>) => {
         const {
@@ -128,6 +136,7 @@ const AddFamilyModal: React.FC = () => {
             gender: values.gender,
             disciplines: disciplineFamily,
             category: values.category,
+            full: full,
             applicationDate: values.applicationDate ? dayjs(values.applicationDate).toDate() : null,
         };
         setFamilyUser(familyUser)
@@ -156,13 +165,14 @@ const AddFamilyModal: React.FC = () => {
                         gender: "",
                         disciplines: {},
                         category: "",
+                        full: user.full,
                         applicationDate: dayjs(),
                     }}
 
                     validationSchema={validationSchemaFamily}
                     onSubmit={handleSubmitFamily}
                 >
-                    {({ handleChange, handleBlur, values, errors, touched, }) => (
+                    {({ handleChange, handleBlur, values, errors, touched, setFieldValue }) => (
                         <Form>
                             <Grid container columnSpacing={2} direction="row" size={12}>
 
@@ -262,7 +272,7 @@ const AddFamilyModal: React.FC = () => {
                                 {/* BIRTHDATE */}
                                 <LocalizationProvider dateAdapter={AdapterDayjs} >
                                     <DemoContainer components={['DatePicker']} sx={{ width: '100%' }} >
-                                        <DatePicker
+                                        {/* <DatePicker
                                             format="DD/MM/YYYY"
                                             sx={editMode ? {
                                                 width: '100%',
@@ -290,7 +300,42 @@ const AddFamilyModal: React.FC = () => {
                                             onChange={(newValue) => {
                                                 handleChange({ target: { name: 'birthDate', value: newValue } });
                                             }}
+                                        /> */}
+                                        <DatePicker
+                                            format="DD/MM/YYYY"
+                                            label="Fecha de Nacimiento"
+                                            value={values.birthDate}
+                                            onChange={(newValue) => {
+                                                handleChange({ target: { name: 'birthDate', value: newValue } });
+
+                                                if (newValue) {
+                                                    const today = dayjs();
+                                                    const age = today.diff(dayjs(newValue), 'year'); // calcula edad exacta
+
+                                                    // Definimos la categoría según edad
+                                                    const newCategory = age < 18 ? "Menor" : "Activo Adherente";
+
+                                                    // Actualizamos el campo 'category' en Formik
+                                                    setFieldValue("category", newCategory);
+                                                } else {
+                                                    setFieldValue("category", ""); // Si se borra la fecha, se limpia
+                                                }
+                                            }}
+                                            sx={editMode ? {
+                                                width: '100%',
+                                                "& .MuiInputLabel-root": {
+                                                    "&.Mui-focused": { color: "#b71c1c" },
+                                                },
+                                                "& .MuiOutlinedInput-root": {
+                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#b71c1c" },
+                                                    "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#b71c1c" },
+                                                },
+                                            } : {
+                                                width: '100%',
+                                                "& .MuiInputLabel-root": { color: "rgba(0, 0, 0, 0.38)" },
+                                            }}
                                         />
+
 
 
                                     </DemoContainer>
@@ -466,7 +511,7 @@ const AddFamilyModal: React.FC = () => {
                                 </FormControl>
 
                                 {/* CATEGORY */}
-                                <FormControl fullWidth variant="outlined" sx={{ mb: 0, mt: 4 }}>
+                                {/* <FormControl fullWidth variant="outlined" sx={{ mb: 0, mt: 4 }}>
                                     <InputLabel
                                         id="category-label"
                                         shrink={true}
@@ -510,7 +555,28 @@ const AddFamilyModal: React.FC = () => {
                                             <p>Cargando Categorias...</p>
                                         )}
                                     </Select>
-                                </FormControl>
+                                </FormControl> */}
+                                <Grid container size={12}>
+                                    <Grid display="flex" size={6} alignItems="center"  sx={{ mt: 3, mb: 0 }}>
+                                        <FormControl fullWidth>
+                                            <TextField
+                                                label="Categoría"
+                                                value={values.category + (full ? " - Pleno" : "")}
+                                                slotProps={{
+                                                    htmlInput: {
+                                                        readOnly: true,
+                                                    }
+                                                }}
+                                            />
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid display="flex" size={6} alignItems="center"  sx={{ mt: 3, mb: 0 }}>
+                                        <FormControlLabel
+                                            control={<Switch checked={full} onChange={handleToggleFull} />}
+                                            label="Pleno"
+                                        />
+                                    </Grid>
+                                </Grid>
 
                                 {/* BOTONES */}
                                 <Grid container size={12}>

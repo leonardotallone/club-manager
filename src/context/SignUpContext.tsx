@@ -8,6 +8,7 @@ import { getFirestore, collection, addDoc, deleteDoc, doc } from "firebase/fires
 export const signUpContext = createContext(null);
 
 interface User {
+  applicationDate: any;
   name: string;
   lastName: string;
   address: string;
@@ -25,6 +26,7 @@ interface User {
   full: boolean;
   groupHead: boolean;
   familyGroup: object;
+  applicationdate:Date;
 }
 
 const SignUpProvider = ({ children }) => {
@@ -41,9 +43,10 @@ const SignUpProvider = ({ children }) => {
   // console.log("USER ID CONTEXT", idForDeleteApplication)
   // console.log("USER EN CONTEXT", signUpUser)
   // console.log("ERROR CONTEXT", signUpError)
-  console.log("Rejected App", rejectApplication)
+  // console.log("Rejected App", rejectApplication)
   console.log("SIGNUP USER", signUpUser)
-  console.log("Loading ", loading)
+  console.log("ACCEPT APPLICATION", acceptApplication)
+
 
 
   const auth = FIREBASE_AUTH;
@@ -78,6 +81,7 @@ const SignUpProvider = ({ children }) => {
             full: signUpUser.full,
             admition: signUpUser.admition,
             familyGroup: signUpUser.familyGroup,
+            applicationDate:signUpUser.applicationDate,
           };
 
           // Agregar documento a Firestore
@@ -110,7 +114,7 @@ const SignUpProvider = ({ children }) => {
 
       createUserAndAddDoc();
     }
-  }, [signUpUser, auth, db, idForDeleteApplication]);
+  }, [signUpUser, auth, db, idForDeleteApplication, acceptApplication]);
 
 
   useEffect(() => {

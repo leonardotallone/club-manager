@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Modal, Box, Typography, Button, TextField, FormControl, InputLabel, Select, MenuItem, Chip, OutlinedInput, Checkbox, ListItemText } from "@mui/material";
+import { Modal, Box, FormControlLabel, Switch, Typography, Button, TextField, FormControl, InputLabel, Select, MenuItem, Chip, OutlinedInput, Checkbox, ListItemText } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -37,14 +37,16 @@ const ModalStyle = {
 const EditFamilyModal: React.FC = () => {
     const { categories } = useContext(getAllCategoriesContext);
     const { disciplines } = useContext(getAllDisciplinesContext);
-    const { setDocId, setUpdateFamilyUser } = useContext(updateUserProfileContext);
+    const { setDocId, setUpdateFamilyUser, setRemoveFamilyMember } = useContext(updateUserProfileContext);
     const { setUserConsent } = useContext(removeUserContext);
     const { openEdit, setOpenEdit } = useContext(controlModalsContext);
 
-    const theme = useTheme();
+    const location = useLocation();
+    const user = location.state;
 
     const [selectedMember, setSelectedMember] = useState<any>(null);
     const [disciplineFamily, setDisciplineFamily] = useState<string[]>([]);
+    const [full, setFull] = useState<boolean>(user.full); // Estado del toggle
 
     const handleCloseEdit = () => {
         setOpenEdit(false);
@@ -52,8 +54,8 @@ const EditFamilyModal: React.FC = () => {
         setDisciplineFamily([]);
     };
 
-    const location = useLocation();
-    const user = location.state;
+
+
 
     useEffect(() => {
         if (user && user.id) setDocId(user.id);
@@ -65,6 +67,16 @@ const EditFamilyModal: React.FC = () => {
             setDisciplineFamily([]);
         }
     }, [openEdit]);
+
+    const handleToggleFull = () => {
+        setFull(prev => !prev);
+        console.log(full)
+    }
+    const handleDeleteMember = () => {
+        setRemoveFamilyMember(selectedMember)
+    }
+
+
 
     return (
         <Modal open={openEdit} onClose={handleCloseEdit}>
@@ -165,9 +177,27 @@ const EditFamilyModal: React.FC = () => {
                                                 format="DD/MM/YYYY"
                                                 value={values.birthDate ? dayjs(values.birthDate) : null}
                                                 onChange={(newValue) => {
+                                                    if (!newValue) {
+                                                        setValues({ ...values, birthDate: null, category: "" });
+                                                        return;
+                                                    }
+
+                                                    const birthDate = dayjs(newValue);
+                                                    const today = dayjs();
+                                                    const age = today.diff(birthDate, "year");
+
+                                                    // Calculamos la categoría según la edad
+                                                    let category = "";
+                                                    if (age < 18) {
+                                                        category = "Menor";
+                                                    } else {
+                                                        category = "Activo adherente";
+                                                    }
+
                                                     setValues({
                                                         ...values,
-                                                        birthDate: newValue ? dayjs(newValue) : null,
+                                                        birthDate,
+                                                        category,
                                                     });
                                                 }}
                                                 slotProps={{
@@ -237,7 +267,7 @@ const EditFamilyModal: React.FC = () => {
                                             </Select>
                                         </FormControl>
 
-                                        <FormControl fullWidth sx={{ mt: 1 }}>
+                                        {/* <FormControl fullWidth sx={{ mt: 1 }}>
                                             <InputLabel id="category-label">Categoría</InputLabel>
                                             <Select
                                                 labelId="category-label"
@@ -249,17 +279,48 @@ const EditFamilyModal: React.FC = () => {
                                                     <MenuItem key={c.id} value={c.name}>{c.name}</MenuItem>
                                                 ))}
                                             </Select>
-                                        </FormControl>
+                                        </FormControl> */}
+                                        <Grid container size={12}>
+                                            <Grid display="flex" size={6} alignItems="center" sx={{ mt: 3, mb: 0 }}>
+                                                <FormControl fullWidth>
+                                                    <TextField
+                                                        label="Categoría"
+                                                        value={values.category + (full ? " - Pleno" : "")}
+                                                        slotProps={{
+                                                            htmlInput: {
+                                                                readOnly: true,
+                                                            }
+                                                        }}
+                                                    />
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid display="flex" size={6} alignItems="center" sx={{ mt: 3, mb: 0 }}>
+                                                <FormControlLabel
+                                                    control={<Switch checked={full} onChange={handleToggleFull} />}
+                                                    label="Pleno"
+                                                />
+                                            </Grid>
+                                        </Grid>
 
-                                        <Grid container spacing={2} sx={{ mt: 3 }}>
-                                            <Grid size={6}>
+                                        <Grid container spacing={1} sx={{ mt: 3 }}>
+                                            <Grid size={4}>
                                                 <Button fullWidth variant="contained" color="inherit" onClick={handleCloseEdit}>
                                                     CANCELAR
                                                 </Button>
                                             </Grid>
-                                            <Grid size={6}>
-                                                <Button type="submit" fullWidth variant="contained" sx={{ backgroundColor: "#b71c1c", "&:hover": { backgroundColor: "darkred" } }}>
-                                                    GUARDAR SOCIO
+                                            <Grid size={4}>
+                                                <Button
+                                                    fullWidth
+                                                    variant="contained"
+                                                    sx={{ backgroundColor: "#b71c1c", "&:hover": { backgroundColor: "darkred" } }}
+                                                    onClick={handleDeleteMember}
+                                                >
+                                                    ELIMINAR SOCIO
+                                                </Button>
+                                            </Grid>
+                                            <Grid size={4}>
+                                                <Button fullWidth type="submit" variant="contained" sx={{ backgroundColor: "#b71c1c", "&:hover": { backgroundColor: "darkred" } }}>
+                                                    GUARDAR CAMBIOS
                                                 </Button>
                                             </Grid>
                                         </Grid>

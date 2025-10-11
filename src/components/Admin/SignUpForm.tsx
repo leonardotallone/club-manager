@@ -32,33 +32,13 @@ import { getAllUsersContext } from "../../Context/GetAllUsersContext"
 import { signUpContext } from '../../Context/SignUpContext';
 
 
-
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 0;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
-
-function getStyles(name: string, discipline: readonly string[], theme: Theme) {
-    return {
-        fontWeight: discipline.includes(name)
-            ? theme.typography.fontWeightMedium
-            : theme.typography.fontWeightRegular,
-    };
-}
-
 interface SignUpFormValues {
 
     name: string;
     lastName: string;
     address: string;
     birthDate: Dayjs;
+    // applicationDate: Dayjs;
     dni: string;
     contactNumber: string;
     gender: string;
@@ -70,19 +50,8 @@ interface SignUpFormValues {
     admin: boolean;
     blockade: boolean;
     familyGroup: object;
-    applicationDate: Dayjs;
 }
 
-const initialState = {
-    nested_1: false,
-    nested_2: false,
-    nested_3: false,
-    nested_4: false,
-    nested_5: false,
-    nested_6: false,
-};
-
-const stateKeys = Object.keys(initialState);
 
 const SignUpForm: React.FC = () => {
 
@@ -95,8 +64,7 @@ const SignUpForm: React.FC = () => {
 
     const genders = ["Masculino", "Femenino", "Otro"]
 
-    const { type } = useParams();
-    const theme = useTheme();
+
     const navigate = useNavigate();
 
     const location = useLocation();
@@ -106,8 +74,6 @@ const SignUpForm: React.FC = () => {
     useEffect(() => {
         if (user) { setIdForDeleteApplication(user.id) }
     }, [user, setIdForDeleteApplication])
-
-
 
     // Validación con Yup
     // const validationSchema = Yup.object({
@@ -150,11 +116,11 @@ const SignUpForm: React.FC = () => {
     // });
 
     const handleSubmit = (
+
         values: SignUpFormValues,
-        formikHelpers: FormikHelpers<SignUpFormValues>
     ) => {
 
-        const user = {
+        const newUser = {
             name: values.name,
             lastName: values.lastName,
             address: values.address,
@@ -174,11 +140,11 @@ const SignUpForm: React.FC = () => {
             admition: "admited",
             familyGroup: [],
 
-            applicationDate: values.applicationDate ? dayjs(values.applicationDate).toDate() : null,
+            applicationDate: user.applicationDate 
         };
 
-        console.log("USUARIO A REGISTRAR", user)
-        setSignUpUser(user)
+        console.log("USUARIO A REGISTRAR", newUser)
+        setSignUpUser(newUser)
         // navigate("/");
     };
 
@@ -187,6 +153,7 @@ const SignUpForm: React.FC = () => {
 
         <Container maxWidth="xl"  >
             <Formik<SignUpFormValues>
+                enableReinitialize
                 initialValues={{
                     name: user.name,
                     lastName: user.lastName,
@@ -203,7 +170,9 @@ const SignUpForm: React.FC = () => {
                     category: user.category,
                     full: user.full,
                     familyGroup: user.familyGroup,
-                    applicationDate: user.applicationDate
+                    // applicationDate: user?.applicationDate?.seconds
+                    //     ? dayjs(new Date(user.applicationDate.seconds * 1000))
+                    //     : null,
                 }}
 
                 // validationSchema={validationSchema}
