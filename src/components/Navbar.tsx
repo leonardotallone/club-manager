@@ -15,6 +15,8 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import ClubSocial from "../assets/svg/ClubSocial.png"
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+
 import avatar from "../assets/backgroundImages/Background.jpg";
 
 import { signInUserContext } from '../Context/SignInUserContext';
@@ -24,16 +26,16 @@ import { FIREBASE_AUTH } from "../Firebase/Firebase";
 
 const pageAdmin = [
     { name: 'solicitudes', href: "/admin-applications" },
-    { name: 'alta de Socio', href: '/signup' },
+    // { name: 'alta de Socio', href: '/signup' },
     { name: 'usuarios', href: "/admin-users-list" },
     // { name: 'Alta Disciplinas', href: '/blog' },
     // { name: 'Documentos', href: '/blog' },
 ];
-const altaSocioOptions = [
-    { name: 'Individual', href: '/signup/unique' },
-    { name: 'Cabeza de Grupo', href: '/signup/grouphead' },
-    { name: 'Menor', href: '/signup/minor' },
-];
+// const altaSocioOptions = [
+//     { name: 'Individual', href: '/signup/unique' },
+//     { name: 'Cabeza de Grupo', href: '/signup/grouphead' },
+//     { name: 'Menor', href: '/signup/minor' },
+// ];
 const pageUsers = [
     { name: 'Noticias', href: "/noticias" },
     { name: 'El Club', href: '/elclub' },
@@ -52,10 +54,10 @@ const Navbar = () => {
 
 
     let pagesToMap = pageUsers;
-if (loguedUserInformation) {
-  pagesToMap = loguedUserInformation.admin === true ? pageAdmin : pageUsers;
-}
-   
+    if (loguedUserInformation) {
+        pagesToMap = loguedUserInformation.admin === true ? pageAdmin : pageUsers;
+    }
+
     const navigate = useNavigate();
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -170,7 +172,7 @@ if (loguedUserInformation) {
                                         open={Boolean(anchorElAltaSocio)}
                                         onClose={handleCloseAltaSocio}
                                     >
-                                        {altaSocioOptions.map((option) => (
+                                        {/* {altaSocioOptions.map((option) => (
                                             <MenuItem
                                                 key={option.name}
                                                 onClick={handleCloseAltaSocio}
@@ -179,7 +181,7 @@ if (loguedUserInformation) {
                                             >
                                                 {option.name}
                                             </MenuItem>
-                                        ))}
+                                        ))} */}
                                     </Menu>
                                 </div>
                             ) : (
@@ -204,13 +206,20 @@ if (loguedUserInformation) {
                                 {loguedUserInformation.admin === false ? `${loguedUserInformation.name} ${loguedUserInformation.lastName}` : null}
                             </Typography>
                             <IconButton onClick={handleLogOut} >
-                                <LogoutOutlinedIcon sx={{ display: { xs: 'flex', md: 'flex', color: '#424242' }, mr: 1.5 }} />
+                                <LogoutOutlinedIcon sx={{ display: { xs: 'flex', md: 'flex', color: '#424242' }, mr: 0 }} />
+                            </IconButton>
+                            <IconButton
+                                onClick={() => navigate(`/edit-user/${loguedUserInformation}`, { state: loguedUserInformation })}
+                            >
+                                <SettingsOutlinedIcon sx={{ display: { xs: 'flex', md: 'flex', color: '#424242' }, mr: 0 }} />
+
                             </IconButton>
                             <Tooltip title={loguedUserInformation?.email}>
                                 <IconButton onClick={handleOpenUserMenu} >
                                     <Avatar alt="Remy Sharp" src={avatar} />
                                 </IconButton>
                             </Tooltip>
+
                         </Box> : null}
 
                 </Toolbar>

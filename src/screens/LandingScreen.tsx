@@ -36,22 +36,20 @@ const LandingScreen = () => {
       <Navbar />
       <Grid container >
         <Grid
-          container
-          sx={{
-            width: '100%',
-            height: "auto",
-            display: 'flex',
-            // backgroundImage: 'url("https://cdn.pixabay.com/photo/2023/04/17/10/31/tennis-7932066_1280.jpg")', // Path to your image
-            // backgroundImage: `url(${Background})`,
-            backgroundColor: "#eeeeee",
-            backgroundSize: 'cover', // Cover the entire area
-            backgroundPosition: 'center', // Center the image
+          
+          // sx={{
+          //   width: '100%',
+          //   height: "auto",
+          //   display: 'flex',
+          //   backgroundColor: "#eeeeee",
+          //   backgroundSize: 'cover', // Cover the entire area
+          //   backgroundPosition: 'center', // Center the image
 
-            // Hace creecer el Grid al maximo de la pantalla
-            flexDirection: 'column', // Apila los elementos en columna
-            minHeight: '100vh', // Altura mínima de toda la pantalla
+          //   // Hace creecer el Grid al maximo de la pantalla
+          //   flexDirection: 'column', // Apila los elementos en columna
+          //   minHeight: '100vh', // Altura mínima de toda la pantalla
 
-          }}
+          // }}
         >
           <Container maxWidth="xl" sx={{
             flexGrow: 1, // Empuja el Footer al final
@@ -86,6 +84,51 @@ const LandingScreen = () => {
             </Grid>
           </Container>
 
+
+
+
+
+          <>
+            {/* Primer Parallax */}
+            <Box
+              sx={{
+                height: '500px',
+                backgroundImage: `url(https://images.pexels.com/photos/8688170/pexels-photo-8688170.jpeg?cs=srgb&dl=pexels-kindelmedia-8688170.jpg&fm=jpg)`,
+                backgroundAttachment: 'fixed',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'cover',
+              }}
+            />
+
+            {/* Sección de contenido */}
+            <Container sx={{ py: 8, backgroundColor: 'white' }}>
+              <Typography variant="h2" gutterBottom>
+                Parallax
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                Parallax is an effect where the background content or image, in this case,
+                is moved at a different speed than the foreground content while scrolling.
+              </Typography>
+            </Container>
+
+            {/* Segundo Parallax */}
+            <Box
+              sx={{
+                height: '500px',
+                backgroundImage: `url(https://images.hdqwalls.com/wallpapers/football-ground-sun-rays-4k-ev.jpg)`,
+                backgroundAttachment: 'fixed',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'cover',
+              }}
+            />
+          </>
+
+
+
+
+
           <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12 }} sx={{ mt: 2 }}>
             <Advertising />
           </Grid>
@@ -93,24 +136,24 @@ const LandingScreen = () => {
             <Footer />
           </Grid>
 
-          {loading 
-          // || loadingJU 
-          ? (
-            <Box sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              height: '100%',
-              width: '100%',
-              backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semitransparente
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              zIndex: 20, // Asegura que esté por encima de otros elementos
-            }}>
-              <CircularProgress color="inherit" />
-            </Box>
-          ) : null}
+          {loading
+            // || loadingJU 
+            ? (
+              <Box sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                height: '100%',
+                width: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semitransparente
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                zIndex: 20, // Asegura que esté por encima de otros elementos
+              }}>
+                <CircularProgress color="inherit" />
+              </Box>
+            ) : null}
 
         </Grid>
 

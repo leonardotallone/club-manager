@@ -23,8 +23,13 @@ const RemoveUserProvider = ({ children }) => {
   const { loguedUser } = useContext(signInUserContext);
   const { loguedUserInformation } = useContext(getAllUsersContext);
 
-  // console.log("LOGUED USER INFORMATION IN CONTEXT", loguedUserInformation)
-  // console.log("LOGUED USER CONTEXT", loguedUser)
+
+  console.log("LOGUED USER INFORMATION IN CONTEXT", loguedUserInformation)
+  console.log("LOGUED USER CONTEXT", loguedUser)
+
+
+  const auth = FIREBASE_AUTH;
+  console.log("AUTH FUERA DEL UF", auth)
 
   const storage = getStorage()
 
@@ -34,11 +39,10 @@ const RemoveUserProvider = ({ children }) => {
       const deleteUserProfile = async () => {
         try {
           const db = getFirestore();
-          const avatarRef = ref(storage, `/Avatars/${loguedUserInformation.id}`);
+          // const avatarRef = ref(storage, `/Avatars/${loguedUserInformation.id}`);
+          // await deleteObject(avatarRef); // Delete Avatar Image form Storage
           await deleteDoc(doc(db, "users", loguedUserInformation.id)); // Delete User Profile Doc
-          await deleteObject(avatarRef); // Delete Avatar Image form Storage
           setRemoveUserProfile(true);
-          console.log("User profile deleted")
         } catch (error) {
           console.log(error.message);
         } finally {
@@ -54,14 +58,15 @@ const RemoveUserProvider = ({ children }) => {
       const deleteUser = async () => {
         try {
           const auth = FIREBASE_AUTH;
-          // await auth.signOut();
           const user = auth.currentUser;
           await user.delete(); // Delete the user from Firebase Authentication
+          await auth.signOut();
 
           setRemovedUserSuccess("Your account has been deleted");
           setUserConsent(false);
         } catch (error) {
-          setRemovedUserError(error.message);
+          console.log(error)
+          // setRemovedUserError(error.message);
         }
       };
       deleteUser();

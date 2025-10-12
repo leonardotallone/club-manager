@@ -1,7 +1,7 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { useContext } from "react";
 import LandingScreen from "./screens/LandingScreen";
-import JoinUpForm from "./screens/JoinUpScreen";
+import JoinUpScreen from "./screens/JoinUpScreen";
 
 import DashboardAdminScreen from "./screens/Admin/DashboardAdminScreen";
 import UsersListScreen from "./screens/Admin/UsersListScreen";
@@ -16,7 +16,6 @@ import EmailRecoverScreen from "./screens/EmailRecoverScreen";
 import DashboardUserScreen from "./screens/DashboardUserScreen";
 
 import { signInUserContext } from "./Context/SignInUserContext";
-import JoinUpScreen from "./screens/JoinUpScreen";
 
 function App() {
   const { setDecodedToken, accessToken } = useContext(signInUserContext);
@@ -30,7 +29,7 @@ function App() {
         <Route path="/admin-users-list" element={<UsersListScreen />} />
         <Route path="/admin-applications" element={<ApplicationsListScreen />} />
         <Route path="/admin-display-application/:user" element={<DisplayApplicationScreen />} />
-        {/* <Route path="/signup/:type" element={<SignUpScreen />} /> */}
+      
 
         <Route path="/joinup" element={<JoinUpScreen />} />
         <Route path="/edit-user/:user" element={<EditUserScreen />} />

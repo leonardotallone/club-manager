@@ -39,7 +39,7 @@ interface SignUpFormValues {
     admin: boolean,
     disciplines: object,
     category: string,
-    full:boolean,
+    full: boolean,
     blockade: boolean,
     familyGroup: object,
     applicationDate: Dayjs,
@@ -167,7 +167,7 @@ const EditUserForm: React.FC = () => {
 
             disciplines: discipline,
             category: values.category,
-            full:full,
+            full: full,
             blockade: lockUser,
 
             familyGroup: user.familyGroup,
@@ -175,7 +175,7 @@ const EditUserForm: React.FC = () => {
 
         };
         setUpdateUserData(editedUser)
-      
+
         // setEditMode(false);
         console.log("SUBMITED USER", editedUser);
         // navigate("/home");
@@ -212,7 +212,7 @@ const EditUserForm: React.FC = () => {
                         admin: false,
                         disciplines: user.disciplines || {},
                         category: categories?.find((c: { name: string }) => c.name === user.category)?.name || "",
-                        full:user.full,
+                        full: user.full,
 
                         blockade: lockUser,
                         familyGroup: familyGroupNames || [],
@@ -788,42 +788,44 @@ const EditUserForm: React.FC = () => {
                                         }}>
                                             SALIR SIN CAMBIOS
                                         </Button> :
-                                        <Button href="/admin-users-list" variant="contained" fullWidth sx={{
+                                        <Button href={user.admin === true ? "/admin-users-list" : "/user-dashboard"} variant="contained" fullWidth sx={{
                                             mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo gris
                                             '&:hover': {
                                                 backgroundColor: 'darkgrey', // Color al pasar el mouse
                                             },
                                         }}>
-                                            VOLVER A LISTA DE SOCIOS
+                                            {user.admin ? "VOLVER A LISTA DE SOCIOS" : "VOLVER A INICIO"}
+                                            
                                         </Button>}
                                 </Grid>
                                 <Grid container size={4}>
                                     <Grid size={6}>
-                                        {user.blockade === false ?
-                                            <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
-                                                mt: 3, mb: 0, backgroundColor: '#b71c1c', // Color de fondo gris
-                                                '&:hover': {
-                                                    backgroundColor: 'darkred', // Color al pasar el mouse
-                                                },
-                                            }}
-                                                onClick={handleLockUser}
-                                                disabled={!editMode}
-                                            >
-                                                BLOQUEAR SOCIO
-                                            </Button> :
-                                            <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
-                                                mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo gris
-                                                '&:hover': {
-                                                    backgroundColor: 'darkgrey', // Color al pasar el mouse
-                                                },
-                                            }}
-                                                onClick={handleLockUser}
-                                                disabled={!editMode}
-                                            >
-                                                DESBLOQUEAR SOCIO
-                                            </Button>}
+                                        {user.admin === true ? <>
+                                            {user.blockade === false ?
+                                                <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
+                                                    mt: 3, mb: 0, backgroundColor: '#b71c1c', // Color de fondo gris
+                                                    '&:hover': {
+                                                        backgroundColor: 'darkred', // Color al pasar el mouse
+                                                    },
+                                                }}
+                                                    onClick={handleLockUser}
+                                                    disabled={!editMode}
+                                                >
+                                                    BLOQUEAR SOCIO
+                                                </Button> :
+                                                <Button href="/dashboard-admin-screen" variant="contained" fullWidth sx={{
+                                                    mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo gris
+                                                    '&:hover': {
+                                                        backgroundColor: 'darkgrey', // Color al pasar el mouse
+                                                    },
+                                                }}
+                                                    onClick={handleLockUser}
+                                                    disabled={!editMode}
+                                                >
+                                                    DESBLOQUEAR SOCIO
+                                                </Button>}</> : null}
                                     </Grid>
-                                    {user.admin === true ?
+                                    {user.admin === false ?
                                         <Grid size={6}>
                                             <Button variant="contained" fullWidth sx={{
                                                 mt: 3, mb: 0, backgroundColor: '#b71c1c', // Color de fondo gris
