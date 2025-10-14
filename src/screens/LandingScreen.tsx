@@ -1,163 +1,280 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Box,
+  Modal,
+  Container,
+  Typography,
+  CircularProgress,
+  Fade,
+  Button,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import Grid from '@mui/material/Grid2';
-import CircularProgress from '@mui/material/CircularProgress';
-import { Box, Container, Typography } from "@mui/material";
-// import Background from "../assets/backgroundImages/Background.jpg"
-import Navbar from '../components/Navbar';
-import SignInForm from "../components/SignInForm";
+import { signInUserContext } from "../Context/SignInUserContext";
+import { getAllUsersContext } from "../Context/GetAllUsersContext";
+import { controlModalsContext } from "../Context/ControModalsContext";
+
+import Navbar from "../components/Navbar";
 import Advertising from "../components/Advertising";
 import Footer from "../components/Footer";
+import JoinUpForm from "../components/JoinUpForm";
 
-import { signInUserContext } from '../Context/SignInUserContext';
-// import { joinUpContext } from '../Context/JoinUpContext';
-import { getAllUsersContext } from '../Context/GetAllUsersContext';
 
 const LandingScreen = () => {
-
   const { loading } = useContext(signInUserContext);
-  // const { loadingJU } = useContext(joinUpContext);
   const { loguedUserInformation } = useContext(getAllUsersContext);
+  const { openJoinUp, setOpenJoinUp } = useContext(controlModalsContext)
 
-  console.log("Informacion de Usuario Conectado", loguedUserInformation)
 
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
-    if (loguedUserInformation && loguedUserInformation.admin === true) {
+    if (loguedUserInformation?.admin) {
       navigate("/dashboard-admin-screen");
-    } else if (loguedUserInformation && loguedUserInformation.admin === false) {
+    } else if (loguedUserInformation && !loguedUserInformation.admin) {
       navigate("/dashboard-user-screen");
     }
   }, [loguedUserInformation, navigate]);
 
+  const handleCloseJoinUp = () => {
+    setOpenJoinUp(false);
+  };
+
   return (
     <>
       <Navbar />
-      <Grid container >
-        <Grid
-          
-          // sx={{
-          //   width: '100%',
-          //   height: "auto",
-          //   display: 'flex',
-          //   backgroundColor: "#eeeeee",
-          //   backgroundSize: 'cover', // Cover the entire area
-          //   backgroundPosition: 'center', // Center the image
 
-          //   // Hace creecer el Grid al maximo de la pantalla
-          //   flexDirection: 'column', // Apila los elementos en columna
-          //   minHeight: '100vh', // Altura mínima de toda la pantalla
-
-          // }}
+      <Box sx={{ backgroundColor: "#f5f5f5" }}>
+        {/* 🟢 HERO SECTION */}
+        <Box
+          sx={{
+            minHeight: { xs: "100vh", md: "90vh" },
+            py: { xs: 6, md: 0 },
+            backgroundImage:
+              "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('https://wallpapers.com/images/hd/gym-background-3avpur3zeam79mrd.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: { xs: "center", md: "left" },
+          }}
         >
-          <Container maxWidth="xl" sx={{
-            flexGrow: 1, // Empuja el Footer al final
-            display: 'flex',
-            flexDirection: { xs: "column", sm: "column", md: "row", lg: "row", xl: "row" },
-            mt: 15,
-            mb: 5
-          }}>
-            <Grid size={{ xs: 12, sm: 10, md: 6, lg: 6 }} sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
+          <Container maxWidth="xl">
+            <Grid
+              container
+              spacing={4}
+              alignItems="center"
+              justifyContent="center"
+              direction={{ xs: "column", md: "row" }}
+            >
+              <Grid size={{ xs: 12, md: 6 }}>
+                <Fade in timeout={1000}>
+                  <Box>
+                    <Typography
+                      variant="h2"
+                      sx={{
+                        color: "white",
+                        fontWeight: 800,
+                        mb: 1,
+                        textShadow: "2px 2px 6px rgba(0,0,0,0.5)",
+                      }}
+                    >
+                      CLUB SOCIAL
+                    </Typography>
+                    <Typography
+                      sx={{
+                        typography: { xs: "body1", sm: "h6", md: "h5" },
+                        color: "rgba(255,255,255,0.85)",
+                        fontWeight: 400,
+                        mb: 3,
+                        maxWidth: { xs: "100%", md: "80%" },
+                        mx: { xs: "auto", md: 0 },
+                      }}
+                    >
+                      Conectá, compartí y gestioná tu comunidad con facilidad.
+                    </Typography>
+                    <Button
+                      variant="outlined"
+                      onClick={() => setOpenJoinUp(true)}
+                      sx={{
+                        borderColor: "#b71c1c",
+                        color: "white",
+                        px: 4,
+                        py: 1,
+                        fontWeight: 600,
+                        "&:hover": {
+                          backgroundColor: "#b71c1c",
+                          borderColor: "#b71c1c",
+                        },
+                      }}
+                    >
+                      QUIERO ASOCIARME
+                    </Button>
+                  </Box>
+                </Fade>
+              </Grid>
 
-              // justifyContent: { xs: "center", md: "flex-end", lg:"flex-end" },
-            }}>
-              <Box >
-                <Typography sx={{ fontSize: 48, color: 'grey.800', fontWeight: "800" }}>CLUB SOCIAL</Typography>
-                {/* <Typography sx={{  mt: -2,fontSize: 28, color: "white", fontWeight: "400"}}>de Junin</Typography> */}
-              </Box>
-              <Typography sx={{ mt: -1, fontSize: 16, color: 'grey.800', fontWeight: "450", justifyContent: { xs: "flex-start", md: "flex-start", lg: "flex-start", xl: "flex-start" } }}>Club Manager Solution</Typography>
-            </Grid>
-
-            <Grid size={{ xs: 12, sm: 10, md: 6, lg: 6 }} sx={{
-              display: 'flex',
-              justifyContent: 'flex-end', // Alinea el formulario a la derecha
-              alignItems: 'center',
-            }}>
-              {!loguedUserInformation ? <SignInForm /> : null}
-              
-
-
+              <Grid
+                size={{ xs: 12, md: 6 }}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  mt: { xs: 4, md: 0 },
+                }}
+              >
+                {/* <Fade in timeout={1200}>
+                  <Box sx={{ width: { xs: "100%", sm: 400 } }}>
+                    {!loguedUserInformation && <SignInForm />}
+                  </Box>
+                </Fade> */}
+              </Grid>
             </Grid>
           </Container>
+        </Box>
 
+        <Modal
+          open={openJoinUp}
+          onClose={handleCloseJoinUp}
+          closeAfterTransition
 
+          slotProps={{
+            backdrop: {
+              timeout: 2000, // duración de la animación del backdrop
+              style: { backdropFilter: "blur(3px)" }
+            }
+          }}
+        >
+          <Fade in={openJoinUp} timeout={{ enter: 2000, exit: 2000 }}>
+            <Box>
+              <JoinUpForm />
+            </Box>
+          </Fade>
+        </Modal>
 
+        {/* 🟠 PARALLAX 1 */}
+        <Box
+          sx={{
+            height: { xs: 250, sm: 350, md: 450 },
+            backgroundImage:
+              "linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(https://images.pexels.com/photos/8688170/pexels-photo-8688170.jpeg)",
+            backgroundAttachment: isMobile ? "scroll" : "fixed",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            px: 2,
+          }}
+        >
+          <Typography
+            variant="h4"
+            sx={{
+              color: "white",
+              fontWeight: 700,
+              textShadow: "2px 2px 6px rgba(0,0,0,0.5)",
+              textAlign: "center",
+              px: 2,
+            }}
+          >
+            Unidos por la pasión de compartir.
+          </Typography>
+        </Box>
 
+        {/* 🟣 CONTENT SECTION */}
+        <Container sx={{ py: { xs: 6, md: 10 }, textAlign: "center" }}>
+          <Typography
+            sx={{
+              typography: { xs: "h5", md: "h4" },
+              mb: 2,
+              fontWeight: 700,
+            }}
+          >
+            Club Manager Solution
+          </Typography>
+          <Typography
+            sx={{
+              typography: { xs: "body2", md: "body1" },
+              mb: 4,
+              color: "text.secondary",
+              maxWidth: 700,
+              mx: "auto",
+            }}
+          >
+            Una plataforma diseñada para administrar tu comunidad, eventos,
+            membresías y experiencias en un solo lugar.
+          </Typography>
+          <Button
+            variant="contained"
+            size="large"
+            sx={{
+              backgroundColor: "#b71c1c",
+              "&:hover": { backgroundColor: "darkred" },
+            }}
+            onClick={() => { setOpenJoinUp(true) }}
+          >
+            Descubrí más
+          </Button>
+        </Container>
 
-          <>
-            {/* Primer Parallax */}
-            <Box
-              sx={{
-                height: '500px',
-                backgroundImage: `url(https://images.pexels.com/photos/8688170/pexels-photo-8688170.jpeg?cs=srgb&dl=pexels-kindelmedia-8688170.jpg&fm=jpg)`,
-                backgroundAttachment: 'fixed',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'cover',
-              }}
-            />
+        {/* 🔵 PARALLAX 2 */}
+        <Box
+          sx={{
+            height: { xs: 250, sm: 350, md: 450 },
+            backgroundImage:
+              "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(https://img.freepik.com/premium-photo/boy-swimming-pool-with-sunny-skies-clear-water_1072437-11958.jpg)",
+            backgroundAttachment: isMobile ? "scroll" : "fixed",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            px: 2,
+          }}
+        >
+          <Typography
+            variant="h4"
+            sx={{
+              color: "white",
+              fontWeight: 700,
+              textShadow: "2px 2px 6px rgba(0,0,0,0.5)",
+              textAlign: "center",
+            }}
+          >
+            Donde la comunidad se convierte en familia.
+          </Typography>
+        </Box>
 
-            {/* Sección de contenido */}
-            <Container sx={{ py: 8, backgroundColor: 'white' }}>
-              <Typography variant="h2" gutterBottom>
-                Parallax
-              </Typography>
-              <Typography variant="body1" color="text.secondary">
-                Parallax is an effect where the background content or image, in this case,
-                is moved at a different speed than the foreground content while scrolling.
-              </Typography>
-            </Container>
+        <Advertising />
+        <Footer />
 
-            {/* Segundo Parallax */}
-            <Box
-              sx={{
-                height: '500px',
-                backgroundImage: `url(https://images.hdqwalls.com/wallpapers/football-ground-sun-rays-4k-ev.jpg)`,
-                backgroundAttachment: 'fixed',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'cover',
-              }}
-            />
-          </>
-
-
-
-
-
-          <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12 }} sx={{ mt: 2 }}>
-            <Advertising />
-          </Grid>
-          <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12 }}>
-            <Footer />
-          </Grid>
-
-          {loading
-            // || loadingJU 
-            ? (
-              <Box sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                height: '100%',
-                width: '100%',
-                backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semitransparente
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                zIndex: 20, // Asegura que esté por encima de otros elementos
-              }}>
-                <CircularProgress color="inherit" />
-              </Box>
-            ) : null}
-
-        </Grid>
-
-      </Grid>
+        {/* ⚫ Loading Overlay */}
+        {loading && (
+          <Box
+            sx={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              height: "100%",
+              width: "100%",
+              backgroundColor: "rgba(0,0,0,0.5)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 20,
+            }}
+          >
+            <CircularProgress color="inherit" />
+          </Box>
+        )}
+      </Box>
     </>
   );
 };

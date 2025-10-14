@@ -7,8 +7,32 @@ const ControlModalsProvider = ({ children }) => {
     const [openAdd, setOpenAdd] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
 
+    const [openLogin, setOpenLogin] = useState(false)
+    const [openRecoverPassword, setOpenRecoverPassword] = useState(false)
+    const [openRecoverEmail, setOpenRecoverEmail] = useState(false)
+
+    const [openJoinUp, setOpenJoinUp] = useState(false);
+
+    console.log("OPEN RECOVER PASS", openRecoverPassword)
+
+
+
     return (
-        <controlModalsContext.Provider value={{ openAdd, openEdit, setOpenAdd, setOpenEdit }}>
+        <controlModalsContext.Provider value={{
+            openAdd,
+            openEdit,
+            openLogin,
+            openRecoverPassword,
+            openRecoverEmail,
+            openJoinUp,
+
+            setOpenLogin,
+            setOpenRecoverPassword,
+            setOpenRecoverEmail,
+            setOpenAdd,
+            setOpenEdit,
+            setOpenJoinUp
+        }}>
             {children}
         </controlModalsContext.Provider>
     );

@@ -1,41 +1,43 @@
 import * as React from 'react';
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
+import {
+    AppBar,
+    Box,
+    Toolbar,
+    IconButton,
+    Typography,
+    Menu,
+    Container,
+    Avatar,
+    Button,
+    Tooltip,
+    MenuItem,
+    Divider,
+    Modal,
+    useTheme,
+    Fade
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import ClubSocial from "../assets/svg/ClubSocial.png"
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-
+import ClubSocial from "../assets/svg/ClubSocial.png";
 import avatar from "../assets/backgroundImages/Background.jpg";
-
 import { signInUserContext } from '../Context/SignInUserContext';
 import { getAllUsersContext } from '../Context/GetAllUsersContext';
+import { controlModalsContext } from '../Context/ControModalsContext';
 import { signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "../Firebase/Firebase";
 
+import SignInForm from "../components/SignInForm";
+import PasswordRecoverForm from "../components/PasswordRecoverForm";
+import EmailRecoverForm from '../components/EmailRecoverForm';
+
 const pageAdmin = [
-    { name: 'solicitudes', href: "/admin-applications" },
-    // { name: 'alta de Socio', href: '/signup' },
-    { name: 'usuarios', href: "/admin-users-list" },
-    // { name: 'Alta Disciplinas', href: '/blog' },
-    // { name: 'Documentos', href: '/blog' },
+    { name: 'Solicitudes', href: "/admin-applications" },
+    { name: 'Usuarios', href: "/admin-users-list" },
 ];
-// const altaSocioOptions = [
-//     { name: 'Individual', href: '/signup/unique' },
-//     { name: 'Cabeza de Grupo', href: '/signup/grouphead' },
-//     { name: 'Menor', href: '/signup/minor' },
-// ];
+
 const pageUsers = [
     { name: 'Noticias', href: "/noticias" },
     { name: 'El Club', href: '/elclub' },
@@ -44,41 +46,25 @@ const pageUsers = [
 ];
 
 const Navbar = () => {
-
-    const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-    const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-    const [anchorElAltaSocio, setAnchorElAltaSocio] = React.useState<null | HTMLElement>(null);
+    const navigate = useNavigate();
+    const theme = useTheme();
 
     const { setLoguedUser } = useContext(signInUserContext);
     const { loguedUserInformation, setLoguedUserInformation } = useContext(getAllUsersContext);
+    const { openLogin, setOpenLogin, openRecoverPassword, setOpenRecoverPassword, openRecoverEmail, setOpenRecoverEmail } = useContext(controlModalsContext);
+
+    const [anchorNav, setAnchorNav] = useState<null | HTMLElement>(null);
+    const [anchorUser, setAnchorUser] = useState<null | HTMLElement>(null);
 
 
-    let pagesToMap = pageUsers;
-    if (loguedUserInformation) {
-        pagesToMap = loguedUserInformation.admin === true ? pageAdmin : pageUsers;
-    }
+    const isAdmin = loguedUserInformation?.admin === true;
+    const pagesToMap = isAdmin ? pageAdmin : pageUsers;
 
-    const navigate = useNavigate();
+    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorNav(event.currentTarget);
+    const handleCloseNavMenu = () => setAnchorNav(null);
 
-    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElNav(event.currentTarget);
-    };
-    const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElUser(event.currentTarget);
-    };
-    const handleOpenAltaSocio = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElAltaSocio(event.currentTarget);
-    };
-
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
-    };
-    const handleCloseUserMenu = () => {
-        setAnchorElUser(null);
-    };
-    const handleCloseAltaSocio = () => {
-        setAnchorElAltaSocio(null);
-    };
+    const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorUser(event.currentTarget);
+    const handleCloseUserMenu = () => setAnchorUser(null);
 
     const handleLogOut = () => {
         const auth = FIREBASE_AUTH;
@@ -89,143 +75,276 @@ const Navbar = () => {
                 localStorage.removeItem("LoguedUser");
                 navigate("/");
             })
-            .catch((error) => {
-                console.error("Error logOut:", error.message);
-            });
+            .catch((error) => console.error("Error logOut:", error.message));
+    };
+
+    const handleCloseLogin = () => {
+        setOpenLogin(false);
+    };
+    const handleClosePasswordRecover = () => {
+        setOpenRecoverPassword(false);
+    };
+    const handleCloseEmailRecover = () => {
+        setOpenRecoverEmail(false);
     };
 
     return (
-        <AppBar position="fixed" sx={{ backgroundColor: 'white' }}>
-            <Container maxWidth="xl">
-                <Toolbar disableGutters>
-                    <a href="/">
-                        <img src={ClubSocial} style={{ width: 45, height: 45 }} alt="Club Social" />
-                    </a>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="a"
-                        href="#app-bar-with-responsive-menu"
-                        sx={{
-                            mr: 2,
-                            ml: 2,
-                            display: { xs: 'none', md: 'flex' },
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            // letterSpacing: '.3rem',
-                            color: 'grey.800', // Cambia el color aquí
-                            textDecoration: 'none',
-                        }}
-                    >
-                        CLUB SOCIAL
-                    </Typography>
-                    {/*---------------------------------------------------------------------------------  Navbar Comprimida  --------------------------------------------------------------- */}
-                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton
-                            size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            onClick={handleOpenNavMenu}
-                            color="inherit"
-                        >
-                            <MenuIcon sx={{ color: 'grey.800' }} />
-                        </IconButton>
-                        <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorElNav}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'left',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'left',
-                            }}
-                            open={Boolean(anchorElNav)}
-                            onClose={handleCloseNavMenu}
-                            sx={{ display: { xs: 'block', md: 'none' } }}
-                        >
-                            {pagesToMap.map((page) => (
-                                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
-                                    <Typography sx={{ textAlign: 'center', color: 'grey.800' }}>{page.name}</Typography> {/* Cambia el color aquí */}
-                                </MenuItem>
-                            ))}
-                        </Menu>
-                    </Box>
+        <>
+            <AppBar
+                position="fixed"
+                sx={{
+                    // backgroundColor: "rgba(255,255,255,0.95)",
+                    // boxShadow: "0px 2px 10px rgba(0,0,0,0.05)",
+                    // backdropFilter: "blur(6px)",
+                    // zIndex: 1100,
 
-                    {/*--------------------------------------------------------------------------------- Menu Descomprimido  --------------------------------------------------------------- */}
+                    background: "rgba(255, 255, 255, 1)",  // 🔹 sutil transparencia
+                    backdropFilter: "blur(8px)",               // 🔹 desenfoque moderado
+                    WebkitBackdropFilter: "blur(8px)",         // 🔹 compatibilidad Safari
+                    // borderBottom: "1px solid rgba(255, 255, 255, 0.4)", // 🔹 leve brillo en borde inferior
+                    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.05)", // 🔹 sombra discreta
+                    transition: "background 0.3s ease, backdrop-filter 0.3s ease", // 🔹 suavidad en scroll
+                    zIndex: 1100,
 
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {pagesToMap.map((page) => (
-                            page.name === 'alta de Socio' ? (
-                                <div key={page.name}>
-                                    <Button
-                                        onClick={handleOpenAltaSocio}
-                                        sx={{ my: 2, color: 'grey.800', display: 'block' }}
+
+
+
+                }}
+            >
+                <Container maxWidth="xl">
+                    <Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
+
+                        {/* ---------- LOGO + TÍTULO ---------- */}
+                        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => navigate('/')}>
+                            <Box
+                                component="img"
+                                src={ClubSocial}
+                                alt="Club Social"
+                                sx={{ width: 45, height: 45, mr: 2 }}
+                            />
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    display: { xs: 'none', md: 'block' },
+                                    fontWeight: 700,
+                                    color: theme.palette.grey[800],
+                                    letterSpacing: 0.5,
+                                }}
+                            >
+                                CLUB SOCIAL
+                            </Typography>
+                        </Box>
+
+                        {/* ---------- MENÚ MOBILE ---------- */}
+                        <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                            <IconButton
+                                size="large"
+                                onClick={handleOpenNavMenu}
+                                sx={{ color: theme.palette.grey[800] }}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                            <Menu
+                                anchorEl={anchorNav}
+                                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                                open={Boolean(anchorNav)}
+                                onClose={handleCloseNavMenu}
+                                sx={{ display: { xs: 'block', md: 'none' } }}
+                            >
+                                {pagesToMap.map((page) => (
+                                    <MenuItem
+                                        key={page.name}
+                                        onClick={() => { navigate(page.href); handleCloseNavMenu(); }}
+                                        sx={{
+                                            mx: 1,
+                                            color: theme.palette.grey[800],
+                                            fontWeight: 500,
+                                            fontSize: "0.85rem", // 🔹 igual que los botones
+                                            textTransform: 'none',
+                                            letterSpacing: 0.3,
+                                            justifyContent: 'center',
+                                            fontFamily: theme.typography.fontFamily,
+                                            '&:hover': { color: '#b71c1c' },
+                                        }}
                                     >
                                         {page.name}
-                                    </Button>
-                                    <Menu
-                                        anchorEl={anchorElAltaSocio}
-                                        open={Boolean(anchorElAltaSocio)}
-                                        onClose={handleCloseAltaSocio}
-                                    >
-                                        {/* {altaSocioOptions.map((option) => (
-                                            <MenuItem
-                                                key={option.name}
-                                                onClick={handleCloseAltaSocio}
-                                                component="a"
-                                                href={option.href}
-                                            >
-                                                {option.name}
-                                            </MenuItem>
-                                        ))} */}
-                                    </Menu>
-                                </div>
-                            ) : (
+                                    </MenuItem>
+                                ))}
+                                {!loguedUserInformation && (
+                                    <>
+                                        <Divider />
+                                        <MenuItem
+                                            onClick={() => { setOpenLogin(true); handleCloseNavMenu(); }}
+                                            sx={{
+                                                mx: 1,
+                                                color: theme.palette.grey[800],
+                                                fontWeight: 500,
+                                                fontSize: "0.85rem", // 🔹 igual que los botones
+                                                textTransform: 'none',
+                                                letterSpacing: 0.3,
+                                                justifyContent: 'center',
+                                                fontFamily: theme.typography.fontFamily,
+                                                '&:hover': { color: '#b71c1c' },
+                                            }}
+                                        >
+                                            Iniciar sesión
+                                        </MenuItem>
+                                    </>
+                                )}
+                            </Menu>
+                        </Box>
+
+                        {/* ---------- MENÚ DESKTOP ---------- */}
+                        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
+                            {pagesToMap.map((page) => (
                                 <Button
                                     key={page.name}
-                                    href={page.href}
-                                    onClick={handleCloseNavMenu}
-                                    sx={{ my: 2, color: 'grey.800', display: 'block' }}
+                                    onClick={() => navigate(page.href)}
+                                    sx={{
+                                        mx: 1,
+                                        color: theme.palette.grey[800],
+                                        fontWeight: 500,
+                                        textTransform: 'none',
+                                        '&:hover': { color: '#b71c1c' },
+                                    }}
                                 >
                                     {page.name}
                                 </Button>
-                            )
-                        ))}
+                            ))}
+                        </Box>
+
+                        {/* ---------- USUARIO LOGUEADO o BOTONES ---------- */}
+                        {loguedUserInformation ? (
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Typography sx={{ fontSize: 14, fontWeight: 500, color: '#424242', mr: 2 }}>
+                                    {isAdmin ? "Administrador" : `${loguedUserInformation.name} ${loguedUserInformation.lastName}`}
+                                </Typography>
+
+                                <Tooltip title="Configuración">
+                                    <IconButton
+                                        onClick={() => navigate(`/edit-user/${loguedUserInformation.id}`, { state: loguedUserInformation })}
+                                        sx={{ color: '#424242' }}
+                                    >
+                                        <SettingsOutlinedIcon />
+                                    </IconButton>
+                                </Tooltip>
+
+                                <Tooltip title="Cerrar sesión">
+                                    <IconButton onClick={handleLogOut} sx={{ color: '#424242' }}>
+                                        <LogoutOutlinedIcon />
+                                    </IconButton>
+                                </Tooltip>
+
+                                <Tooltip title={loguedUserInformation?.email}>
+                                    <IconButton onClick={handleOpenUserMenu}>
+                                        <Avatar alt="Usuario" src={avatar} />
+                                    </IconButton>
+                                </Tooltip>
+
+                                <Menu
+                                    anchorEl={anchorUser}
+                                    open={Boolean(anchorUser)}
+                                    onClose={handleCloseUserMenu}
+                                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                                >
+                                    <MenuItem disabled>
+                                        <Typography variant="body2">{loguedUserInformation?.email}</Typography>
+                                    </MenuItem>
+                                    <Divider />
+                                    <MenuItem onClick={() => navigate(`/edit-user/${loguedUserInformation.id}`)}>
+                                        Configuración
+                                    </MenuItem>
+                                    <MenuItem onClick={handleLogOut}>Cerrar sesión</MenuItem>
+                                </Menu>
+                            </Box>
+                        ) : (
+                            // ---------- VISITANTE (no logueado) ----------
+                            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                                <Button
+                                    variant="text"
+                                    sx={{
+                                        color: theme.palette.grey[800],
+                                        textTransform: 'none',
+                                        '&:hover': { color: '#b71c1c' },
+                                    }}
+                                    onClick={() => setOpenLogin(true)}
+                                >
+                                    Iniciar sesión
+                                </Button>
+                            </Box>
+                        )}
+                    </Toolbar>
+                </Container>
+            </AppBar>
+
+            {/* ---------- MODAL LOGIN ---------- */}
+            <Modal
+                open={openLogin}
+                onClose={handleCloseLogin}
+                closeAfterTransition
+
+                slotProps={{
+                    backdrop: {
+                        timeout: 2000, // duración de la animación del backdrop
+                        style: { backdropFilter: "blur(3px)" }
+                    }
+                }}
+            >
+                <Fade in={openLogin} timeout={{ enter: 2000, exit: 2000 }}>
+                    <Box>
+                        <SignInForm />
                     </Box>
+                </Fade>
+            </Modal>
 
+            {/* ---------- MODAL PASSWORD RECOVER ---------- */}
+            <Modal
+                open={openRecoverPassword}
+                onClose={handleClosePasswordRecover}
+                closeAfterTransition
 
-                    {/*---------------------------------------------------------------------------------  Margen Derecho si hay usuario Conectado  --------------------------------------------------------------- */}
-                    {loguedUserInformation ?
-                        <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
-                            <Typography sx={{ fontSize: 14, fontWeight: "500", color: "#424242", mr: 1.5 }} >
-                                {loguedUserInformation.admin === true ? "Bienvenido Admin" : null}
-                                {loguedUserInformation.admin === false ? `${loguedUserInformation.name} ${loguedUserInformation.lastName}` : null}
-                            </Typography>
-                            <IconButton onClick={handleLogOut} >
-                                <LogoutOutlinedIcon sx={{ display: { xs: 'flex', md: 'flex', color: '#424242' }, mr: 0 }} />
-                            </IconButton>
-                            <IconButton
-                                onClick={() => navigate(`/edit-user/${loguedUserInformation}`, { state: loguedUserInformation })}
-                            >
-                                <SettingsOutlinedIcon sx={{ display: { xs: 'flex', md: 'flex', color: '#424242' }, mr: 0 }} />
+                slotProps={{
+                    backdrop: {
+                        timeout: 2000, // duración de la animación del backdrop
+                        style: { backdropFilter: "blur(3px)" }
+                    }
+                }}
+            >
+                <Fade in={openRecoverPassword} timeout={{ enter: 2000, exit: 2000 }}>
+                    <Box>
+                        <PasswordRecoverForm />
+                    </Box>
+                </Fade>
+            </Modal>
 
-                            </IconButton>
-                            <Tooltip title={loguedUserInformation?.email}>
-                                <IconButton onClick={handleOpenUserMenu} >
-                                    <Avatar alt="Remy Sharp" src={avatar} />
-                                </IconButton>
-                            </Tooltip>
+            {/* ---------- MODAL RECOVER EMAIL---------- */}
+            <Modal
+                open={openRecoverEmail}
+                onClose={handleCloseEmailRecover}
+                closeAfterTransition
 
-                        </Box> : null}
+                slotProps={{
+                    backdrop: {
+                        timeout: 2000, // duración de la animación del backdrop
+                        style: { backdropFilter: "blur(3px)" }
+                    }
+                }}
+            >
+                <Fade in={openRecoverEmail} timeout={{ enter: 2000, exit: 2000 }}>
+                    <Box>
+                        <EmailRecoverForm />
+                    </Box>
+                </Fade>
+            </Modal>
 
-                </Toolbar>
-            </Container>
-        </AppBar>
+        </>
     );
-}
+};
 
 export default Navbar;
+
+
+
+

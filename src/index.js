@@ -15,6 +15,8 @@ import GetAllJoinUpProvider from "./Context/GetAllJoinUpContext";
 import UpdateUserProfileProvider from "./Context/UpdateUserProfileContext";
 import RemoveUserProvider from "./Context/RemoveUserContext";
 
+import RecoverUserProvider from "./Context/RecoverUserContext";
+
 import SignedUserProvider from "./Context/SignedUserContext";
 import RecoverPasswordProvider from "./Context/RecoverPasswordContext";
 import NewPasswordProvider from "./Context/NewPasswordContext";
@@ -37,7 +39,7 @@ root.render(
         <GetAllJoinUpProvider>
           <RecoverPasswordProvider>
             <NewPasswordProvider>
-              {/* <RecoverUserProvider> */}
+              <RecoverUserProvider>
               <SignedUserProvider>
                 <SignUpProvider>
                   <JoinUpProvider>
@@ -57,7 +59,7 @@ root.render(
                   </JoinUpProvider>
                 </SignUpProvider>
               </SignedUserProvider>
-              {/* </RecoverUserProvider> */}
+              </RecoverUserProvider>
             </NewPasswordProvider>
           </RecoverPasswordProvider>
         </GetAllJoinUpProvider>
