@@ -1,211 +1,177 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Grid from '@mui/material/Grid2';
-import { Box, Container, Typography, Button } from "@mui/material";
-
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Footer from '../../components/Footer';
-import Advertising from '../../components/Advertising';
-
-import Avatar from '@mui/material/Avatar';
-
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import avatar1 from "../../assets/avatars/1.jpg";
-import avatar2 from "../../assets/avatars/2.jpg";
-import avatar3 from "../../assets/avatars/3.jpg";
-import avatar4 from "../../assets/avatars/4.jpg";
-
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  Avatar,
+  Stack,
+  Divider,
+  useMediaQuery,
+  Pagination,
+} from '@mui/material';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import ManOutlinedIcon from '@mui/icons-material/ManOutlined';
 import FamilyRestroomOutlinedIcon from '@mui/icons-material/FamilyRestroomOutlined';
-import Pagination from '@mui/material/Pagination';
-
 import { getAllUsersContext } from '../../Context/GetAllUsersContext';
 
-
 const UsersList = () => {
+  const { allUsers } = useContext(getAllUsersContext);
+  const navigate = useNavigate();
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
 
-    const { allUsers } = useContext(getAllUsersContext);
+  // simulamos paginación simple (más adelante se puede integrar backend)
+  const usersPerPage = 25;
+  const [page, setPage] = React.useState(1);
+  const startIndex = (page - 1) * usersPerPage;
+  const endIndex = startIndex + usersPerPage;
+  const displayedUsers = allUsers?.slice(startIndex, endIndex) || [];
 
-    console.log(allUsers)
+  return (
+    <Container maxWidth="xl" sx={{ mt: 3, mb: 4 }}>
+      <Typography
+        variant="h6"
+        sx={{
+          mb: 2,
+          fontWeight: 600,
+          color: '#444',
+          textAlign: { xs: 'center', sm: 'left' },
+        }}
+      >
+        Lista de Usuarios
+      </Typography>
 
-    const navigate = useNavigate();
+      {/* Encabezado de columnas */}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          px: 1.5,
+          py: 1,
+          color: '#888',
+          fontSize: 12,
+          borderBottom: '1px solid #e0e0e0',
+          fontWeight: 600,
+        }}
+      >
+        <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>Usuario</Box>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            minWidth: isSmallScreen ? 100 : 200,
+          }}
+        >
+          Estado / Grupo / Acciones
+        </Box>
+      </Box>
 
-    return (
-        <>
+      {/* Lista plana */}
+      <Stack spacing={0} sx={{ width: '100%' }}>
+        {displayedUsers.map((user: any, index: number) => (
+          <Box
+            key={index}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%',
+              py: 1,
+              px: 1.5,
+              borderBottom: '1px solid #f0f0f0',
+              minHeight: 48,
+              transition: 'background-color 0.15s ease',
+              '&:hover': {
+                backgroundColor: '#fafafa',
+              },
+            }}
+          >
+            {/* Avatar + nombre + DNI */}
+            <Stack direction="row" spacing={2} alignItems="center" sx={{ flex: 1 }}>
+              <Avatar src={user.avatarURL} sx={{ width: 34, height: 34 }} />
+              <Box sx={{ overflow: 'hidden' }}>
+                <Typography
+                  sx={{
+                    fontSize: 13,
+                    fontWeight: 600,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {user.lastName} {user.name}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: 11.5,
+                    color: '#777',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  DNI: {user.dni}
+                </Typography>
+              </Box>
+            </Stack>
 
-
-            <Box
-                sx={{
-                    mb: 3,
-                    // position: "fixed", // Asegura que ocupe toda la pantalla
-                    width: '100%', // Asegura que tome todo el ancho del viewport
-
-
-                }}
+            {/* Íconos o acciones */}
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={isSmallScreen ? 1 : 2}
+              sx={{
+                flexShrink: 0,
+                justifyContent: 'flex-end',
+                minWidth: isSmallScreen ? 100 : 200,
+              }}
             >
-                <Container maxWidth="xl">
-                    {/* <Grid container direction="column">
-                        <Grid size={{ xs: 6, sm: 6, md: 6, lg: 12 }} >
-                            <Typography
-                                sx={{
-                                    // fontFamily: 'monospace',
-                                    // bgcolor:"red",
-                                    fontWeight: 600,
-                                    fontSize: 16,
-                                    color: 'grey', // Cambia el color aquí
-                                    textDecoration: 'none',
-                                }}
-                            >
-                                Ordenar Usuarios
-                            </Typography>
+              {user.blockade ? (
+                <LockOutlinedIcon sx={{ color: 'red', fontSize: 18 }} />
+              ) : (
+                <LockOpenIcon sx={{ color: 'green', fontSize: 18 }} />
+              )}
 
-                        </Grid>
-                        <Grid size={{ xs: 6, sm: 6, md: 6, lg: 2 }} >
-                            <FormControl fullWidth sx={{ mt: 2 }}>
-                                <InputLabel id="demo-simple-select-label">Categoria</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={selectedCategory}
-                                    onChange={(event) => setSelectedCategory(event.target.value)}
-                                    label="Categoria"
-                                >
-                                    {category.map((cat) => (
-                                        <MenuItem key={cat} value={cat}>
-                                            {cat}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
+              {user.familyGroup.length === 0 ? (
+                <ManOutlinedIcon sx={{ color: '#666', fontSize: 18 }} />
+              ) : (
+                <FamilyRestroomOutlinedIcon sx={{ color: '#666', fontSize: 18 }} />
+              )}
 
-                            </FormControl>
-                        </Grid>
-                    </Grid> */}
+              <Button
+                variant="text"
+                sx={{
+                  minWidth: 0,
+                  color: '#666',
+                  p: 0.5,
+                  '&:hover': { color: 'primary.main', background: 'transparent' },
+                }}
+                onClick={() => navigate(`/edit-user/${user}`, { state: user })}
+              >
+                <ModeEditOutlineOutlinedIcon sx={{ fontSize: 18 }} />
+              </Button>
+            </Stack>
+          </Box>
+        ))}
+      </Stack>
 
-
-
-                </Container>
-            </Box>
-
-            <Container maxWidth="xl">
-                <Grid container>
-                    {allUsers?.map((user: any, index: any) => (
-                        <Grid key={index} size={{ xs: 12, sm: 6, md: 6, lg: 12 }} sx={{ mb: 1.5 }}>
-                            <Box
-                                sx={{
-                                    bgcolor: "#eeeeee",
-                                    height: 65,
-                                    borderRadius: 2,
-                                    borderWidth: 1,
-                                    borderColor: "#ffab91",
-                                    borderStyle: 'solid',
-                                    width: '100%',
-                                    boxShadow: 2,
-                                    display: 'flex',
-                                    alignItems: 'center',
-
-                                }}
-                            >
-                                <Grid container sx={{ width: '100%' }} >
-                                    <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 0.7 }} sx={{ ml: 1 }}>
-                                        <Avatar alt="Avatar" src={user.avatarURL} sx={{ width: 50, height: 50 }} />
-                                    </Grid>
-                                    <Grid size={{ xs: 1.5, sm: 1.5, md: 1.5, lg: 1.5, xl: 2 }} direction="column">
-                                        <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
-                                            NOMBRE Y APELLIDO
-                                        </Typography>
-                                        <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                            {user.lastName} {user.name}
-                                        </Typography>
-                                    </Grid>
-
-                                    <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }} direction="column">
-                                        <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
-                                            DNI
-                                        </Typography>
-                                        <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                            {user.dni}
-                                        </Typography>
-                                    </Grid>
-
-                                    {/* <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }} direction="column">
-                                        <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
-                                            CATEGORIA
-                                        </Typography>
-                                        <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'black', textDecoration: 'none' }}>
-                                            {user.category}
-                                        </Typography>
-                                    </Grid> */}
-
-                                    <Grid size={{ xs: 1.5, sm: 1.5, md: 1.5, lg: 1.5, xl: 1.2 }} direction="column">
-                                        <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
-                                            BLOQUEAR USUARIO
-                                        </Typography>
-                                        {user.blockade === false ? <LockOpenIcon sx={{ fontSize: 24, color: 'Green', ml: 5 }} /> :
-                                            <LockOutlinedIcon sx={{ fontSize: 24, color: 'Red', ml: 5 }} />}
-                                    </Grid>
-
-                                    <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 0.7 }} direction="column">
-                                        {user.familyGroup.length === 0 ?
-                                            <>
-                                                <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none',ml:-1 }}>
-                                                    INDIVIDUO
-                                                </Typography>
-
-                                                <ManOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} />
-                                            </> : <>
-                                                <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
-                                                    GRUPO
-                                                </Typography>
-                                                <FamilyRestroomOutlinedIcon sx={{ fontSize: 24, color: "black", ml: 1 }} /></>
-                                        }
-                                    </Grid>
-                                    <Grid size={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1 }} direction="column" >
-                                        <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none' }}>
-                                            ESTADO DE CUENTA
-                                        </Typography>
-                                        {/* <Typography sx={{ fontWeight: 600, fontSize: 14, color: socio.countState === "Sin Deuda" ? 'Green' : 'Red', textDecoration: 'none' }}>
-                                            {socio.countState}
-                                        </Typography> */}
-                                    </Grid>
-                                    <Grid size={{ xs: 1, sm: 6, md: 6, lg: 4 }} direction="column" sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'flex-end',
-                                        justifyContent: 'center',
-                                        fontSize: 24,
-                                        color: 'black',
-
-                                    }}>
-                                        <Typography sx={{ fontWeight: 800, fontSize: 11, color: '#616161', textDecoration: 'none', mr: 1 }}>
-                                            EDITAR
-                                        </Typography>
-                                        <Button
-                                            startIcon={<ModeEditOutlineOutlinedIcon sx={{ fontSize: 24, color: "black", mr: -3 }} />}
-                                            onClick={() => navigate(`/edit-user/${user}`, { state: user })}
-                                        >
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                            </Box>
-                        </Grid>
-                    ))}
-                </Grid>
-                <Pagination count={10} variant="outlined" sx={{ mt: 1, display: 'flex', justifyContent: 'center' }} />
-            </Container>
-
-            <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12 }} sx={{ mt: 2 }}>
-                <Advertising />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12 }}>
-                <Footer />
-            </Grid>
-        </>
-    );
+      {/* Paginación */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+        <Pagination
+          count={Math.ceil(allUsers?.length / usersPerPage) || 1}
+          page={page}
+          onChange={(_, value) => setPage(value)}
+          variant="outlined"
+          size="small"
+        />
+      </Box>
+    </Container>
+  );
 };
 
 export default UsersList;
+
+

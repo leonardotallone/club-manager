@@ -39,27 +39,27 @@ root.render(
         <GetAllJoinUpProvider>
           <RecoverPasswordProvider>
             <NewPasswordProvider>
-              <RecoverUserProvider>
               <SignedUserProvider>
                 <SignUpProvider>
                   <JoinUpProvider>
                     <GetAllUsersProvider>
-                      <GetAllCategoriesProvider>
-                        <GetAllDisciplinesProvider>
-                          <ControlModalsProvider>
-                            <RemoveUserProvider>
-                              <UpdateUserProfileProvider>
-                                <App />
-                              </UpdateUserProfileProvider>
-                            </RemoveUserProvider>
-                          </ControlModalsProvider>
-                        </GetAllDisciplinesProvider>
-                      </GetAllCategoriesProvider>
+                      <RecoverUserProvider>
+                        <GetAllCategoriesProvider>
+                          <GetAllDisciplinesProvider>
+                            <ControlModalsProvider>
+                              <RemoveUserProvider>
+                                <UpdateUserProfileProvider>
+                                  <App />
+                                </UpdateUserProfileProvider>
+                              </RemoveUserProvider>
+                            </ControlModalsProvider>
+                          </GetAllDisciplinesProvider>
+                        </GetAllCategoriesProvider>
+                      </RecoverUserProvider>
                     </GetAllUsersProvider>
                   </JoinUpProvider>
                 </SignUpProvider>
               </SignedUserProvider>
-              </RecoverUserProvider>
             </NewPasswordProvider>
           </RecoverPasswordProvider>
         </GetAllJoinUpProvider>

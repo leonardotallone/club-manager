@@ -197,9 +197,9 @@ import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import { getAllJoinUpContext } from '../../Context/GetAllJoinUpContext';
 import { joinUpContext } from '../../Context/JoinUpContext';
 
-const ApplicationsList = () => {
+const RejectedApplicationsList = () => {
   const [page, setPage] = useState(1);
-  const { allApplications } = useContext(getAllJoinUpContext);
+  const { allRejectedApplications } = useContext(getAllJoinUpContext);
   const { setDeleteApplication } = useContext(joinUpContext);
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery('(max-width:600px)');
@@ -207,8 +207,8 @@ const ApplicationsList = () => {
   const applicationsPerPage = 4;
   const startIndex = (page - 1) * applicationsPerPage;
   const endIndex = startIndex + applicationsPerPage;
-  const displayedApplications = allApplications?.slice(startIndex, endIndex) || [];
-  const totalPages = Math.ceil((allApplications?.length || 0) / applicationsPerPage);
+  const displayedApplications = allRejectedApplications?.slice(startIndex, endIndex) || [];
+  const totalPages = Math.ceil((allRejectedApplications?.length || 0) / applicationsPerPage);
 
   const handleDelete = (id: string) => {
     setDeleteApplication(id);
@@ -220,7 +220,7 @@ const ApplicationsList = () => {
         variant="h6"
         sx={{ mb: 2, fontWeight: 600, color: '#444', textAlign: { xs: 'center', sm: 'left' } }}
       >
-        Lista de Solicitudes
+        Lista de Solicitudes Rechazadas
       </Typography>
 
       {/* Encabezado de columnas */}
@@ -385,7 +385,7 @@ const ApplicationsList = () => {
   );
 };
 
-export default ApplicationsList;
+export default RejectedApplicationsList;
 
 
 

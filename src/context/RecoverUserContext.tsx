@@ -1,41 +1,52 @@
-import { useState, createContext, useEffect } from "react";
-import axios from "axios";
+import { useState, createContext, useEffect, useContext } from "react";
+import { getAllUsersContext } from "../Context/GetAllUsersContext";
 
 export const recoverUserContext = createContext(null);
 
-interface SignIn {
-    dni: string;
-}
 const RecoverUserProvider = ({ children }) => {
+    const { allUsers } = useContext(getAllUsersContext);
 
-    const [dni, setDni] = useState<SignIn | null>();
-    const [recoverUserSuccess, setRecoverUserSuccess] = useState("")
-    const [recoverUserError, setRecoverUserError] = useState("")
-    const [loading, setLoading] = useState(false)
+
+    const [dni, setDni] = useState<{ dni: string } | null>(null);
+    const [recoverUserSuccess, setRecoverUserSuccess] = useState("");
+    const [recoverUserError, setRecoverUserError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (dni) {
-            setLoading(true); // Show ActivityIndicator when action starts
-            setRecoverUserError("");
-            axios
-                .post("https://masterclub.com.ar/api/Auth/recover-username", dni)
-                .then((response) => {
-                    setRecoverUserSuccess(response.data.message)
-                    console.log("Response", response.data.message)
-                })
-                .catch((error) => {
-                    setRecoverUserError(error.response.data.message);
-                })
-                .finally(() => {
-                    setLoading(false);
-                });
+        if (dni?.dni) { // ✅ accedemos correctamente al string
+            setLoading(true);
+
+            const userFound = allUsers.find(
+                (user: { dni: any; }) => String(user.dni).trim() === String(dni.dni).trim()
+            );
+
+            if (!userFound) {
+                setRecoverUserError("El DNI ingresado no se encuentra registrado");
+                setRecoverUserSuccess("");
+            } else {
+                setRecoverUserSuccess(userFound.email); // ✅ guardamos email
+                setRecoverUserError("");
+            }
+
+            setLoading(false);
         }
-    }, [dni]);
+    }, [dni, allUsers]);
 
     return (
-        <recoverUserContext.Provider value={{ dni, setDni, recoverUserError,setRecoverUserError, recoverUserSuccess, loading }}>
+        <recoverUserContext.Provider
+            value={{
+                dni,
+                setDni,
+                recoverUserError,
+                setRecoverUserError,
+                setRecoverUserSuccess,
+                recoverUserSuccess,
+                loading
+            }}
+        >
             {children}
         </recoverUserContext.Provider>
     );
 };
+
 export default RecoverUserProvider;

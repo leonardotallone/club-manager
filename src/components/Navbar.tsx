@@ -35,6 +35,7 @@ import EmailRecoverForm from '../components/EmailRecoverForm';
 
 const pageAdmin = [
     { name: 'Solicitudes', href: "/admin-applications" },
+    { name: 'Solicitudes Rechazadas', href: "/admin-applications" },
     { name: 'Usuarios', href: "/admin-users-list" },
 ];
 

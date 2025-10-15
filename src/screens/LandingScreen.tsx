@@ -21,12 +21,10 @@ import Advertising from "../components/Advertising";
 import Footer from "../components/Footer";
 import JoinUpForm from "../components/JoinUpForm";
 
-
 const LandingScreen = () => {
   const { loading } = useContext(signInUserContext);
   const { loguedUserInformation } = useContext(getAllUsersContext);
-  const { openJoinUp, setOpenJoinUp } = useContext(controlModalsContext)
-
+  const { openJoinUp, setOpenJoinUp, setOpenLogin } = useContext(controlModalsContext)
 
   const navigate = useNavigate();
   const theme = useTheme();
@@ -34,9 +32,11 @@ const LandingScreen = () => {
 
   useEffect(() => {
     if (loguedUserInformation?.admin) {
-      navigate("/dashboard-admin-screen");
+      navigate("/admin-screen");
+      setOpenLogin(false)
     } else if (loguedUserInformation && !loguedUserInformation.admin) {
-      navigate("/dashboard-user-screen");
+      navigate("/user-screen");
+      setOpenLogin(false)
     }
   }, [loguedUserInformation, navigate]);
 
@@ -252,7 +252,12 @@ const LandingScreen = () => {
           </Typography>
         </Box>
 
-        <Advertising />
+        <Box sx={{ my: { xs: 6, md: 5 } }}>
+          <Advertising />
+        </Box>
+
+
+
         <Footer />
 
         {/* ⚫ Loading Overlay */}

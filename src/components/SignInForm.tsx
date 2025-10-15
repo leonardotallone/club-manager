@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Box, Button, TextField, Typography, Grid } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { Formik, Form } from "formik";
+import Grid from '@mui/material/Grid2';
 import * as Yup from "yup";
 
 import { signInUserContext } from '../Context/SignInUserContext';
@@ -31,7 +32,6 @@ const SignInForm: React.FC = () => {
     return (
         <Box
             sx={{
-
                 position: "absolute",
                 top: "50%",
                 left: "50%",
@@ -99,10 +99,8 @@ const SignInForm: React.FC = () => {
                                 "& .MuiInput-underline:after": { borderBottomColor: "green" },
                             }}
                         />
-
                         <Grid container >
-
-                            <Grid item xs={12}>
+                            <Grid  size={{ xs: 12, md: 12 }}>
                                 <Button
                                     fullWidth
                                     type="submit"
@@ -119,7 +117,6 @@ const SignInForm: React.FC = () => {
                                 </Button>
                             </Grid>
                         </Grid>
-
                         <Button
                             fullWidth
                             type="button"

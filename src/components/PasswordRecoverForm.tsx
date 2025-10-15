@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react';
-import { Box, Button, TextField, Typography, Grid, Modal } from "@mui/material";
+import { Box, Button, TextField, Typography, Modal } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -94,7 +95,7 @@ const PasswordRecoverForm: React.FC = () => {
                         />
 
                         <Grid container spacing={1.5}>
-                            <Grid item xs={6}>
+                            <Grid size={{ xs: 6 }}>
                                 <Button
                                     fullWidth
                                     variant="contained"
@@ -109,7 +110,7 @@ const PasswordRecoverForm: React.FC = () => {
                                     Cancelar
                                 </Button>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid size={{ xs: 6 }}>
                                 <Button
                                     fullWidth
                                     type="submit"

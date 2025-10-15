@@ -3,15 +3,16 @@ import Grid from '@mui/material/Grid2';
 import { Box, Container } from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 
-import Navbar from '../../components/Navbar';
-import BlackBanner from '../../components/BlackBanner';
-import Dashboard from '../../components/Admin/Dashboard';
-import Footer from '../../components/Footer';
-import Advertising from '../../components/Advertising';
+import Navbar from '../components/Navbar';
+import BlackBanner from '../components/BlackBanner';
+import Dashboard from '../components/Users/Dashboard';
+import Advertising from '../components/Advertising';
+import Footer from '../components/Footer';
 
-import { getAllUsersContext } from '../../Context/GetAllUsersContext';
+import { getAllUsersContext } from '../Context/GetAllUsersContext';
 
-const DashboardAdminScreen = () => {
+const UserScreen = () => {
+
 
     const { loading } = useContext(getAllUsersContext);
     return (
@@ -76,4 +77,5 @@ const DashboardAdminScreen = () => {
     );
 };
 
-export default DashboardAdminScreen;
+export default 
+UserScreen;

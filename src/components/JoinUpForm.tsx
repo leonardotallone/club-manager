@@ -161,7 +161,10 @@ const JoinUpForm: React.FC = () => {
                     borderRadius: 4,
                     backdropFilter: "blur(8px)",
                     backgroundColor: "rgba(255, 255, 255, 0.85)",
-                    width: { xs: "70%" },
+                    width: { xs: "70%", md: "60%" },
+
+                    maxHeight: { xs: '100vh', md: 'auto' },  // Limitar altura en xs
+                    overflowY: { xs: 'auto', md: 'visible' }, // Scroll vertical sólo en xs
                 }}
             >
 
@@ -192,12 +195,9 @@ const JoinUpForm: React.FC = () => {
                 >
                     {({ handleChange, handleBlur, values, errors, touched, }) => (
                         <Form>
-                            <Grid container columnSpacing={2} direction="row" size={12}>
+                            <Grid container columnSpacing={2} direction="row"  >
 
-
-
-
-                                <Grid direction="column" size={4}>
+                                <Grid direction="column" size={{ xs: 12, md: 4 }}>
                                     {/* NAME */}
                                     <TextField
                                         variant="standard"
@@ -293,7 +293,7 @@ const JoinUpForm: React.FC = () => {
                                         }
                                     </LocalizationProvider>
                                 </Grid>
-                                <Grid direction="column" size={4} sx={{ mt: 0 }}>
+                                <Grid direction="column" size={{ xs: 12, md: 4 }} sx={{ mt: 0 }}>
                                     {/* LASTNAME */}
                                     <TextField
 
@@ -394,7 +394,7 @@ const JoinUpForm: React.FC = () => {
                                     </FormControl>
 
                                 </Grid>
-                                <Grid direction="column" size={4} sx={{ mt: 0 }}>
+                                <Grid direction="column" size={{ xs: 12, md: 4 }} sx={{ mt: 0 }}>
                                     {/* DNI */}
                                     <TextField
                                         variant="standard"
@@ -446,7 +446,7 @@ const JoinUpForm: React.FC = () => {
                             {/* BOTONES */}
                             <Grid container spacing={2}>
 
-                                <Grid size={8}>
+                                <Grid size={{ xs: 12, md: 8 }}>
                                     <Button
                                         onClick={handleCloseJoinUp}
                                         variant="contained" fullWidth sx={{
@@ -458,7 +458,7 @@ const JoinUpForm: React.FC = () => {
                                         CANCELAR
                                     </Button>
                                 </Grid>
-                                <Grid size={4}>
+                                <Grid size={{ xs: 12, md: 4 }}>
 
                                     <Button
                                         type="submit"
@@ -477,6 +477,7 @@ const JoinUpForm: React.FC = () => {
 
 
                                 </Grid>
+
                             </Grid>
 
                         </Form>

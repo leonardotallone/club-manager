@@ -1,59 +1,65 @@
 import React, { useContext } from 'react';
-import Grid from '@mui/material/Grid2';
-import { Box } from "@mui/material";
-import CircularProgress from '@mui/material/CircularProgress';
+import { Box, CircularProgress, Container } from "@mui/material";
 
 import Navbar from '../../components/Navbar';
 import BlackBanner from '../../components/BlackBanner';
 import UsersList from '../../components/Admin/UsersList';
+import Footer from '../../components/Footer';
 
 import { getAllUsersContext } from '../../Context/GetAllUsersContext';
 
 const UserListScreen = () => {
-
     const { loading } = useContext(getAllUsersContext);
-    return (
-        <>
-            <Navbar />
-            <Grid
-                container
-                sx={{
-                    width: '100%',
-                    height: "auto",
-                    display: 'flex',
-                    mt: 12, // Ajusta este valor según la altura de tu Navbar
-                }}
-            >
-                <BlackBanner />
-            </Grid>
 
-            <Grid
-                container
+    return (
+        <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#fafafa' }}>
+            {/* Navbar */}
+            <Navbar />
+
+            {/* BlackBanner opcional */}
+            {/* <BlackBanner /> */}
+
+            {/* Contenedor principal */}
+            <Container
+                maxWidth="xl"
                 sx={{
-                    width: '100%',
-                    height: "auto",
+                    flex: 1,
+                    mt: 6, // separación de la Navbar
+                    position: 'relative',
                     display: 'flex',
-                    mt: 3, // Ajusta este valor según la altura de tu Navbar
+                    flexDirection: 'column',
+                    pb: 4,
                 }}
             >
-            {loading ? (
-                <Box sx={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    height: '100%',
-                    width: '100%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semitransparente
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    zIndex: 20, // Asegura que esté por encima de otros elementos
-                }}>
-                    <CircularProgress color="inherit" />
-                </Box>
-            ) : <UsersList />}
-            </Grid>
-        </>
+                {/* Loader overlay */}
+                {loading && (
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            bgcolor: 'rgba(0,0,0,0.3)',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            zIndex: 10,
+                        }}
+                    >
+                        <CircularProgress color="inherit" />
+                    </Box>
+                )}
+
+                {/* Lista de usuarios */}
+                {!loading && <UsersList />}
+            </Container>
+
+            {/* Footer full width */}
+            {/* <Box sx={{ width: '100%' }}>
+                <Footer />
+            </Box> */}
+        </Box>
     );
 };
 
