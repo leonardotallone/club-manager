@@ -7,7 +7,7 @@ const Dashboard = () => {
 
     return (
         <>
-            <Typography sx={{ fontWeight: 800, fontSize: 14, color: '#616161', textDecoration: 'none' }}>
+            <Typography sx={{ fontWeight: 800, fontSize: 18, color: '#616161', textDecoration: 'none' }}>
                 USER DASHBOARD
             </Typography>
 

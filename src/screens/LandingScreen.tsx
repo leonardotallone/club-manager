@@ -33,10 +33,12 @@ const LandingScreen = () => {
   useEffect(() => {
     if (loguedUserInformation?.admin) {
       navigate("/admin-screen");
-      setOpenLogin(false)
+      setOpenLogin(false);
     } else if (loguedUserInformation && !loguedUserInformation.admin) {
       navigate("/user-screen");
-      setOpenLogin(false)
+      setOpenLogin(false);
+    } else if (!loguedUserInformation) {
+      navigate("/");
     }
   }, [loguedUserInformation, navigate]);
 

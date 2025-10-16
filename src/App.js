@@ -3,8 +3,7 @@ import { useContext } from "react";
 import LandingScreen from "./screens/LandingScreen";
 
 import AdminScreen from "./screens/Admin/AdminScreen";
-import UsersListScreen from "./screens/Admin/UsersListScreen";
-import ApplicationsListScreen from "./screens/Admin/ApplicationsListScreen";
+
 import DisplayApplicationScreen from "./screens/Admin/DisplayApplicationScreen";
 
 
@@ -24,8 +23,7 @@ function App() {
         <Route path="/" element={<LandingScreen />} /> 
 
         <Route path="/admin-screen" element={<AdminScreen />}/>
-        <Route path="/admin-users-list" element={<UsersListScreen />} />
-        <Route path="/admin-applications" element={<ApplicationsListScreen />} />
+
         <Route path="/admin-display-application/:user" element={<DisplayApplicationScreen />} />
       
         <Route path="/edit-user/:user" element={<EditUserScreen />} />

@@ -7,7 +7,7 @@ import {
   Button,
   Avatar,
   Stack,
-  Divider,
+
   useMediaQuery,
   Pagination,
 } from '@mui/material';

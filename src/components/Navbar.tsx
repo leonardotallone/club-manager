@@ -2,21 +2,9 @@ import * as React from 'react';
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-    AppBar,
-    Box,
-    Toolbar,
-    IconButton,
-    Typography,
-    Menu,
-    Container,
-    Avatar,
-    Button,
-    Tooltip,
-    MenuItem,
-    Divider,
-    Modal,
-    useTheme,
-    Fade
+    AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar,
+    Button, Tooltip, MenuItem, Divider, Modal, useTheme, Fade
+    , Backdrop
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
@@ -26,47 +14,55 @@ import avatar from "../assets/backgroundImages/Background.jpg";
 import { signInUserContext } from '../Context/SignInUserContext';
 import { getAllUsersContext } from '../Context/GetAllUsersContext';
 import { controlModalsContext } from '../Context/ControModalsContext';
+import { displaySelectorViewContext } from "../Context/DisplaySelectorViewContext"
 import { signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "../Firebase/Firebase";
-
 import SignInForm from "../components/SignInForm";
 import PasswordRecoverForm from "../components/PasswordRecoverForm";
 import EmailRecoverForm from '../components/EmailRecoverForm';
 
-const pageAdmin = [
-    { name: 'Solicitudes', href: "/admin-applications" },
-    { name: 'Solicitudes Rechazadas', href: "/admin-applications" },
-    { name: 'Usuarios', href: "/admin-users-list" },
-];
-
-const pageUsers = [
-    { name: 'Noticias', href: "/noticias" },
-    { name: 'El Club', href: '/elclub' },
-    { name: 'Historia', href: '/historia' },
-    { name: 'Autoridades', href: '/autoridades' },
-];
-
 const Navbar = () => {
-    const navigate = useNavigate();
     const theme = useTheme();
-
     const { setLoguedUser } = useContext(signInUserContext);
     const { loguedUserInformation, setLoguedUserInformation } = useContext(getAllUsersContext);
     const { openLogin, setOpenLogin, openRecoverPassword, setOpenRecoverPassword, openRecoverEmail, setOpenRecoverEmail } = useContext(controlModalsContext);
+    const { setActiveAdminView, setActiveUserView } = useContext(displaySelectorViewContext);
 
-    const [anchorNav, setAnchorNav] = useState<null | HTMLElement>(null);
-    const [anchorUser, setAnchorUser] = useState<null | HTMLElement>(null);
 
+    const [anchorNav, setAnchorNav] = useState(null);
+    const [anchorUser, setAnchorUser] = useState(null);
 
     const isAdmin = loguedUserInformation?.admin === true;
-    const pagesToMap = isAdmin ? pageAdmin : pageUsers;
 
-    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorNav(event.currentTarget);
+    const pageAdmin = [
+        { name: 'Dashboard', view: 'Admindashboard' },
+        { name: 'Usuarios', view: 'users' },
+        { name: 'Solicitudes', view: 'applications' },
+        { name: 'Solicitudes Rechazadas', view: 'rejected' },
+    ];
+
+    const pageUsers = [
+        { name: 'Dashboard', view: 'Userdashboard' },
+        { name: 'Documentos', view: 'docs' },
+        // { name: 'Historia', href: '/historia' },
+        // { name: 'Autoridades', href: '/autoridades' },
+    ];
+
+    const pageNoUser = [
+        { name: 'El Club', view: 'elclub' },
+        { name: 'Autoridades', view: 'autoridades' },
+
+    ];
+
+    const pagesToMap = !loguedUserInformation ? pageNoUser : isAdmin ? pageAdmin : pageUsers;
+
+
+    const handleOpenNavMenu = (event: { currentTarget: any; }) => setAnchorNav(event.currentTarget);
     const handleCloseNavMenu = () => setAnchorNav(null);
 
-    const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorUser(event.currentTarget);
+    const handleOpenUserMenu = (event: { currentTarget: any; }) => setAnchorUser(event.currentTarget);
     const handleCloseUserMenu = () => setAnchorUser(null);
-
+    const navigate = useNavigate();
     const handleLogOut = () => {
         const auth = FIREBASE_AUTH;
         signOut(auth)
@@ -79,44 +75,23 @@ const Navbar = () => {
             .catch((error) => console.error("Error logOut:", error.message));
     };
 
-    const handleCloseLogin = () => {
-        setOpenLogin(false);
-    };
-    const handleClosePasswordRecover = () => {
-        setOpenRecoverPassword(false);
-    };
-    const handleCloseEmailRecover = () => {
-        setOpenRecoverEmail(false);
-    };
-
     return (
         <>
             <AppBar
                 position="fixed"
                 sx={{
-                    // backgroundColor: "rgba(255,255,255,0.95)",
-                    // boxShadow: "0px 2px 10px rgba(0,0,0,0.05)",
-                    // backdropFilter: "blur(6px)",
-                    // zIndex: 1100,
-
-                    background: "rgba(255, 255, 255, 1)",  // 🔹 sutil transparencia
-                    backdropFilter: "blur(8px)",               // 🔹 desenfoque moderado
-                    WebkitBackdropFilter: "blur(8px)",         // 🔹 compatibilidad Safari
-                    // borderBottom: "1px solid rgba(255, 255, 255, 0.4)", // 🔹 leve brillo en borde inferior
-                    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.05)", // 🔹 sombra discreta
-                    transition: "background 0.3s ease, backdrop-filter 0.3s ease", // 🔹 suavidad en scroll
+                    background: "rgba(255, 255, 255, 1)",
+                    backdropFilter: "blur(8px)",
+                    WebkitBackdropFilter: "blur(8px)",
+                    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.05)",
                     zIndex: 1100,
-
-
-
-
                 }}
             >
                 <Container maxWidth="xl">
                     <Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
 
-                        {/* ---------- LOGO + TÍTULO ---------- */}
-                        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => navigate('/')}>
+                        {/* ---------- LOGO ---------- */}
+                        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                             <Box
                                 component="img"
                                 src={ClubSocial}
@@ -129,7 +104,6 @@ const Navbar = () => {
                                     display: { xs: 'none', md: 'block' },
                                     fontWeight: 700,
                                     color: theme.palette.grey[800],
-                                    letterSpacing: 0.5,
                                 }}
                             >
                                 CLUB SOCIAL
@@ -138,11 +112,7 @@ const Navbar = () => {
 
                         {/* ---------- MENÚ MOBILE ---------- */}
                         <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                            <IconButton
-                                size="large"
-                                onClick={handleOpenNavMenu}
-                                sx={{ color: theme.palette.grey[800] }}
-                            >
+                            <IconButton size="large" onClick={handleOpenNavMenu} sx={{ color: theme.palette.grey[800] }}>
                                 <MenuIcon />
                             </IconButton>
                             <Menu
@@ -151,48 +121,19 @@ const Navbar = () => {
                                 transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                                 open={Boolean(anchorNav)}
                                 onClose={handleCloseNavMenu}
-                                sx={{ display: { xs: 'block', md: 'none' } }}
                             >
                                 {pagesToMap.map((page) => (
                                     <MenuItem
                                         key={page.name}
-                                        onClick={() => { navigate(page.href); handleCloseNavMenu(); }}
-                                        sx={{
-                                            mx: 1,
-                                            color: theme.palette.grey[800],
-                                            fontWeight: 500,
-                                            fontSize: "0.85rem", // 🔹 igual que los botones
-                                            textTransform: 'none',
-                                            letterSpacing: 0.3,
-                                            justifyContent: 'center',
-                                            fontFamily: theme.typography.fontFamily,
-                                            '&:hover': { color: '#b71c1c' },
+                                        onClick={() => {
+                                            handleCloseNavMenu();
+                                            if (isAdmin) setActiveAdminView(page.view);
                                         }}
+                                        sx={{ justifyContent: 'center', color: theme.palette.grey[800] }}
                                     >
                                         {page.name}
                                     </MenuItem>
                                 ))}
-                                {!loguedUserInformation && (
-                                    <>
-                                        <Divider />
-                                        <MenuItem
-                                            onClick={() => { setOpenLogin(true); handleCloseNavMenu(); }}
-                                            sx={{
-                                                mx: 1,
-                                                color: theme.palette.grey[800],
-                                                fontWeight: 500,
-                                                fontSize: "0.85rem", // 🔹 igual que los botones
-                                                textTransform: 'none',
-                                                letterSpacing: 0.3,
-                                                justifyContent: 'center',
-                                                fontFamily: theme.typography.fontFamily,
-                                                '&:hover': { color: '#b71c1c' },
-                                            }}
-                                        >
-                                            Iniciar sesión
-                                        </MenuItem>
-                                    </>
-                                )}
                             </Menu>
                         </Box>
 
@@ -201,7 +142,10 @@ const Navbar = () => {
                             {pagesToMap.map((page) => (
                                 <Button
                                     key={page.name}
-                                    onClick={() => navigate(page.href)}
+                                    onClick={() => {
+                                        if (isAdmin) setActiveAdminView(page.view);
+                                        else setActiveUserView(page.view)
+                                    }}
                                     sx={{
                                         mx: 1,
                                         color: theme.palette.grey[800],
@@ -215,7 +159,7 @@ const Navbar = () => {
                             ))}
                         </Box>
 
-                        {/* ---------- USUARIO LOGUEADO o BOTONES ---------- */}
+                        {/* ---------- PERFIL USUARIO ---------- */}
                         {loguedUserInformation ? (
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                 <Typography sx={{ fontSize: 14, fontWeight: 500, color: '#424242', mr: 2 }}>
@@ -223,10 +167,7 @@ const Navbar = () => {
                                 </Typography>
 
                                 <Tooltip title="Configuración">
-                                    <IconButton
-                                        onClick={() => navigate(`/edit-user/${loguedUserInformation.id}`, { state: loguedUserInformation })}
-                                        sx={{ color: '#424242' }}
-                                    >
+                                    <IconButton sx={{ color: '#424242' }}>
                                         <SettingsOutlinedIcon />
                                     </IconButton>
                                 </Tooltip>
@@ -238,54 +179,31 @@ const Navbar = () => {
                                 </Tooltip>
 
                                 <Tooltip title={loguedUserInformation?.email}>
-                                    <IconButton onClick={handleOpenUserMenu}>
-                                        <Avatar alt="Usuario" src={avatar} />
-                                    </IconButton>
+                                    <Avatar alt="Usuario" src={avatar} sx={{ ml: 1 }} />
                                 </Tooltip>
-
-                                <Menu
-                                    anchorEl={anchorUser}
-                                    open={Boolean(anchorUser)}
-                                    onClose={handleCloseUserMenu}
-                                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                                >
-                                    <MenuItem disabled>
-                                        <Typography variant="body2">{loguedUserInformation?.email}</Typography>
-                                    </MenuItem>
-                                    <Divider />
-                                    <MenuItem onClick={() => navigate(`/edit-user/${loguedUserInformation.id}`)}>
-                                        Configuración
-                                    </MenuItem>
-                                    <MenuItem onClick={handleLogOut}>Cerrar sesión</MenuItem>
-                                </Menu>
                             </Box>
                         ) : (
-                            // ---------- VISITANTE (no logueado) ----------
-                            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                                <Button
-                                    variant="text"
-                                    sx={{
-                                        color: theme.palette.grey[800],
-                                        textTransform: 'none',
-                                        '&:hover': { color: '#b71c1c' },
-                                    }}
-                                    onClick={() => setOpenLogin(true)}
-                                >
-                                    Iniciar sesión
-                                </Button>
-                            </Box>
+                            <Button
+                                variant="text"
+                                sx={{
+                                    color: theme.palette.grey[800],
+                                    textTransform: 'none',
+                                    '&:hover': { color: '#b71c1c' },
+                                }}
+                                onClick={() => setOpenLogin(true)}
+                            >
+                                Iniciar sesión
+                            </Button>
                         )}
                     </Toolbar>
                 </Container>
             </AppBar>
 
-            {/* ---------- MODAL LOGIN ---------- */}
+            {/* ---------- MODALES ---------- */}
             <Modal
                 open={openLogin}
-                onClose={handleCloseLogin}
+                onClose={() => setOpenLogin(false)}
                 closeAfterTransition
-
                 slotProps={{
                     backdrop: {
                         timeout: 2000, // duración de la animación del backdrop
@@ -300,12 +218,10 @@ const Navbar = () => {
                 </Fade>
             </Modal>
 
-            {/* ---------- MODAL PASSWORD RECOVER ---------- */}
             <Modal
                 open={openRecoverPassword}
-                onClose={handleClosePasswordRecover}
+                onClose={() => setOpenRecoverPassword(false)}
                 closeAfterTransition
-
                 slotProps={{
                     backdrop: {
                         timeout: 2000, // duración de la animación del backdrop
@@ -320,12 +236,10 @@ const Navbar = () => {
                 </Fade>
             </Modal>
 
-            {/* ---------- MODAL RECOVER EMAIL---------- */}
             <Modal
                 open={openRecoverEmail}
-                onClose={handleCloseEmailRecover}
+                onClose={() => setOpenRecoverEmail(false)}
                 closeAfterTransition
-
                 slotProps={{
                     backdrop: {
                         timeout: 2000, // duración de la animación del backdrop
@@ -339,12 +253,12 @@ const Navbar = () => {
                     </Box>
                 </Fade>
             </Modal>
-
         </>
     );
 };
 
 export default Navbar;
+
 
 
 

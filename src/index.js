@@ -21,6 +21,7 @@ import SignedUserProvider from "./Context/SignedUserContext";
 import RecoverPasswordProvider from "./Context/RecoverPasswordContext";
 import NewPasswordProvider from "./Context/NewPasswordContext";
 import ControlModalsProvider from "./Context/ControModalsContext";
+import DisplaySelectorViewProvider from "./Context/DisplaySelectorViewContext";
 
 import App from "./App";
 
@@ -35,35 +36,37 @@ root.render(
   <React.StrictMode>
     <CssBaseline />
     <ThemeProvider theme={theme}>
-      <SignInUserProvider>
-        <GetAllJoinUpProvider>
-          <RecoverPasswordProvider>
-            <NewPasswordProvider>
-              <SignedUserProvider>
-                <SignUpProvider>
-                  <JoinUpProvider>
-                    <GetAllUsersProvider>
-                      <RecoverUserProvider>
-                        <GetAllCategoriesProvider>
-                          <GetAllDisciplinesProvider>
-                            <ControlModalsProvider>
-                              <RemoveUserProvider>
-                                <UpdateUserProfileProvider>
-                                  <App />
-                                </UpdateUserProfileProvider>
-                              </RemoveUserProvider>
-                            </ControlModalsProvider>
-                          </GetAllDisciplinesProvider>
-                        </GetAllCategoriesProvider>
-                      </RecoverUserProvider>
-                    </GetAllUsersProvider>
-                  </JoinUpProvider>
-                </SignUpProvider>
-              </SignedUserProvider>
-            </NewPasswordProvider>
-          </RecoverPasswordProvider>
-        </GetAllJoinUpProvider>
-      </SignInUserProvider>
+      <DisplaySelectorViewProvider>
+        <SignInUserProvider>
+          <GetAllJoinUpProvider>
+            <RecoverPasswordProvider>
+              <NewPasswordProvider>
+                <SignedUserProvider>
+                  <SignUpProvider>
+                    <JoinUpProvider>
+                      <GetAllUsersProvider>
+                        <RecoverUserProvider>
+                          <GetAllCategoriesProvider>
+                            <GetAllDisciplinesProvider>
+                              <ControlModalsProvider>
+                                <RemoveUserProvider>
+                                  <UpdateUserProfileProvider>
+                                    <App />
+                                  </UpdateUserProfileProvider>
+                                </RemoveUserProvider>
+                              </ControlModalsProvider>
+                            </GetAllDisciplinesProvider>
+                          </GetAllCategoriesProvider>
+                        </RecoverUserProvider>
+                      </GetAllUsersProvider>
+                    </JoinUpProvider>
+                  </SignUpProvider>
+                </SignedUserProvider>
+              </NewPasswordProvider>
+            </RecoverPasswordProvider>
+          </GetAllJoinUpProvider>
+        </SignInUserProvider>
+      </DisplaySelectorViewProvider>
     </ThemeProvider>
   </React.StrictMode>
 );

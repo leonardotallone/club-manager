@@ -1,11 +1,10 @@
 import React, { useContext } from 'react';
-import Grid from '@mui/material/Grid2';
 import { Box, Container, Fade } from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 
 import Navbar from '../../components/Navbar';
 
-import Dashboard from '../../components/Admin/Dashboard';
+import AdminDashboard from '../../components/Admin/AdminDashboard';
 import UsersList from '../../components/Admin/UsersList';
 import ApplicationsList from '../../components/Admin/ApplicationsList';
 import RejectedApplicationsList from '../../components/Admin/RejectedApplicationsList';
@@ -14,9 +13,21 @@ import Footer from '../../components/Footer';
 import Advertising from '../../components/Advertising';
 
 import { getAllUsersContext } from '../../Context/GetAllUsersContext';
+import { displaySelectorViewContext } from "../../Context/DisplaySelectorViewContext";
 
 const AdminScreen = () => {
     const { loading } = useContext(getAllUsersContext);
+    const { activeAdminView } = useContext(displaySelectorViewContext);
+
+
+    const renderView = () => {
+        switch (activeAdminView) {
+            case "users": return <UsersList />;
+            case "applications": return <ApplicationsList />;
+            case "rejected": return <RejectedApplicationsList />;
+            default: return <AdminDashboard />;
+        }
+    };
 
     return (
         <>
@@ -59,34 +70,11 @@ const AdminScreen = () => {
                             <CircularProgress color="inherit" />
                         </Box>
                     ) : (<>
-                        <Fade in={!loading} timeout={1200}>
-                            <Box sx={{ width: '100%' }}>
-                                <Dashboard />
+                        <Fade key={activeAdminView} in={!loading} timeout={1200}>
+                            <Box sx={{ width: "100%" }}>
+                                {renderView()}
                             </Box>
                         </Fade>
-
-
-                        <Fade in={!loading} timeout={1200}>
-                            <Box sx={{ width: '100%' }}>
-                                <UsersList />
-                            </Box>
-                        </Fade>
-
-                          <Fade in={!loading} timeout={1200}>
-                            <Box sx={{ width: '100%' }}>
-                                <ApplicationsList />
-                            </Box>
-                        </Fade>
-
-                            <Fade in={!loading} timeout={1200}>
-                            <Box sx={{ width: '100%' }}>
-                                <RejectedApplicationsList />
-                            </Box>
-                        </Fade>
-
-
-
-
                     </>
 
                     )}
