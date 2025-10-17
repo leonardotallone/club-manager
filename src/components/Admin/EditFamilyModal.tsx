@@ -35,26 +35,23 @@ const ModalStyle = {
 };
 
 const EditFamilyModal: React.FC = () => {
-    const { categories } = useContext(getAllCategoriesContext);
+    // const { categories } = useContext(getAllCategoriesContext);
     const { disciplines } = useContext(getAllDisciplinesContext);
-    const { setDocId, setUpdateFamilyUser, setRemoveFamilyMember } = useContext(updateUserProfileContext);
+    const { userForEdit, setDocId, setUpdateFamilyUser, setRemoveFamilyMember } = useContext(updateUserProfileContext);
     const { setUserConsent } = useContext(removeUserContext);
     const { openEdit, setOpenEdit } = useContext(controlModalsContext);
 
-    const location = useLocation();
-    const user = location.state;
-
     const [selectedMember, setSelectedMember] = useState<any>(null);
     const [disciplineFamily, setDisciplineFamily] = useState<string[]>([]);
-    const [full, setFull] = useState<boolean>(user.full); // Estado del toggle
+    const [full, setFull] = useState<boolean>(userForEdit.full); // Estado del toggle
+    
+    const user = userForEdit
 
     const handleCloseEdit = () => {
         setOpenEdit(false);
         setSelectedMember(null);
         setDisciplineFamily([]);
     };
-
-
 
 
     useEffect(() => {
@@ -75,8 +72,6 @@ const EditFamilyModal: React.FC = () => {
     const handleDeleteMember = () => {
         setRemoveFamilyMember(selectedMember)
     }
-
-
 
     return (
         <Modal open={openEdit} onClose={handleCloseEdit}>

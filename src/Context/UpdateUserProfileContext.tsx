@@ -15,6 +15,10 @@ interface FamilyMember {
 
 const UpdateUserProfileProvider = ({ children }) => {
 
+  const [userForEdit, setUserForEdit] = useState<any>()
+
+
+
   const [updateUserData, setUpdateUserData] = useState<any>()
   const [docId, setDocId] = useState<string | undefined>()
   const [familyUser, setFamilyUser] = useState<FamilyMember | undefined>()
@@ -132,42 +136,42 @@ const UpdateUserProfileProvider = ({ children }) => {
   }, [UpdateFamilyUser, docId, db]);
 
 
-useEffect(() => {
-  const handleDeleteMember = async () => {
-    if (!removeFamilyMember || !docId) return;
+  useEffect(() => {
+    const handleDeleteMember = async () => {
+      if (!removeFamilyMember || !docId) return;
 
-    setLoading(true);
-    const userRef = doc(db, "users", docId);
+      setLoading(true);
+      const userRef = doc(db, "users", docId);
 
-    try {
-      // 1️⃣ Obtener el documento actual
-      const userSnap = await getDoc(userRef);
-      if (!userSnap.exists()) throw new Error("Usuario no encontrado");
+      try {
+        // 1️⃣ Obtener el documento actual
+        const userSnap = await getDoc(userRef);
+        if (!userSnap.exists()) throw new Error("Usuario no encontrado");
 
-      const userData = userSnap.data();
-      const currentFamily = userData.familyGroup || [];
+        const userData = userSnap.data();
+        const currentFamily = userData.familyGroup || [];
 
-      // 2️⃣ Filtrar el familiar a eliminar
-      const updatedFamily = currentFamily.filter(
-        (m: any) => m.dni !== removeFamilyMember.dni
-      );
+        // 2️⃣ Filtrar el familiar a eliminar
+        const updatedFamily = currentFamily.filter(
+          (m: any) => m.dni !== removeFamilyMember.dni
+        );
 
-      // 3️⃣ Actualizar el documento en Firestore
-      await updateDoc(userRef, { familyGroup: updatedFamily });
+        // 3️⃣ Actualizar el documento en Firestore
+        await updateDoc(userRef, { familyGroup: updatedFamily });
 
-      console.log("🗑️ Familiar eliminado correctamente!");
-      setSuccessmsj("Family member removed successfully!");
-      setRemoveFamilyMember(undefined); // Limpiar estado
-    } catch (error) {
-      console.error("❌ Error eliminando familiar:", error);
-      setErrormsj("Error removing family member");
-    } finally {
-      setLoading(false);
-    }
-  };
+        console.log("🗑️ Familiar eliminado correctamente!");
+        setSuccessmsj("Family member removed successfully!");
+        setRemoveFamilyMember(undefined); // Limpiar estado
+      } catch (error) {
+        console.error("❌ Error eliminando familiar:", error);
+        setErrormsj("Error removing family member");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  handleDeleteMember();
-}, [removeFamilyMember, docId, db]);
+    handleDeleteMember();
+  }, [removeFamilyMember, docId, db]);
 
   // useEffect(() => {
   //   const updateUserProfile = async () => {
@@ -263,18 +267,20 @@ useEffect(() => {
   return (
     <updateUserProfileContext.Provider
       value={{
+        userForEdit,
+        updatedUser,
+        loading,
+        successmsj,
+        errormsj,
+
         setUpdateUserData,
         setDocId,
         setFamilyUser,
         setUpdateFamilyUser,
         setRemoveFamilyMember,
-
-        loading,
-        successmsj,
-        errormsj,
         setSuccessmsj,
         setErrormsj,
-        updatedUser,
+        setUserForEdit
 
       }}
     >

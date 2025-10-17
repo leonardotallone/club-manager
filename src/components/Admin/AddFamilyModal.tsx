@@ -1,5 +1,4 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { useLocation } from "react-router-dom";
 import { Modal, FormControlLabel, Switch, Avatar, Box, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 
@@ -77,20 +76,17 @@ const ModalStyle = {
 
 const AddFamilyModal: React.FC = () => {
 
-    const location = useLocation();
-    const user = location.state;
-
-
-    const { categories } = useContext(getAllCategoriesContext)
+    // const { categories } = useContext(getAllCategoriesContext)
     const { disciplines } = useContext(getAllDisciplinesContext)
-    const { setDocId, setFamilyUser } = useContext(updateUserProfileContext)
+    const { userForEdit, setDocId, setFamilyUser } = useContext(updateUserProfileContext)
     const { openAdd, setOpenAdd } = useContext(controlModalsContext)
 
     const [discipline, setDiscipline] = React.useState<string[]>([]);
     const [disciplineFamily, setDisciplineFamily] = React.useState<string[]>([]);
     const [editMode] = React.useState<boolean>(true);
+    const [full, setFull] = useState<boolean>(userForEdit.full); // Estado del toggle
 
-    const [full, setFull] = useState<boolean>(user.full); // Estado del toggle
+    const user = userForEdit
 
     const handleOpenAdd = () => setOpenAdd((prevOpen: any) => !prevOpen);
 
@@ -557,7 +553,7 @@ const AddFamilyModal: React.FC = () => {
                                     </Select>
                                 </FormControl> */}
                                 <Grid container size={12}>
-                                    <Grid display="flex" size={6} alignItems="center"  sx={{ mt: 3, mb: 0 }}>
+                                    <Grid display="flex" size={6} alignItems="center" sx={{ mt: 3, mb: 0 }}>
                                         <FormControl fullWidth>
                                             <TextField
                                                 label="Categoría"
@@ -570,7 +566,7 @@ const AddFamilyModal: React.FC = () => {
                                             />
                                         </FormControl>
                                     </Grid>
-                                    <Grid display="flex" size={6} alignItems="center"  sx={{ mt: 3, mb: 0 }}>
+                                    <Grid display="flex" size={6} alignItems="center" sx={{ mt: 3, mb: 0 }}>
                                         <FormControlLabel
                                             control={<Switch checked={full} onChange={handleToggleFull} />}
                                             label="Pleno"

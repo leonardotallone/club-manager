@@ -2,22 +2,28 @@ import React, { useContext } from 'react';
 import { Box, Container, Fade } from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 
-import Navbar from '../../components/Navbar';
+import Navbar from '../components/Navbar';
 
-import AdminDashboard from '../../components/Admin/AdminDashboard';
-import UsersList from '../../components/Admin/UsersList';
-import ApplicationsList from '../../components/Admin/ApplicationsList';
-import RejectedApplicationsList from '../../components/Admin/RejectedApplicationsList';
+import AdminDashboard from '../components/Admin/AdminDashboard';
+import UsersList from '../components/Admin/UsersList';
+import ApplicationsList from '../components/Admin/ApplicationsList';
+import RejectedApplicationsList from '../components/Admin/RejectedApplicationsList';
+import EditUserForm from '../components/Admin/EditUserForm';
 
-import Footer from '../../components/Footer';
-import Advertising from '../../components/Advertising';
+import Footer from '../components/Footer';
+import Advertising from '../components/Advertising';
 
-import { getAllUsersContext } from '../../Context/GetAllUsersContext';
-import { displaySelectorViewContext } from "../../Context/DisplaySelectorViewContext";
+import { getAllUsersContext } from '../Context/GetAllUsersContext';
+import { displaySelectorViewContext } from "../Context/DisplaySelectorViewContext";
+import { updateUserProfileContext } from '../Context/UpdateUserProfileContext';
+
+
+
 
 const AdminScreen = () => {
     const { loading } = useContext(getAllUsersContext);
     const { activeAdminView } = useContext(displaySelectorViewContext);
+    const { userForEdit } = useContext(updateUserProfileContext);
 
 
     const renderView = () => {
@@ -25,6 +31,7 @@ const AdminScreen = () => {
             case "users": return <UsersList />;
             case "applications": return <ApplicationsList />;
             case "rejected": return <RejectedApplicationsList />;
+            case "edituser": return <EditUserForm/>;
             default: return <AdminDashboard />;
         }
     };

@@ -17,9 +17,14 @@ import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutl
 import ManOutlinedIcon from '@mui/icons-material/ManOutlined';
 import FamilyRestroomOutlinedIcon from '@mui/icons-material/FamilyRestroomOutlined';
 import { getAllUsersContext } from '../../Context/GetAllUsersContext';
+import { updateUserProfileContext } from '../../Context/UpdateUserProfileContext';
+import { displaySelectorViewContext } from '../../Context/DisplaySelectorViewContext';
 
 const UsersList = () => {
   const { allUsers } = useContext(getAllUsersContext);
+  const { setUserForEdit } = useContext(updateUserProfileContext);
+  const { setActiveAdminView, setActiveUserView } = useContext(displaySelectorViewContext);
+
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery('(max-width:600px)');
 
@@ -29,6 +34,14 @@ const UsersList = () => {
   const startIndex = (page - 1) * usersPerPage;
   const endIndex = startIndex + usersPerPage;
   const displayedUsers = allUsers?.slice(startIndex, endIndex) || [];
+
+
+
+  const handleEditUser = (user: any) => {
+    setUserForEdit(user);
+    setActiveAdminView('edituser')
+    setActiveUserView('edituser')
+  };
 
   return (
     <Container maxWidth="xl" sx={{ mt: 3, mb: 4 }}>
@@ -149,7 +162,8 @@ const UsersList = () => {
                   p: 0.5,
                   '&:hover': { color: 'primary.main', background: 'transparent' },
                 }}
-                onClick={() => navigate(`/edit-user/${user}`, { state: user })}
+                // onClick={() => navigate(`/edit-user/${user}`, { state: user })}
+                onClick={() => handleEditUser(user)}
               >
                 <ModeEditOutlineOutlinedIcon sx={{ fontSize: 18 }} />
               </Button>

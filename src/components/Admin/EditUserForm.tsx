@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Switch, FormControlLabel, Avatar, Box, Paper, Card, Container, Typography, Checkbox, Button, TextField, Theme, useTheme, InputLabel, MenuItem, FormControl, Select, SelectChangeEvent, Chip, OutlinedInput, ListItemText } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -22,8 +22,6 @@ import { controlModalsContext } from '../../Context/ControModalsContext';
 
 import AddFamilyModal from './AddFamilyModal';
 import EditFamilyModal from './EditFamilyModal';
-
-
 
 interface SignUpFormValues {
 
@@ -79,24 +77,21 @@ const validationSchema = Yup.object({
 
 const EditUserForm: React.FC = () => {
 
-    const location = useLocation();
-    const user = location.state;
-
-    // console.log("IN EDITON USER", user)
     const { categories } = useContext(getAllCategoriesContext)
-    // console.log("CATEGORIES CONTEXT", categories)
     const { disciplines } = useContext(getAllDisciplinesContext)
-    const { setUpdateUserData, setDocId } = useContext(updateUserProfileContext)
+    const { userForEdit, setUpdateUserData, setDocId } = useContext(updateUserProfileContext)
     const { setUserConsent } = useContext(removeUserContext)
     const { setOpenAdd, setOpenEdit } = useContext(controlModalsContext)
 
     const [discipline, setDiscipline] = React.useState<string[]>([]);
     const [editMode, setEditMode] = React.useState<boolean>(false);
-    const [lockUser, setLockUser] = React.useState<boolean>(user.blockade);
+    const [lockUser, setLockUser] = React.useState<boolean>(userForEdit.blockade);
 
-    const [full, setFull] = useState<boolean>(user.full); // Estado del toggle
+    const [full, setFull] = useState<boolean>(userForEdit.full); // Estado del toggle
     // const [familyGroup, setFamilyGroup] = useState(user.familyGroup || []);
 
+
+    const user = userForEdit;
 
     const handleOpenAdd = () => setOpenAdd((prevOpen: any) => !prevOpen);
     const handleOpenEdit = () => setOpenEdit((prevOpen: any) => !prevOpen);
@@ -183,8 +178,8 @@ const EditUserForm: React.FC = () => {
 
     return (
         <Box
-            component={Paper}
-            elevation={3}
+            // component={Paper}
+            // elevation={3}
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -223,13 +218,15 @@ const EditUserForm: React.FC = () => {
                     onSubmit={handleSubmit}
                 >
                     {({ handleChange, handleBlur, values, errors, touched, }) => (
+
+
                         <Form>
                             <Grid container columnSpacing={2} direction="row" size={12}>
                                 {/* Columna IZQUIERDA */}
                                 <Grid container direction="column" size={4}>
                                     <Grid size={12} >
                                         {/* AVATAR */}
-                                        <Box
+                                        {/* <Box
                                             component={Card}
                                             elevation={1}
                                             sx={{
@@ -244,85 +241,130 @@ const EditUserForm: React.FC = () => {
                                             }}
                                         >
                                             <Avatar alt="Avatar" src={user.avatar} sx={{ width: 120, height: 120, ml: 3, boxShadow: 1 }} />
-                                        </Box>
+                                        </Box> */}
                                         {/* NAME */}
                                         <TextField
-                                            disabled={!editMode}
+                                            variant="standard"
                                             fullWidth
+                                            disabled={!editMode}
+                                            id="name"
                                             name="name"
                                             label="Nombre"
-                                            type="name"
-                                            id="name"
+                                            type="text"
                                             autoComplete="name"
                                             value={values.name}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             error={touched.name && Boolean(errors.name)}
-                                            helperText={touched.name && errors.name ? errors.name : " "} // 
-                                            sx={{ mt: 1 }}
+                                            helperText={touched.name && errors.name ? errors.name : " "}
+                                            sx={{
+                                                mt: 1,
+
+                                                // ✨ Fuerza buena legibilidad cuando está desactivado
+                                                "& .MuiInputBase-input.Mui-disabled": {
+                                                    WebkitTextFillColor: "#000000",
+                                                    opacity: 1,
+                                                },
+                                                "& .MuiInputLabel-root.Mui-disabled": {
+                                                    color: "#000000",
+                                                    opacity: 0.7,
+                                                },
+
+                                                // 🔧 Mantiene la línea continua al estar deshabilitado
+                                                "& .MuiInput-underline.Mui-disabled:before": {
+                                                    borderBottomStyle: "solid",
+                                                },
+                                                "& .MuiInput-underline:before": {
+                                                    borderColor: "rgba(0,0,0,0.42)",
+                                                },
+                                            }}
                                             slotProps={{
                                                 input: {
-                                                    sx: !editMode
-                                                        ? {} // No aplicar estilos si está deshabilitado
-                                                        : {
-                                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c",
+                                                    sx: editMode
+                                                        ? {
+                                                            "&.Mui-focused .MuiInput-underline:after": {
+                                                                borderBottomColor: "#b71c1c",
                                                             },
-                                                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c",
+                                                            "&:hover .MuiInput-underline:before": {
+                                                                borderBottomColor: "#b71c1c",
                                                             },
-                                                        },
+                                                        }
+                                                        : {},
                                                 },
                                                 inputLabel: {
-                                                    sx: !editMode
-                                                        ? {}
-                                                        : {
+                                                    sx: editMode
+                                                        ? {
                                                             "&.Mui-focused": {
                                                                 color: "#b71c1c",
                                                             },
-                                                        },
+                                                        }
+                                                        : {},
                                                 },
                                             }}
                                         />
+
+
                                         {/* LASTNAME */}
                                         <TextField
-                                            disabled={!editMode}
+                                            variant="standard"
                                             fullWidth
+                                            disabled={!editMode}
+                                            id="lastName"
                                             name="lastName"
                                             label="Apellido/s"
-                                            type="lastName"
-                                            id="lastName"
+                                            type="text"
                                             autoComplete="lastName"
                                             value={values.lastName}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             error={touched.lastName && Boolean(errors.lastName)}
-                                            helperText={touched.lastName && errors.lastName ? errors.lastName : " "} // 
-                                            sx={{ mt: 1 }}
+                                            helperText={touched.lastName && errors.lastName ? errors.lastName : " "}
+                                            sx={{
+                                                mt: 1,
+
+                                                // ✨ Fuerza buena legibilidad cuando está desactivado
+                                                "& .MuiInputBase-input.Mui-disabled": {
+                                                    WebkitTextFillColor: "#000000",
+                                                    opacity: 1,
+                                                },
+                                                "& .MuiInputLabel-root.Mui-disabled": {
+                                                    color: "#000000",
+                                                    opacity: 0.7,
+                                                },
+
+                                                // 🔧 Mantiene la línea continua al estar deshabilitado
+                                                "& .MuiInput-underline.Mui-disabled:before": {
+                                                    borderBottomStyle: "solid",
+                                                },
+                                                "& .MuiInput-underline:before": {
+                                                    borderColor: "rgba(0,0,0,0.42)",
+                                                },
+                                            }}
                                             slotProps={{
                                                 input: {
-                                                    sx: !editMode
-                                                        ? {} // Si está deshabilitado, no aplica estilos de focus/hover
-                                                        : {
-                                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c",
+                                                    sx: editMode
+                                                        ? {
+                                                            "&.Mui-focused .MuiInput-underline:after": {
+                                                                borderBottomColor: "#b71c1c",
                                                             },
-                                                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#b71c1c",
+                                                            "&:hover .MuiInput-underline:before": {
+                                                                borderBottomColor: "#b71c1c",
                                                             },
-                                                        },
+                                                        }
+                                                        : {},
                                                 },
                                                 inputLabel: {
-                                                    sx: !editMode
-                                                        ? {}
-                                                        : {
+                                                    sx: editMode
+                                                        ? {
                                                             "&.Mui-focused": {
                                                                 color: "#b71c1c",
                                                             },
-                                                        },
+                                                        }
+                                                        : {},
                                                 },
                                             }}
                                         />
+
                                     </Grid>
                                 </Grid>
                                 {/* Columna CENTRO */}
@@ -331,59 +373,87 @@ const EditUserForm: React.FC = () => {
                                         {/* BIRTHDATE */}
                                         <Grid size={6} >
                                             <LocalizationProvider dateAdapter={AdapterDayjs} >
-                                                <DemoContainer components={['DatePicker']} sx={{ width: '100%' }} >
+                                                <DemoContainer components={["DatePicker"]} sx={{ width: "100%" }}>
                                                     <DatePicker
+
                                                         disabled={!editMode}
                                                         format="DD/MM/YYYY"
-                                                        sx={editMode ? {
-                                                            width: '100%',
-                                                            "& .MuiInputLabel-root": {
-                                                                "&.Mui-focused": {
-                                                                    color: "#b71c1c",
-                                                                },
-                                                            },
-                                                            "& .MuiOutlinedInput-root": {
-                                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                                "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                            },
-                                                        } : {
-                                                            width: '100%',
-                                                            "& .MuiInputLabel-root": {
-                                                                color: "rgba(0, 0, 0, 0.38)", // Color típico para label deshabilitado
-                                                            },
-                                                        }}
                                                         label="Fecha de Nacimiento"
                                                         value={values.birthDate}
                                                         onChange={(newValue) => {
-                                                            handleChange({ target: { name: 'birthDate', value: newValue } });
+                                                            handleChange({
+                                                                target: { name: "birthDate", value: newValue },
+                                                            });
+                                                        }}
+                                                        sx={{
+                                                            width: "100%",
+
+                                                            // ✨ Legibilidad total cuando está deshabilitado
+                                                            "& .MuiInputBase-input.Mui-disabled": {
+                                                                WebkitTextFillColor: "#000000",
+                                                                opacity: 1,
+                                                            },
+                                                            "& .MuiInputLabel-root.Mui-disabled": {
+                                                                color: "#000000",
+                                                                opacity: 0.7,
+                                                            },
+                                                            "& .MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-notchedOutline": {
+                                                                borderColor: "rgba(0, 0, 0, 0.23)",
+                                                            },
+
+                                                            // 🎨 Estilos de foco y hover activos en modo edición
+                                                            ...(editMode && {
+                                                                "& .MuiInputLabel-root.Mui-focused": {
+                                                                    color: "#b71c1c",
+                                                                },
+                                                                "& .MuiOutlinedInput-root": {
+                                                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                                        borderColor: "#b71c1c",
+                                                                    },
+                                                                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                                        borderColor: "#b71c1c",
+                                                                    },
+                                                                },
+                                                            }),
                                                         }}
                                                     />
-
-
                                                 </DemoContainer>
-                                                {touched.birthDate && errors.birthDate ?
-                                                    <Typography color="error" variant="caption" sx={{ fontSize: '0.75rem' }} >
+
+                                                {touched.birthDate && errors.birthDate ? (
+                                                    <Typography
+                                                        color="error"
+                                                        variant="caption"
+                                                        sx={{ fontSize: "0.75rem" }}
+                                                    >
                                                         {errors.birthDate as string}
-                                                    </Typography> : <span> &nbsp; </span>
-                                                }
+                                                    </Typography>
+                                                ) : (
+                                                    <span>&nbsp;</span>
+                                                )}
                                             </LocalizationProvider>
+
                                         </Grid>
                                         {/* GENDER */}
                                         <Grid size={6} >
+
                                             <FormControl fullWidth sx={{ mb: 0, mt: 1 }}>
                                                 <InputLabel
-                                                    id="demo-simple-select-label"
+                                                    id="gender-label"
                                                     error={touched.gender && Boolean(errors.gender)}
                                                     sx={{
-                                                        color: !editMode ? 'rgba(0, 0, 0, 0.38)' : undefined,
-                                                        '&.Mui-focused': {
-                                                            color: '#b71c1c',
+                                                        color: !editMode ? "rgba(0, 0, 0, 0.7)" : undefined,
+                                                        "&.Mui-focused": {
+                                                            color: "#b71c1c",
                                                         },
-                                                    }}>Genero</InputLabel>
+                                                        "&.Mui-disabled": {
+                                                            color: "#000000",
+                                                            opacity: 0.7,
+                                                        },
+                                                    }}
+                                                >
+                                                    Género
+                                                </InputLabel>
+
                                                 <Select
                                                     disabled={!editMode}
                                                     labelId="gender-label"
@@ -391,22 +461,39 @@ const EditUserForm: React.FC = () => {
                                                     name="gender"
                                                     value={values.gender}
                                                     onChange={(event) => {
-                                                        handleChange({ target: { name: 'gender', value: event.target.value } }); // Correctly update Formik state
+                                                        handleChange({
+                                                            target: { name: "gender", value: event.target.value },
+                                                        });
                                                     }}
                                                     onBlur={handleBlur}
                                                     label="Género"
-                                                    sx={editMode ? {
-                                                        "& .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: touched.gender && errors.gender ? "#b71c1c" : undefined,
+                                                    sx={{
+                                                        // ✨ Legibilidad total si está deshabilitado
+                                                        "& .MuiSelect-select.Mui-disabled": {
+                                                            WebkitTextFillColor: "#000000",
+                                                            opacity: 1,
                                                         },
-                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c", // Change border color when focused
+                                                        "& .MuiOutlinedInput-notchedOutline.Mui-disabled": {
+                                                            borderColor: "rgba(0, 0, 0, 0.23)",
                                                         },
-                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c", // Change border color on hover
+                                                        "&.Mui-disabled .MuiSvgIcon-root": {
+                                                            color: "rgba(0,0,0,0.6)", // color del ícono del dropdown deshabilitado
                                                         },
-                                                    } : null}
 
+                                                        // 🎨 Estilos activos en modo edición
+                                                        ...(editMode && {
+                                                            "& .MuiOutlinedInput-notchedOutline": {
+                                                                borderColor:
+                                                                    touched.gender && errors.gender ? "#b71c1c" : "rgba(0, 0, 0, 0.23)",
+                                                            },
+                                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                                borderColor: "#b71c1c",
+                                                            },
+                                                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                                borderColor: "#b71c1c",
+                                                            },
+                                                        }),
+                                                    }}
                                                 >
                                                     {genders?.length > 0 ? (
                                                         genders.map((name) => (
@@ -415,26 +502,30 @@ const EditUserForm: React.FC = () => {
                                                             </MenuItem>
                                                         ))
                                                     ) : (
-                                                        <p>Cargando Generos...</p>
+                                                        <MenuItem disabled>Cargando géneros...</MenuItem>
                                                     )}
-
                                                 </Select>
-                                                {touched.gender && errors.gender ?
+
+                                                {touched.gender && errors.gender ? (
                                                     <Typography color="error" variant="caption">
                                                         {errors.gender}
-                                                    </Typography> : <span> &nbsp; </span>
-                                                }
+                                                    </Typography>
+                                                ) : (
+                                                    <span>&nbsp;</span>
+                                                )}
                                             </FormControl>
+
                                         </Grid>
                                     </Grid>
                                     {/* DNI */}
+
                                     <TextField
-                                        // margin="none"
+                                        variant="standard"
                                         disabled={!editMode}
                                         fullWidth
                                         name="dni"
                                         label="DNI"
-                                        type="dni"
+                                        type="text"
                                         id="dni"
                                         autoComplete="dni"
                                         value={values.dni}
@@ -442,16 +533,36 @@ const EditUserForm: React.FC = () => {
                                         onBlur={handleBlur}
                                         error={touched.dni && Boolean(errors.dni)}
                                         helperText={touched.dni && errors.dni ? errors.dni : " "}
-                                        sx={{ mt: -2.8 }}
+                                        sx={{
+                                            mt: -2.8,
+
+                                            // ✨ Legibilidad total al estar deshabilitado
+                                            "& .MuiInputBase-input.Mui-disabled": {
+                                                WebkitTextFillColor: "#000000", // texto negro
+                                                opacity: 1,
+                                            },
+                                            "& .MuiInputLabel-root.Mui-disabled": {
+                                                color: "#000000", // etiqueta legible
+                                                opacity: 0.7,
+                                            },
+
+                                            // 🔧 Mantiene línea continua al estar deshabilitado
+                                            "& .MuiInput-underline.Mui-disabled:before": {
+                                                borderBottomStyle: "solid",
+                                            },
+                                            "& .MuiInput-underline:before": {
+                                                borderColor: "rgba(0,0,0,0.42)",
+                                            },
+                                        }}
                                         slotProps={{
                                             input: {
                                                 sx: editMode
                                                     ? {
-                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c",
+                                                        "&.Mui-focused .MuiInput-underline:after": {
+                                                            borderBottomColor: "#b71c1c",
                                                         },
-                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c",
+                                                        "&:hover .MuiInput-underline:before": {
+                                                            borderBottomColor: "#b71c1c",
                                                         },
                                                     }
                                                     : {},
@@ -467,8 +578,11 @@ const EditUserForm: React.FC = () => {
                                             },
                                         }}
                                     />
+
                                     {/* ADDRESS */}
+
                                     <TextField
+                                        variant="standard"
                                         disabled={!editMode}
                                         fullWidth
                                         name="address"
@@ -481,20 +595,30 @@ const EditUserForm: React.FC = () => {
                                         onBlur={handleBlur}
                                         error={touched.address && Boolean(errors.address)}
                                         helperText={touched.address && errors.address ? errors.address : " "}
-                                        sx={{ mt: 1 }}
-                                        slotProps={{
-                                            input: {
-                                                sx: editMode
-                                                    ? {
-                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c",
-                                                        },
-                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c",
-                                                        },
-                                                    }
-                                                    : {},
+                                        sx={{
+                                            mt: 1,
+                                            "& .MuiInputBase-input.Mui-disabled": {
+                                                WebkitTextFillColor: "#000", // texto negro legible
+                                                color: "#000",
+                                                opacity: 1,
                                             },
+                                            "& .MuiInputLabel-root.Mui-disabled": {
+                                                color: "rgba(0, 0, 0, 0.6)",
+                                            },
+                                            "& .MuiInput-underline:before": {
+                                                borderBottom: "1px dotted rgba(0,0,0,0.4) !important", // línea punteada base
+                                            },
+                                            "& .MuiInput-underline.Mui-disabled:before": {
+                                                borderBottom: "1px dotted rgba(0,0,0,0.4) !important", // punteada visible en deshabilitado
+                                            },
+                                            "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
+                                                borderBottom: "1px solid #b71c1c !important",
+                                            },
+                                            "& .MuiInput-underline.Mui-focused:after": {
+                                                borderBottom: "2px solid #b71c1c !important", // foco rojo
+                                            },
+                                        }}
+                                        slotProps={{
                                             inputLabel: {
                                                 sx: editMode
                                                     ? {
@@ -506,15 +630,18 @@ const EditUserForm: React.FC = () => {
                                             },
                                         }}
                                     />
-                                    {/* CONTACT NUMBER */}
-                                    <TextField
-                                        // margin="normal"
-                                        disabled={!editMode}
 
+
+
+                                    {/* CONTACT NUMBER */}
+
+                                    <TextField
+                                        variant="standard"
+                                        disabled={!editMode}
                                         fullWidth
                                         name="contactNumber"
                                         label="Número de Contacto"
-                                        type="contactNumber"
+                                        type="text"
                                         id="contactNumber"
                                         autoComplete="contactNumber"
                                         value={values.contactNumber}
@@ -522,20 +649,36 @@ const EditUserForm: React.FC = () => {
                                         onBlur={handleBlur}
                                         error={touched.contactNumber && Boolean(errors.contactNumber)}
                                         helperText={touched.contactNumber && errors.contactNumber ? errors.contactNumber : " "}
-                                        sx={{ mt: 1 }}
-                                        slotProps={{
-                                            input: {
-                                                sx: editMode
-                                                    ? {
-                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c",
-                                                        },
-                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                            borderColor: "#b71c1c",
-                                                        },
-                                                    }
-                                                    : {},
+                                        sx={{
+                                            mt: 1,
+
+                                            // Legibilidad cuando está deshabilitado
+                                            "& .MuiInputBase-input.Mui-disabled": {
+                                                WebkitTextFillColor: "#000000",
+                                                color: "#000000",
+                                                opacity: 1,
                                             },
+                                            "& .MuiInputLabel-root.Mui-disabled": {
+                                                color: "rgba(0, 0, 0, 0.6)",
+                                            },
+
+                                            // Línea inferior continua para standard
+                                            "& .MuiInput-underline:before": {
+                                                borderBottom: "1px solid rgba(0,0,0,0.42)",
+                                            },
+                                            "& .MuiInput-underline.Mui-disabled:before": {
+                                                borderBottom: "1px solid rgba(0,0,0,0.42)",
+                                            },
+
+                                            // Focus y hover en modo edición
+                                            "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
+                                                borderBottomColor: "#b71c1c",
+                                            },
+                                            "& .MuiInput-underline.Mui-focused:after": {
+                                                borderBottomColor: "#b71c1c",
+                                            },
+                                        }}
+                                        slotProps={{
                                             inputLabel: {
                                                 sx: editMode
                                                     ? {
@@ -547,6 +690,7 @@ const EditUserForm: React.FC = () => {
                                             },
                                         }}
                                     />
+
                                 </Grid>
                                 {/* Columna DERECHA */}
                                 <Grid container direction="column" size={4} sx={{ mt: 0 }}>
@@ -627,65 +771,12 @@ const EditUserForm: React.FC = () => {
 
                                         <Grid size={12} >
                                             {/* CATEGORY */}
-                                            {/* <FormControl fullWidth sx={{ mb: 0, mt: -0.8 }}>
-                                                <InputLabel
-                                                    id="demo-simple-select-label"
-                                                    shrink={true} // Forzar que el label esté siempre flotando
-                                                    sx={{
-                                                        color: !editMode ? 'rgba(0, 0, 0, 0.38)' : undefined, // Color gris claro cuando está deshabilitado
-                                                        '&.Mui-focused': {
-                                                            color: '#b71c1c', // Color rojo cuando está enfocado
-                                                        },
-                                                    }}
-                                                >
-                                                    Categoria
-                                                </InputLabel>
-                                                <Select
-                                                    disabled={!editMode}
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={values.category}
-                                                    label="Categoria" // Importante para que el notch y label funcionen bien
-                                                    onChange={(event) => {
-                                                        handleChange({ target: { name: 'category', value: event.target.value } });
-                                                    }}
 
-                                                    sx={
-
-                                                        editMode
-                                                            ? {
-                                                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                                    borderColor: '#b71c1c',
-                                                                },
-                                                                '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                                    borderColor: '#b71c1c',
-                                                                },
-                                                            }
-                                                            : {}
-                                                    }
-                                                >
-                                                    {categories?.length > 0 ? (
-                                                        categories.map(({ id, name }) => (
-                                                            <MenuItem key={id} value={name}>
-                                                                {name}
-                                                            </MenuItem>
-                                                        ))
-                                                    ) : (
-                                                        <p>Cargando Categorias...</p>
-                                                    )}
-                                                </Select>
-                                                {touched.category && errors.category ? (
-                                                    <Typography color="error" variant="caption">
-                                                        {errors.category}
-                                                    </Typography>
-                                                ) : (
-                                                    <span> &nbsp; </span>
-                                                )}
-                                            </FormControl> */}
 
                                             <Grid display="flex" alignItems="center" gap={2} sx={{ mt: -0.8, mb: 3 }}>
                                                 <FormControl fullWidth>
                                                     <TextField
+                                                        variant='standard'
                                                         label="Categoría"
                                                         value={values.category + (full ? " - Pleno" : "")}
                                                         slotProps={{
@@ -705,6 +796,7 @@ const EditUserForm: React.FC = () => {
 
                                             {/* EMAIL */}
                                             <TextField
+                                                variant="standard"
                                                 disabled
                                                 fullWidth
                                                 id="email"
@@ -715,31 +807,38 @@ const EditUserForm: React.FC = () => {
                                                 onChange={handleChange}
                                                 onBlur={handleBlur}
                                                 error={touched.email && Boolean(errors.email)}
-                                                helperText={touched.email && errors.email ? errors.email : " "} // 
-                                                sx={{ mt: 0.85 }}
-                                                slotProps={editMode ? {
-                                                    input: {
-                                                        sx: editMode
-                                                            ? {
-                                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                            }
-                                                            : {},
+                                                helperText={touched.email && errors.email ? errors.email : " "}
+                                                sx={{
+                                                    mt: 0.85,
+
+                                                    // Texto legible aun deshabilitado
+                                                    "& .MuiInputBase-input.Mui-disabled": {
+                                                        WebkitTextFillColor: "#000000",
+                                                        color: "#000000",
+                                                        opacity: 1,
                                                     },
-                                                    inputLabel: {
-                                                        sx: !editMode
-                                                            ? {
-                                                                "&.Mui-focused": {
-                                                                    color: "#b71c1c",
-                                                                },
-                                                            }
-                                                            : {},
+                                                    "& .MuiInputLabel-root.Mui-disabled": {
+                                                        color: "rgba(0, 0, 0, 0.6)",
                                                     },
-                                                } : null}
+
+                                                    // Línea inferior continua
+                                                    "& .MuiInput-underline:before": {
+                                                        borderBottom: "1px solid rgba(0,0,0,0.42)",
+                                                    },
+                                                    "& .MuiInput-underline.Mui-disabled:before": {
+                                                        borderBottom: "1px solid rgba(0,0,0,0.42)",
+                                                    },
+
+                                                    // Focus rojo si editMode se aplicara
+                                                    "& .MuiInput-underline.Mui-focused:after": {
+                                                        borderBottomColor: "#b71c1c",
+                                                    },
+                                                }}
                                             />
+
                                             {/* FAMILY GROUP */}
                                             <TextField
+                                                variant="standard"
                                                 disabled
                                                 fullWidth
                                                 id="familyGroup"
@@ -749,30 +848,35 @@ const EditUserForm: React.FC = () => {
                                                 value={familyGroupNames}
                                                 onChange={handleChange}
                                                 onBlur={handleBlur}
-                                                error={touched.email && Boolean(errors.email)}
-                                                helperText={touched.email && errors.email ? errors.email : " "} // 
-                                                sx={{ mt: 0.85 }}
-                                                slotProps={editMode ? {
-                                                    input: {
-                                                        sx: editMode
-                                                            ? {
-                                                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                    borderColor: "#b71c1c",
-                                                                },
-                                                            }
-                                                            : {},
+                                                error={touched.familyGroup && Boolean(errors.familyGroup)}
+                                                sx={{
+                                                    mt: 0.85,
+
+                                                    // Texto legible aun deshabilitado
+                                                    "& .MuiInputBase-input.Mui-disabled": {
+                                                        WebkitTextFillColor: "#000000",
+                                                        color: "#000000",
+                                                        opacity: 1,
                                                     },
-                                                    inputLabel: {
-                                                        sx: !editMode
-                                                            ? {
-                                                                "&.Mui-focused": {
-                                                                    color: "#b71c1c",
-                                                                },
-                                                            }
-                                                            : {},
+                                                    "& .MuiInputLabel-root.Mui-disabled": {
+                                                        color: "rgba(0, 0, 0, 0.6)",
                                                     },
-                                                } : null}
+
+                                                    // Línea inferior continua
+                                                    "& .MuiInput-underline:before": {
+                                                        borderBottom: "1px solid rgba(0,0,0,0.42)",
+                                                    },
+                                                    "& .MuiInput-underline.Mui-disabled:before": {
+                                                        borderBottom: "1px solid rgba(0,0,0,0.42)",
+                                                    },
+
+                                                    // Focus rojo si editMode se aplicara
+                                                    "& .MuiInput-underline.Mui-focused:after": {
+                                                        borderBottomColor: "#b71c1c",
+                                                    },
+                                                }}
                                             />
+
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -795,7 +899,7 @@ const EditUserForm: React.FC = () => {
                                             },
                                         }}>
                                             {user.admin ? "VOLVER A LISTA DE SOCIOS" : "VOLVER A INICIO"}
-                                            
+
                                         </Button>}
                                 </Grid>
                                 <Grid container size={4}>
