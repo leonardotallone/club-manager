@@ -10,7 +10,6 @@ const GetAllCategoriesProvider = ({ children }) => {
   const [loadingCategories, setLoadingCategories] = useState(false)
 
 
-
   const db = getFirestore(FIREBASE_APP);
 
   useEffect(() => {

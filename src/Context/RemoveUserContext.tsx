@@ -23,13 +23,7 @@ const RemoveUserProvider = ({ children }) => {
   const { loguedUser } = useContext(signInUserContext);
   const { loguedUserInformation } = useContext(getAllUsersContext);
 
-
-  console.log("LOGUED USER INFORMATION IN CONTEXT", loguedUserInformation)
-  console.log("LOGUED USER CONTEXT", loguedUser)
-
-
   const auth = FIREBASE_AUTH;
-  console.log("AUTH FUERA DEL UF", auth)
 
   const storage = getStorage()
 

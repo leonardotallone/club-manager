@@ -15,9 +15,6 @@ const SignInUserProvider = ({ children }) => {
   const [signInError, setSignInError] = useState("")
   const [loading, setLoading] = useState(false)
 
-
-  console.log("loguedUser", loguedUser)
-
   const auth = FIREBASE_AUTH;
 
   useEffect(() => {

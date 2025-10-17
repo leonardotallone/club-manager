@@ -14,9 +14,13 @@ const GetAllUsersProvider = ({ children }) => {
 
   const { loguedUser } = useContext(signInUserContext);
   const [allUsers, setAllUsers] = useState([]);
+
   const [loguedUserInformation, setLoguedUserInformation] = useState();
   const [loading, setLoading] = useState(false)
+
+
   
+
   const db = getFirestore(FIREBASE_APP);
 
   type User = {

@@ -45,6 +45,7 @@ const Navbar = () => {
     const pageUsers = [
         { name: 'Dashboard', view: 'Userdashboard' },
         { name: 'Documentos', view: 'docs' },
+        { name: 'Carnet Digital', view: 'digitalCard' },
     ];
 
     const pageNoUser = [
@@ -128,7 +129,7 @@ const Navbar = () => {
                         {/* MENÚ MOBILE FULL-SCREEN DESDE ABAJO */}
                         <Box sx={{ display: { xs: "flex", md: "none" } }}>
                             <IconButton size="large" onClick={toggleDrawer(true)} sx={{ color: theme.palette.grey[800] }}>
-                                <MenuIcon fontSize="large"/>
+                                <MenuIcon fontSize="large" />
                             </IconButton>
                             <Drawer
                                 anchor="bottom" // <--- sale desde abajo
@@ -279,109 +280,140 @@ const Navbar = () => {
                         </Box>
 
 
-{/* MENÚ DESKTOP MODERNO SIN EFECTO BOTÓN */}
-<Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" }, justifyContent: "center", alignItems: "center" }}>
-    {pagesToMap.map((page) => (
-        <Typography
-            key={page.name}
-            onClick={() => {
-                if (!loguedUserInformation) scrollToSection(page.view);
-                else if (isAdmin) setActiveAdminView(page.view);
-                else setActiveUserView(page.view);
-            }}
-            sx={{
-                mx: 3,
-                color: "#333",
-                fontWeight: 600,
-                fontFamily: '"Manrope", sans-serif',
-                fontSize: "1rem",
-                lineHeight: 1.2,
-                cursor: "pointer",
-                transition: "color 0.3s, transform 0.2s",
-                "&:hover": {
-                    color: "#b71c1c",
-                    transform: "translateY(-2px)",
-                },
-            }}
-        >
-            {page.name}
-        </Typography>
-    ))}
-</Box>
+                        {/* MENÚ DESKTOP MODERNO SIN EFECTO BOTÓN */}
+                        <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" }, justifyContent: "center", alignItems: "center" }}>
+                            {pagesToMap.map((page) => (
+                                <Typography
+                                    key={page.name}
+                                    onClick={() => {
+                                        if (!loguedUserInformation) scrollToSection(page.view);
+                                        else if (isAdmin) setActiveAdminView(page.view);
+                                        else setActiveUserView(page.view);
+                                    }}
+                                    sx={{
+                                        mx: 3,
+                                        color: "#333",
+                                        fontWeight: 600,
+                                        fontFamily: '"Manrope", sans-serif',
+                                        fontSize: "1rem",
+                                        lineHeight: 1.2,
+                                        cursor: "pointer",
+                                        transition: "color 0.3s, transform 0.2s",
+                                        "&:hover": {
+                                            color: "#b71c1c",
+                                            transform: "translateY(-2px)",
+                                        },
+                                    }}
+                                >
+                                    {page.name}
+                                </Typography>
+                            ))}
+                        </Box>
 
-{/* PERFIL DESKTOP MODERNO */}
-{loguedUserInformation ? (
-    <Box
-        sx={{
-            display: { xs: "none", md: "flex" },
-            alignItems: "center",
-            gap: 2,
-            padding: 1,
-            borderRadius: 3,
-            backgroundColor: "#f5f5f5",
-        }}
-    >
-        <Box sx={{ textAlign: "right" }}>
-            <Typography sx={{ fontSize: 14, fontWeight: 600, color: "#333" }}>
-                {isAdmin ? "Administrador" : `${loguedUserInformation.name} ${loguedUserInformation.lastName}`}
-            </Typography>
-            <Typography sx={{ fontSize: 12, color: "#666" }}>{loguedUserInformation?.email}</Typography>
-        </Box>
+                        {/* PERFIL DESKTOP MODERNO */}
+                        {loguedUserInformation ? (
+                            <Box
+                                sx={{
+                                    display: { xs: "none", md: "flex" },
+                                    alignItems: "center",
+                                    gap: 2,
+                                    padding: 1,
+                                    borderRadius: 3,
+                                    backgroundColor: "#f5f5f5",
+                                }}
+                            >
+                                <Box sx={{ textAlign: "right" }}>
+                                    <Typography sx={{ fontSize: 14, fontWeight: 600, color: "#333" }}>
+                                        {isAdmin ? "Administrador" : `${loguedUserInformation.name} ${loguedUserInformation.lastName}`}
+                                    </Typography>
+                                    <Typography sx={{ fontSize: 12, color: "#666" }}>{loguedUserInformation?.email}</Typography>
+                                </Box>
 
-        <Tooltip title="Configuración">
-            <IconButton sx={{ color: "#424242" }}>
-                <SettingsOutlinedIcon />
-            </IconButton>
-        </Tooltip>
+                                <Tooltip title="Configuración">
+                                    <IconButton sx={{ color: "#424242" }}>
+                                        <SettingsOutlinedIcon />
+                                    </IconButton>
+                                </Tooltip>
 
-        <Tooltip title="Cerrar sesión">
-            <IconButton onClick={handleLogOut} sx={{ color: "#b71c1c" }}>
-                <LogoutOutlinedIcon />
-            </IconButton>
-        </Tooltip>
+                                <Tooltip title="Cerrar sesión">
+                                    <IconButton onClick={handleLogOut} sx={{ color: "#b71c1c" }}>
+                                        <LogoutOutlinedIcon />
+                                    </IconButton>
+                                </Tooltip>
 
-        <Avatar alt="Usuario" src={avatar} sx={{ width: 42, height: 42, border: "2px solid #b71c1c" }} />
-    </Box>
-) : (
-    <Typography
-        onClick={() => setOpenLogin(true)}
-        sx={{
-            display: { xs: "none", md: "block" },
-            color: "#b71c1c",
-            fontWeight: 600,
-            fontFamily: '"Manrope", sans-serif',
-            fontSize: "1rem",
-            cursor: "pointer",
-            transition: "color 0.3s",
-            "&:hover": { color: "#333" },
-        }}
-    >
-        Iniciar sesión
-    </Typography>
-)}
+                                <Avatar alt="Usuario" src={avatar} sx={{ width: 42, height: 42, border: "2px solid #b71c1c" }} />
+                            </Box>
+                        ) : (
+                            <Typography
+                                onClick={() => setOpenLogin(true)}
+                                sx={{
+                                    display: { xs: "none", md: "block" },
+                                    color: "#b71c1c",
+                                    fontWeight: 600,
+                                    fontFamily: '"Manrope", sans-serif',
+                                    fontSize: "1rem",
+                                    cursor: "pointer",
+                                    transition: "color 0.3s",
+                                    "&:hover": { color: "#333" },
+                                }}
+                            >
+                                Iniciar sesión
+                            </Typography>
+                        )}
                     </Toolbar>
                 </Container>
             </AppBar >
 
             {/* MODALES */}
-            < Modal open={openLogin} onClose={() => setOpenLogin(false)} closeAfterTransition >
-                <Fade in={openLogin}>
+
+            <Modal
+                open={openLogin}
+                onClose={() => setOpenLogin(false)}
+                closeAfterTransition
+                slotProps={{
+                    backdrop: {
+                        timeout: 2000,
+                        style: { backdropFilter: "blur(3px)" }
+                    }
+                }}
+            >
+                <Fade in={openLogin} timeout={{ enter: 2000, exit: 2000 }}>
                     <Box>
                         <SignInForm />
                     </Box>
                 </Fade>
-            </Modal >
+            </Modal>
 
-            <Modal open={openRecoverPassword} onClose={() => setOpenRecoverPassword(false)} closeAfterTransition>
-                <Fade in={openRecoverPassword}>
+            <Modal
+                open={openRecoverPassword}
+                onClose={() => setOpenRecoverPassword(false)}
+                closeAfterTransition
+                slotProps={{
+                    backdrop: {
+                        timeout: 2000,
+                        style: { backdropFilter: "blur(3px)" }
+                    }
+                }}
+            >
+                <Fade in={openRecoverPassword} timeout={{ enter: 2000, exit: 2000 }}>
                     <Box>
                         <PasswordRecoverForm />
                     </Box>
                 </Fade>
             </Modal>
 
-            <Modal open={openRecoverEmail} onClose={() => setOpenRecoverEmail(false)} closeAfterTransition>
-                <Fade in={openRecoverEmail}>
+            <Modal
+                open={openRecoverEmail}
+                onClose={() => setOpenRecoverEmail(false)}
+                closeAfterTransition
+                slotProps={{
+                    backdrop: {
+                        timeout: 2000,
+                        style: { backdropFilter: "blur(3px)" }
+                    }
+                }}
+            >
+                <Fade in={openRecoverEmail} timeout={{ enter: 2000, exit: 2000 }}>
                     <Box>
                         <EmailRecoverForm />
                     </Box>

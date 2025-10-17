@@ -10,6 +10,7 @@ import SignUpProvider from "./Context/SignUpContext";
 import GetAllUsersProvider from "./Context/GetAllUsersContext";
 import GetAllCategoriesProvider from "./Context/GetAllCategoriesContext";
 import GetAllDisciplinesProvider from "./Context/GetAllDisciplinesContext";
+import FeesProvider from "./Context/FeesContext";
 
 import GetAllJoinUpProvider from "./Context/GetAllJoinUpContext";
 import UpdateUserProfileProvider from "./Context/UpdateUserProfileContext";
@@ -51,7 +52,9 @@ root.render(
                               <ControlModalsProvider>
                                 <RemoveUserProvider>
                                   <UpdateUserProfileProvider>
-                                    <App />
+                                    <FeesProvider>
+                                      <App />
+                                    </FeesProvider>
                                   </UpdateUserProfileProvider>
                                 </RemoveUserProvider>
                               </ControlModalsProvider>
