@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Grid, Typography, Divider } from "@mui/material";
+import { Box, Typography, Divider } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import {
     PieChart,
     Pie,
@@ -71,7 +72,7 @@ const AdminDashboard = () => {
 
 
     return (
-        <Box sx={{ p: 3, borderRadius: 2, backgroundColor:"white" }}>
+        <Box sx={{ p: 3, borderRadius: 2, backgroundColor: "white" }}>
             {/* Panel de control alineado izquierda */}
             <Typography
                 variant="h6"
@@ -89,7 +90,7 @@ const AdminDashboard = () => {
             {/* KPIs centrados */}
             <Grid container justifyContent="center" spacing={2} sx={{ mb: 4, textAlign: "center" }}>
                 {kpiData.map((item, index) => (
-                    <Grid item xs={6} sm={3} md={2.5} key={index}>
+                    <Grid size={{ xs: 6, sm: 3, md: 2.5 }} key={index}>
                         <Box
                             sx={{
                                 display: "flex",
@@ -134,7 +135,7 @@ const AdminDashboard = () => {
             {/* Tres gráficos circulares alineados */}
             <Grid container spacing={2} justifyContent="center">
                 {/* Tipo de membresía */}
-                <Grid item xs={12} md={4}>
+                <Grid size={{ xs: 12, md: 4 }}>
                     <Box sx={{ height: 260 }}>
                         <Typography
                             variant="subtitle2"
@@ -170,7 +171,7 @@ const AdminDashboard = () => {
                 </Grid>
 
                 {/* Distribución deporte */}
-                <Grid item xs={12} md={4}>
+                <Grid size={{ xs: 12, md: 4 }}>
                     <Box sx={{ height: 260 }}>
                         <Typography
                             variant="subtitle2"
@@ -208,7 +209,7 @@ const AdminDashboard = () => {
                 </Grid>
 
                 {/* Categorías de socios */}
-                <Grid item xs={12} md={4}>
+                <Grid size={{ xs: 12, md: 4 }}>
                     <Box sx={{ height: 260 }}>
                         <Typography
                             variant="subtitle2"

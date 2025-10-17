@@ -16,9 +16,9 @@ const EditUserScreen = () => {
         <>
             <Navbar />
             <Grid container sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-                <Grid size={12} sx={{ mt: 12 }}>
+                {/* <Grid size={12} sx={{ mt: 12 }}>
                     <BlackBanner />
-                </Grid>
+                </Grid> */}
 
                 <Grid
                     container
@@ -63,12 +63,12 @@ const EditUserScreen = () => {
 
                 </Grid>
 
-                <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12 }} sx={{ mt: 2 }}>
+                {/* <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12 }} sx={{ mt: 2 }}>
                     <Advertising />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12 }}>
+                </Grid> */}
+                {/* <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12 }}>
                     <Footer />
-                </Grid>
+                </Grid> */}
             </Grid>
         </>
     );

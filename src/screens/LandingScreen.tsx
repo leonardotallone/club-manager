@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -15,7 +15,6 @@ import Grid from '@mui/material/Grid2';
 import { signInUserContext } from "../Context/SignInUserContext";
 import { getAllUsersContext } from "../Context/GetAllUsersContext";
 import { controlModalsContext } from "../Context/ControModalsContext";
-
 import Navbar from "../components/Navbar";
 import Advertising from "../components/Advertising";
 import Footer from "../components/Footer";
@@ -24,7 +23,7 @@ import JoinUpForm from "../components/JoinUpForm";
 const LandingScreen = () => {
   const { loading } = useContext(signInUserContext);
   const { loguedUserInformation } = useContext(getAllUsersContext);
-  const { openJoinUp, setOpenJoinUp, setOpenLogin } = useContext(controlModalsContext)
+  const { openJoinUp, setOpenJoinUp, setOpenLogin } = useContext(controlModalsContext);
 
   const navigate = useNavigate();
   const theme = useTheme();
@@ -50,14 +49,15 @@ const LandingScreen = () => {
     <>
       <Navbar />
 
-      <Box sx={{ backgroundColor: "#f5f5f5" }}>
-        {/* 🟢 HERO SECTION */}
+      <Box sx={{ backgroundColor: "#fafafa" }}>
+        {/* HERO SECTION */}
+
         <Box
           sx={{
             minHeight: { xs: "100vh", md: "90vh" },
             py: { xs: 6, md: 0 },
             backgroundImage:
-              "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('https://wallpapers.com/images/hd/gym-background-3avpur3zeam79mrd.jpg')",
+              "linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url('https://wallpapers.com/images/hd/gym-background-3avpur3zeam79mrd.jpg')",
             backgroundSize: "cover",
             backgroundPosition: "center",
             display: "flex",
@@ -67,35 +67,33 @@ const LandingScreen = () => {
           }}
         >
           <Container maxWidth="xl">
-            <Grid
-              container
-              spacing={4}
-              alignItems="center"
-              justifyContent="center"
-              direction={{ xs: "column", md: "row" }}
-            >
-              <Grid size={{ xs: 12, md: 6 }}>
+            <Grid container>
+              <Grid size={{ xs: 12, md: 12, lg: 7 }}>
                 <Fade in timeout={1000}>
                   <Box>
                     <Typography
-                      variant="h2"
+                      // variant="h1"
                       sx={{
-                        color: "white",
-                        fontWeight: 800,
-                        mb: 1,
-                        textShadow: "2px 2px 6px rgba(0,0,0,0.5)",
+                        color: "#b71c1c",
+                        fontWeight: 600,
+                        mb: 2,
+                        fontFamily: '"Outfit", sans-serif',
+                        fontSize: { xs: "6rem", md: "6rem" },
+                        textShadow: "none",
+                        lineHeight: 1.2,
+                        letterSpacing: "-0.02rem"
                       }}
                     >
-                      CLUB SOCIAL
+                      Club Social
                     </Typography>
                     <Typography
                       sx={{
-                        typography: { xs: "body1", sm: "h6", md: "h5" },
-                        color: "rgba(255,255,255,0.85)",
-                        fontWeight: 400,
-                        mb: 3,
-                        maxWidth: { xs: "100%", md: "80%" },
-                        mx: { xs: "auto", md: 0 },
+                        color: "#333",
+                        fontWeight: 600,
+                        mb: 4,
+                        maxWidth: { xs: "100%", md: "75%" },
+                        fontFamily: '"Outfit", sans-serif',
+                        fontSize: { xs: "2.5rem", md: "3rem" },
                       }}
                     >
                       Conectá, compartí y gestioná tu comunidad con facilidad.
@@ -105,14 +103,18 @@ const LandingScreen = () => {
                       onClick={() => setOpenJoinUp(true)}
                       sx={{
                         borderColor: "#b71c1c",
-                        color: "white",
-                        px: 4,
-                        py: 1,
+                        color: "#b71c1c",
+                        px: 5,
+                        py: 1.5,
                         fontWeight: 600,
+                        fontFamily: '"Outfit", sans-serif',
+                        fontSize: { xs: "1rem", md: "1.0rem" },
                         "&:hover": {
                           backgroundColor: "#b71c1c",
                           borderColor: "#b71c1c",
+                          color: "white",
                         },
+
                       }}
                     >
                       QUIERO ASOCIARME
@@ -121,22 +123,9 @@ const LandingScreen = () => {
                 </Fade>
               </Grid>
 
-              <Grid
-                size={{ xs: 12, md: 6 }}
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  mt: { xs: 4, md: 0 },
-                }}
-              >
-                {/* <Fade in timeout={1200}>
-                  <Box sx={{ width: { xs: "100%", sm: 400 } }}>
-                    {!loguedUserInformation && <SignInForm />}
-                  </Box>
-                </Fade> */}
-              </Grid>
             </Grid>
+
+
           </Container>
         </Box>
 
@@ -144,10 +133,9 @@ const LandingScreen = () => {
           open={openJoinUp}
           onClose={handleCloseJoinUp}
           closeAfterTransition
-
           slotProps={{
             backdrop: {
-              timeout: 2000, // duración de la animación del backdrop
+              timeout: 2000,
               style: { backdropFilter: "blur(3px)" }
             }
           }}
@@ -159,12 +147,12 @@ const LandingScreen = () => {
           </Fade>
         </Modal>
 
-        {/* 🟠 PARALLAX 1 */}
+        {/* PARALLAX 1 */}
         <Box
           sx={{
             height: { xs: 250, sm: 350, md: 450 },
             backgroundImage:
-              "linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(https://images.pexels.com/photos/8688170/pexels-photo-8688170.jpeg)",
+              "linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)), url(https://images.pexels.com/photos/8688170/pexels-photo-8688170.jpeg)",
             backgroundAttachment: isMobile ? "scroll" : "fixed",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
@@ -173,64 +161,160 @@ const LandingScreen = () => {
             alignItems: "center",
             justifyContent: "center",
             px: 2,
+            textAlign: { xs: "center", md: "left" },
           }}
         >
           <Typography
             variant="h4"
             sx={{
-              color: "white",
-              fontWeight: 700,
-              textShadow: "2px 2px 6px rgba(0,0,0,0.5)",
-              textAlign: "center",
-              px: 2,
+              color: "#333",
+              // color: "#b71c1c",
+              fontWeight: 600,
+              fontFamily: '"Outfit", sans-serif',
+              fontSize: { xs: "2.5rem", md: "4rem" },
             }}
           >
             Unidos por la pasión de compartir.
           </Typography>
         </Box>
 
-        {/* 🟣 CONTENT SECTION */}
-        <Container sx={{ py: { xs: 6, md: 10 }, textAlign: "center" }}>
+        {/* CONTENT SECTION */}
+        <Container 
+         id="club" // 👈  id para navegar desde navbar
+        sx={{ py: { xs: 6, md: 10 }, textAlign: "center" }}>
           <Typography
             sx={{
-              typography: { xs: "h5", md: "h4" },
-              mb: 2,
-              fontWeight: 700,
+              // color: "#333",
+              color: "#b71c1c",
+              fontWeight: 600,
+              fontFamily: '"Outfit", sans-serif',
+              fontSize: { xs: "2.5rem", md: "4rem" },
             }}
           >
             Club Manager Solution
           </Typography>
           <Typography
             sx={{
-              typography: { xs: "body2", md: "body1" },
-              mb: 4,
-              color: "text.secondary",
-              maxWidth: 700,
-              mx: "auto",
+
+              color: "#333",
+              fontWeight: 100,
+              fontFamily: '"Outfit", sans-serif',
+              fontSize: { xs: "2.5rem", md: "4rem" },
             }}
           >
             Una plataforma diseñada para administrar tu comunidad, eventos,
             membresías y experiencias en un solo lugar.
           </Typography>
-          <Button
-            variant="contained"
-            size="large"
-            sx={{
-              backgroundColor: "#b71c1c",
-              "&:hover": { backgroundColor: "darkred" },
-            }}
-            onClick={() => { setOpenJoinUp(true) }}
-          >
-            Descubrí más
-          </Button>
         </Container>
 
-        {/* 🔵 PARALLAX 2 */}
+        {/* EQUIPO DIRECTIVO */}
+        <Box
+          id="equipo" // 👈  id para navegar desde navbar
+          sx={{
+            backgroundColor: "#fff",
+            py: { xs: 8, md: 10 },
+            textAlign: "center",
+          }}
+        >
+          <Container maxWidth="xl">
+            <Typography
+              sx={{
+                color: "#333",
+                // color: "#b71c1c",
+                fontWeight: 600,
+                fontFamily: '"Outfit", sans-serif',
+                fontSize: { xs: "2.5rem", md: "4rem" },
+                mb: 4,
+                textAlign: { xs: "center", md: "left" },
+              }}
+            >
+              Nuestro equipo
+            </Typography>
+
+            <Grid container spacing={6} justifyContent="center" alignItems="flex-start">
+              {[
+                {
+                  nombre: "Juana Martinez",
+                  cargo: "Presidente",
+                  foto:
+                    "https://i.pinimg.com/736x/40/55/1b/40551b99dcd86abb8a880b85e8ba48f1.jpg",
+                },
+                {
+                  nombre: "Ramiro Apellido",
+                  cargo: "Vicepresidente",
+                  foto:
+                    "https://beatapraska.com/wp-content/uploads/2021/04/fotografia-perfil-profesional-en-madrid-00013.jpg",
+                },
+                {
+                  nombre: "Brad López",
+                  cargo: "Tesorero",
+                  foto:
+                    "https://i.pinimg.com/236x/ea/97/dd/ea97ddf175f9db019b6a4b0c94e46a92.jpg",
+                },
+              ].map((persona, index) => (
+                <Grid key={index} size={{ xs: 12, sm: 6, md: 4 }}>
+                  <Fade in timeout={800 + index * 200}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        textAlign: "left",
+                      }}
+                    >
+                      <Box
+                        component="img"
+                        src={persona.foto}
+                        alt={persona.nombre}
+                        sx={{
+                          width: "100%",
+                          height: 400,
+                          objectFit: "cover",
+                          filter: "grayscale(100%)",
+                          transition: "filter 0.4s ease",
+                          "&:hover": {
+                            filter: "grayscale(0%)",
+                          },
+                        }}
+                      />
+                      <Typography
+
+                        sx={{
+                          mt: 2,
+                          color: "#333",
+                          // color: "#b71c1c",
+                          fontWeight: 600,
+                          fontFamily: '"Outfit", sans-serif',
+                          fontSize: { xs: "1.5rem", md: "1.5rem" },
+                        }}
+                      >
+                        {persona.nombre}
+                      </Typography>
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          fontWeight: 600,
+                          color: "#5e5d5dff",
+                          fontFamily: '"Outfit", sans-serif',
+                          fontSize: { xs: "0.8rem", md: "0.8rem" },
+                        }}
+                      >
+                        {persona.cargo}
+                      </Typography>
+                    </Box>
+                  </Fade>
+                </Grid>
+              ))}
+            </Grid>
+          </Container>
+        </Box>
+
+        {/* PARALLAX 2 */}
         <Box
           sx={{
             height: { xs: 250, sm: 350, md: 450 },
             backgroundImage:
-              "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(https://img.freepik.com/premium-photo/boy-swimming-pool-with-sunny-skies-clear-water_1072437-11958.jpg)",
+              "linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url(https://img.freepik.com/premium-photo/boy-swimming-pool-with-sunny-skies-clear-water_1072437-11958.jpg)",
             backgroundAttachment: isMobile ? "scroll" : "fixed",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
@@ -239,30 +323,31 @@ const LandingScreen = () => {
             alignItems: "center",
             justifyContent: "center",
             px: 2,
+
+
           }}
         >
           <Typography
             variant="h4"
             sx={{
-              color: "white",
-              fontWeight: 700,
-              textShadow: "2px 2px 6px rgba(0,0,0,0.5)",
-              textAlign: "center",
+              color: "#333",
+              // color: "#b71c1c",
+              fontWeight: 600,
+              fontFamily: '"Outfit", sans-serif',
+              fontSize: { xs: "2.5rem", md: "4rem" },
             }}
           >
             Donde la comunidad se convierte en familia.
           </Typography>
         </Box>
 
-        <Box sx={{ my: { xs: 6, md: 5 } }}>
+        <Box sx={{ my: { xs: 8, md: 6 } }}>
           <Advertising />
         </Box>
 
-
-
         <Footer />
 
-        {/* ⚫ Loading Overlay */}
+        {/* Loading Overlay */}
         {loading && (
           <Box
             sx={{
@@ -287,3 +372,7 @@ const LandingScreen = () => {
 };
 
 export default LandingScreen;
+
+
+
+

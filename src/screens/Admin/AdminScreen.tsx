@@ -60,7 +60,6 @@ const AdminScreen = () => {
                             sx={{
                                 position: 'absolute',
                                 inset: 0,
-                                backgroundColor: 'rgba(0,0,0,0.4)',
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',

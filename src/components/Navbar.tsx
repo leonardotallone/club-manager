@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {
     AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar,
     Button, Tooltip, MenuItem, Divider, Modal, useTheme, Fade
-    , Backdrop
+    ,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
@@ -49,8 +49,8 @@ const Navbar = () => {
     ];
 
     const pageNoUser = [
-        { name: 'El Club', view: 'elclub' },
-        { name: 'Autoridades', view: 'autoridades' },
+        { name: 'El Club', view: 'club' },  // 👈  el ID ("club")debe ser igual al q tengo en Landing Screen para navegar desde navbar
+        { name: 'Equipo', view: 'equipo' },
 
     ];
 
@@ -74,6 +74,17 @@ const Navbar = () => {
             })
             .catch((error) => console.error("Error logOut:", error.message));
     };
+
+
+    const scrollToSection = (sectionId: string) => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            const yOffset = -80; // altura aproximada del navbar
+            const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+            window.scrollTo({ top: y, behavior: "smooth" });
+        }
+    };
+
 
     return (
         <>
@@ -102,11 +113,13 @@ const Navbar = () => {
                                 variant="h6"
                                 sx={{
                                     display: { xs: 'none', md: 'block' },
-                                    fontWeight: 700,
+                                    fontWeight: 600,
                                     color: theme.palette.grey[800],
+                                    fontFamily: '"Outfit", sans-serif',
+                                    fontSize: { xs: "1rem", md: "1.2rem" },
                                 }}
                             >
-                                CLUB SOCIAL
+                                Club Social
                             </Typography>
                         </Box>
 
@@ -138,13 +151,41 @@ const Navbar = () => {
                         </Box>
 
                         {/* ---------- MENÚ DESKTOP ---------- */}
-                        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
+                        {/* <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
                             {pagesToMap.map((page) => (
                                 <Button
                                     key={page.name}
                                     onClick={() => {
                                         if (isAdmin) setActiveAdminView(page.view);
                                         else setActiveUserView(page.view)
+                                    }}
+                                    sx={{
+                                        mx: 1,
+                                        color: theme.palette.grey[800],
+                                        fontWeight: 500,
+                                        textTransform: 'none',
+                                        '&:hover': { color: '#b71c1c' },
+                                    }}
+                                >
+                                    {page.name}
+                                </Button>
+                            ))}
+                        </Box> */}
+
+                        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
+                            {pagesToMap.map((page) => (
+                                <Button
+                                    key={page.name}
+                                    onClick={() => {
+                                        handleCloseNavMenu(); // cerrar menú mobile si es necesario
+                                        if (!loguedUserInformation) {
+                                            // si no hay usuario logueado, hacemos scroll a la sección
+                                            scrollToSection(page.view); // ⚡ aquí llamamos la función
+                                        } else if (isAdmin) {
+                                            setActiveAdminView(page.view);
+                                        } else {
+                                            setActiveUserView(page.view);
+                                        }
                                     }}
                                     sx={{
                                         mx: 1,

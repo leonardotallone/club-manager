@@ -1,42 +1,49 @@
-import { useState, createContext, useEffect } from "react";
-import axios from "axios";
+// RecoverPasswordProvider.tsx
+import React, { useState, createContext, useContext } from "react";
+import { FIREBASE_AUTH } from "../Firebase/Firebase";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { getAllUsersContext } from "../Context/GetAllUsersContext";
 
-export const recoverPasswordContext = createContext(null);
-
-interface SignIn {
-    email: string;
-}
-const RecoverPasswordProvider = ({ children }) => {
-
-    const [email, setEmail] = useState<SignIn | null>(null);
-    const [recoverPasswordSuccess, setRecoverPasswordSuccess] = useState("")
-    const [recoverPasswordError, setRecoverPasswordError] = useState("")
-    const [loading, setLoading] = useState(false)
-
-
-
-    useEffect(() => {
-        if (email) {
-            setLoading(true); // Show ActivityIndicator when action starts
-            setRecoverPasswordError("");
-            axios
-                .post("https://masterclub.com.ar/api/Auth/forgot-password", email)
-                .then((response) => {
-                    setRecoverPasswordSuccess(response.data)
-                    // console.log("Response", response.data)
-                })
-                .catch((error) => {
-                    setRecoverPasswordError(error.response.data);
-                })
-                .finally(() => {
-                    setLoading(false);
-                });
-        }
-    }, [email]);
-    return (
-        <recoverPasswordContext.Provider value={{ email, setEmail,setRecoverPasswordError, recoverPasswordError, recoverPasswordSuccess, loading }}>
-            {children}
-        </recoverPasswordContext.Provider>
-    );
+type RecoverCtxType = {
+  // solo exponemos lo necesario
+  loading: boolean;
+  handlePasswordReset: (emailToSend: string) => Promise<{ ok: boolean; message?: string }>;
 };
+
+export const recoverPasswordContext = createContext<RecoverCtxType | null>(null);
+
+const RecoverPasswordProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { allUsers } = useContext(getAllUsersContext);
+  const [loading, setLoading] = useState(false);
+  const auth = FIREBASE_AUTH;
+
+  const handlePasswordReset = async (emailToSend: string) => {
+    // Limpiado local (no usamos resetError en el provider)
+    // Verificamos existencia:
+    const exists = allUsers?.some((user: { email: string }) => user.email === emailToSend);
+
+    if (!exists) {
+      return { ok: false, message: "No hay usuario registrado con el correo ingresado" };
+    }
+
+    setLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, emailToSend);
+      return { ok: true, message: "Correo de recuperación enviado correctamente" };
+    } catch (error: any) {
+      // Estandarizo el mensaje
+      const msg = error?.message ? `Error al enviar el correo: ${error.message}` : "Error al enviar el correo";
+      return { ok: false, message: msg };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <recoverPasswordContext.Provider value={{ loading, handlePasswordReset }}>
+      {children}
+    </recoverPasswordContext.Provider>
+  );
+};
+
 export default RecoverPasswordProvider;

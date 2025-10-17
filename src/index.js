@@ -39,13 +39,13 @@ root.render(
       <DisplaySelectorViewProvider>
         <SignInUserProvider>
           <GetAllJoinUpProvider>
-            <RecoverPasswordProvider>
-              <NewPasswordProvider>
-                <SignedUserProvider>
-                  <SignUpProvider>
-                    <JoinUpProvider>
-                      <GetAllUsersProvider>
-                        <RecoverUserProvider>
+            <NewPasswordProvider>
+              <SignedUserProvider>
+                <SignUpProvider>
+                  <JoinUpProvider>
+                    <GetAllUsersProvider>
+                      <RecoverUserProvider>
+                        <RecoverPasswordProvider>
                           <GetAllCategoriesProvider>
                             <GetAllDisciplinesProvider>
                               <ControlModalsProvider>
@@ -57,13 +57,13 @@ root.render(
                               </ControlModalsProvider>
                             </GetAllDisciplinesProvider>
                           </GetAllCategoriesProvider>
-                        </RecoverUserProvider>
-                      </GetAllUsersProvider>
-                    </JoinUpProvider>
-                  </SignUpProvider>
-                </SignedUserProvider>
-              </NewPasswordProvider>
-            </RecoverPasswordProvider>
+                        </RecoverPasswordProvider>
+                      </RecoverUserProvider>
+                    </GetAllUsersProvider>
+                  </JoinUpProvider>
+                </SignUpProvider>
+              </SignedUserProvider>
+            </NewPasswordProvider>
           </GetAllJoinUpProvider>
         </SignInUserProvider>
       </DisplaySelectorViewProvider>
