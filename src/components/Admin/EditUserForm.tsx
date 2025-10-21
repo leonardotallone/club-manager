@@ -20,8 +20,8 @@ import { updateUserProfileContext } from "../../Context/UpdateUserProfileContext
 import { removeUserContext } from "../../Context/RemoveUserContext"
 import { controlModalsContext } from '../../Context/ControModalsContext';
 
-import AddFamilyModal from './AddFamilyModal';
-import EditFamilyModal from './EditFamilyModal';
+// import AddFamilyModal from './AddFamilyModal';
+// import EditFamilyModal from './EditFamilyModal';
 
 interface SignUpFormValues {
 
@@ -42,6 +42,12 @@ interface SignUpFormValues {
     familyGroup: object,
     applicationDate: Dayjs,
 }
+
+type EditUserFormProps = {
+    user: any; // o SignUpFormValues si ya lo tenés tipado
+};
+
+
 
 // Validación con Yup
 const validationSchema = Yup.object({
@@ -75,7 +81,10 @@ const validationSchema = Yup.object({
     //     .required("El campo es obligatorio"),
 });
 
-const EditUserForm: React.FC = () => {
+
+
+
+const EditUserForm: React.FC<EditUserFormProps> = ({ user }) => {
 
     const { categories } = useContext(getAllCategoriesContext)
     const { disciplines } = useContext(getAllDisciplinesContext)
@@ -85,13 +94,13 @@ const EditUserForm: React.FC = () => {
 
     const [discipline, setDiscipline] = React.useState<string[]>([]);
     const [editMode, setEditMode] = React.useState<boolean>(false);
-    const [lockUser, setLockUser] = React.useState<boolean>(userForEdit.blockade);
+    const [lockUser, setLockUser] = React.useState<boolean>(user.blockade);
 
-    const [full, setFull] = useState<boolean>(userForEdit.full); // Estado del toggle
+    const [full, setFull] = useState<boolean>(user.full); // Estado del toggle
     // const [familyGroup, setFamilyGroup] = useState(user.familyGroup || []);
 
 
-    const user = userForEdit;
+
 
     const handleOpenAdd = () => setOpenAdd((prevOpen: any) => !prevOpen);
     const handleOpenEdit = () => setOpenEdit((prevOpen: any) => !prevOpen);
@@ -1014,8 +1023,8 @@ const EditUserForm: React.FC = () => {
 
             {/*  MODALS*/}
 
-            <AddFamilyModal />
-            <EditFamilyModal />
+            {/* <AddFamilyModal /> */}
+            {/* <EditFamilyModal /> */}
 
 
 

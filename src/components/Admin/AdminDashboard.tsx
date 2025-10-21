@@ -1,289 +1,370 @@
 import React from "react";
-import { Box, Typography, Divider } from "@mui/material";
-import Grid from "@mui/material/Grid2";
 import {
-    PieChart,
-    Pie,
-    Cell,
-    Tooltip,
-    ResponsiveContainer,
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
+  Box,
+  Typography,
+  Grid,
+  Divider,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
 } from "recharts";
 
-const AdminDashboard = () => {
-    const metrics = {
-        totalUsers: 120,
-        totalApplications: 8,
-        males: 75,
-        females: 45,
-        individual: 75,
-        family: 25,
-        totalFee: 240000,
-        paid: 180000,
-        pending: 60000,
-    };
+const AdminDashboardModern = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-    const palette = {
-        accent: "#2E7D32",
-        grayDark: "rgba(0,0,0,0.75)",
-        grayLight: "rgba(0,0,0,0.45)",
-        neutralBg: "#F9F9F9",
-        black: "#000000",
-    };
+  // 📊 Datos simulados
+  const metrics = {
+    totalUsers: 120,
+    totalApplications: 8,
+    males: 70,
+    females: 50,
+    totalFee: 240000,
+    paid: 180000,
+    pending: 60000,
+    categories: [
+      { name: "Activo", value: 60 },
+      { name: "Menor", value: 25 },
+      { name: "Adherente", value: 20 },
+      { name: "Pleno", value: 15 },
+    ],
+    disciplines: [
+      { name: "Fútbol", value: 40 },
+      { name: "Tenis", value: 25 },
+      { name: "Hockey", value: 30 },
+      { name: "Pileta", value: 25 },
+    ],
+  };
 
-    const membershipData = [
-        { name: "Individuales", value: metrics.individual },
-        { name: "Familiares", value: metrics.family },
-    ];
+  // 🎨 Paleta moderna
+  const palette = {
+    text: "#1A1A1A",
+    gray: "#666666",
+    blue: "#4A90E2",
+    pink: "#E57373",
+    mint: "#80CBC4",
+    lilac: "#B39DDB",
+    accent: "#FDD835",
+  };
 
-    const paymentsData = [
-        { name: "Total a cobrar", value: metrics.totalFee, fill: "rgba(46,125,50,0.3)" },
-        { name: "Cobrado", value: metrics.paid, fill: "rgba(46,125,50,0.6)" },
-        { name: "Pendiente", value: metrics.pending, fill: "rgba(46,125,50,1)" },
-    ];
+  const colors = [
+    palette.blue,
+    palette.pink,
+    palette.mint,
+    palette.lilac,
+    palette.accent,
+  ];
 
-    const kpiData = [
-        { label: "Total socios", value: metrics.totalUsers },
-        { label: "Solicitudes pendientes", value: metrics.totalApplications },
-        { label: "Hombres", value: metrics.males },
-        { label: "Mujeres", value: metrics.females },
-    ];
+  // 📈 Totales para cálculos de %
+  const genderData = [
+    { name: "Hombres", value: metrics.males },
+    { name: "Mujeres", value: metrics.females },
+  ];
+  const totalGender = genderData.reduce((a, b) => a + b.value, 0);
+  const categoryTotal = metrics.categories.reduce((a, b) => a + b.value, 0);
+  const disciplineTotal = metrics.disciplines.reduce((a, b) => a + b.value, 0);
+  const paymentPercent = Math.round((metrics.paid / metrics.totalFee) * 100);
 
-    const sportsCategoriesData = [
-        { name: "Fútbol", value: 40 },
-        { name: "Tenis", value: 30 },
-        { name: "Hockey", value: 50 },
-    ];
+  // 🧩 Reutilizable: render de donut + leyenda
+  const DonutWithLegend = ({
+    title,
+    data,
+    total,
+  }: {
+    title: string;
+    data: { name: string; value: number }[];
+    total: number;
+  }) => (
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: { xs: "column", md: "row" },
+        gap: 3,
+        width: "100%",
+      }}
+    >
+      {/* 🥧 Donut */}
+      <Box sx={{ width: 250, height: 250 }}>
+        <ResponsiveContainer>
+          <PieChart>
+            <Pie
+              data={data}
+              dataKey="value"
+              cx="50%"
+              cy="50%"
+              innerRadius={70}
+              outerRadius={100}
+              labelLine={false}
+            >
+              {data.map((_, i) => (
+                <Cell key={i} fill={colors[i % colors.length]} />
+              ))}
+            </Pie>
+            <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
+      </Box>
 
-    const memberCategoriesData = [
-        { name: "Activo", value: 60 },
-        { name: "Menor", value: 20 },
-        { name: "Adherente", value: 15 },
-        { name: "Plenos", value: 25 },
-    ];
+      {/* 🧾 Leyenda personalizada */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          gap: 1,
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{
+            mb: 1,
+            fontFamily: '"Outfit", sans-serif',
+            fontWeight: 600,
+            color: palette.text,
+          }}
+        >
+          {title}
+        </Typography>
+        {data.map((item, i) => {
+          const numericValue = Number(item.value) || 0;
+          const percent = ((numericValue / total) * 100).toFixed(1);
+          return (
+            <Box
+              key={i}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1.2,
+                fontFamily: '"Outfit", sans-serif',
+              }}
+            >
+              <Box
+                sx={{
+                  width: 14,
+                  height: 14,
+                  borderRadius: "50%",
+                  backgroundColor: colors[i % colors.length],
+                }}
+              />
+              <Typography
+                variant="body1"
+                sx={{
+                  fontFamily: '"Outfit", sans-serif',
+                  fontSize: 14,
+                  fontWeight: 500,
+                  color: "#1A1A1A",
+                }}
+              >
+                {`${item.name}: ${numericValue}`}
+                <Typography
+                  component="span"
+                  sx={{
+                    ml: 0.8,
+                    fontSize: 13,
+                    fontWeight: 400,
+                    color: "#666",
+                  }}
+                >
+                  ({percent}%)
+                </Typography>
+              </Typography>
+            </Box>
+          );
+        })}
+      </Box>
+    </Box>
+  );
 
-    const sportsColors = ["rgba(46,125,50,0.8)", "rgba(198,40,40,0.8)", "rgba(255,167,38,0.8)"];
-    const memberColors = ["rgba(46,125,50,0.8)", "rgba(198,40,40,0.8)", "rgba(255,167,38,0.8)", "rgba(76,175,80,0.8)"];
+  // 🎯 Render principal
+  return (
+    <Box
+      sx={{
+        width: "100%",
+        px: { xs: 2, md: 8 },
+        py: { xs: 4, md: 6 },
+        fontFamily: '"Outfit", sans-serif',
+        color: palette.text,
+      }}
+    >
+      {/* 🏁 Título */}
+      <Typography
+        variant={isMobile ? "h5" : "h4"}
+        sx={{
+          mb: 6,
+          fontWeight: 700,
+          color: palette.text,
+          textAlign: "left",
+          letterSpacing: "-0.5px",
+        }}
+      >
+        Panel de Control del Club
+      </Typography>
 
+      {/* 🔸 Totales principales mejorados */}
+      <Grid
+        container
+        spacing={isMobile ? 3 : 6}
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        sx={{ mb: 8 }}
+      >
+        {[
+          { label: "Total de Socios", value: metrics.totalUsers, color: palette.mint },
+          { label: "Solicitudes Pendientes", value: metrics.totalApplications, color: palette.pink },
+        ].map((kpi, i) => (
+          <Grid item xs={12} sm={6} md={4} key={i}>
+            <Box
+              sx={{
+                transform: "translateY(10px)",
+                opacity: 0,
+                animation: "fadeUp 0.8s ease forwards",
+                "@keyframes fadeUp": {
+                  to: { transform: "translateY(0)", opacity: 1 },
+                },
+              }}
+            >
+              <Typography
+                variant={isMobile ? "h3" : "h2"}
+                sx={{
+                  fontWeight: 700,
+                  mb: 0.3,
+                  color: "#1A1A1A",
+                  fontFamily: '"Outfit", sans-serif',
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                {kpi.value}
+              </Typography>
 
-
-
-    return (
-        <Box sx={{ p: 3, borderRadius: 2, backgroundColor: "white" }}>
-            {/* Panel de control alineado izquierda */}
-            <Typography
+              <Typography
                 variant="h6"
                 sx={{
-                    mb: 3,
-                    fontWeight: 600,
-                    color: palette.grayDark,
-                    letterSpacing: 0.3,
-                    textAlign: "left",
+                  color: palette.gray,
+                  fontWeight: 400,
+                  fontFamily: '"Outfit", sans-serif',
+                  mb: 1,
                 }}
-            >
-                Panel de control del club
-            </Typography>
+              >
+                {kpi.label}
+              </Typography>
 
-            {/* KPIs centrados */}
-            <Grid container justifyContent="center" spacing={2} sx={{ mb: 4, textAlign: "center" }}>
-                {kpiData.map((item, index) => (
-                    <Grid size={{ xs: 6, sm: 3, md: 2.5 }} key={index}>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                gap: 0.5,
-                            }}
-                        >
-                            <Box sx={{ width: 70, height: 70 }}>
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <PieChart>
-                                        <Pie
-
-                                            data={[
-                                                { value: item.value, fill: palette.accent },
-                                                { value: 100 - item.value, fill: "#E0E0E0" },
-                                            ]}
-                                            dataKey="value"
-                                            innerRadius={25}
-                                            outerRadius={32}
-                                            startAngle={90}
-                                            endAngle={-270}
-                                            stroke="none"
-
-                                        />
-                                    </PieChart>
-                                </ResponsiveContainer>
-                            </Box>
-                            <Typography sx={{ color: palette.grayDark, fontSize: 13, fontWeight: 500 }}>
-                                {item.label}
-                            </Typography>
-                            <Typography sx={{ color: palette.grayDark, fontSize: 17, fontWeight: 600 }}>
-                                {item.value}
-                            </Typography>
-                        </Box>
-                    </Grid>
-                ))}
-            </Grid>
-
-            <Divider sx={{ my: 3, opacity: 0.8 }} />
-
-            {/* Tres gráficos circulares alineados */}
-            <Grid container spacing={2} justifyContent="center">
-                {/* Tipo de membresía */}
-                <Grid size={{ xs: 12, md: 4 }}>
-                    <Box sx={{ height: 260 }}>
-                        <Typography
-                            variant="subtitle2"
-                            sx={{
-                                mb: 1,
-                                fontWeight: 600,
-                                color: palette.black,
-                                textAlign: "left",
-                            }}
-                        >
-                            Tipo de membresía
-                        </Typography>
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie
-                                    data={membershipData}
-                                    dataKey="value"
-                                    cx="50%"
-                                    cy="50%"
-                                    outerRadius={70}
-                                    label={({ name, value }) => `${name}: ${value}`}
-                                    labelLine={{ stroke: palette.black }}
-                                    fill={palette.black}
-
-                                >
-                                    <Cell fill="rgba(46,125,50,0.7)" />
-                                    <Cell fill="rgba(198,40,40,0.8)" />
-                                </Pie>
-                                <Tooltip />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </Box>
-                </Grid>
-
-                {/* Distribución deporte */}
-                <Grid size={{ xs: 12, md: 4 }}>
-                    <Box sx={{ height: 260 }}>
-                        <Typography
-                            variant="subtitle2"
-                            sx={{
-                                mb: 1,
-                                fontWeight: 600,
-                                color: palette.black,
-                                textAlign: "left",
-                            }}
-                        >
-                            Distribución por deporte
-                        </Typography>
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie
-                                    data={sportsCategoriesData}
-                                    dataKey="value"
-                                    cx="50%"
-                                    cy="50%"
-                                    outerRadius={70}
-                                    label={({ name, value }) => `${name}: ${value}`}
-                                    labelLine={{ stroke: palette.black }}
-                                >
-                                    {sportsCategoriesData.map((entry, index) => (
-                                        <Cell
-                                            key={`cell-sport-${index}`}
-                                            fill={sportsColors[index % sportsColors.length]}
-                                        />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </Box>
-                </Grid>
-
-                {/* Categorías de socios */}
-                <Grid size={{ xs: 12, md: 4 }}>
-                    <Box sx={{ height: 260 }}>
-                        <Typography
-                            variant="subtitle2"
-                            sx={{
-                                mb: 1,
-                                fontWeight: 600,
-                                color: palette.black,
-                                textAlign: "left",
-                            }}
-                        >
-                            Categorías de socios
-                        </Typography>
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie
-                                    data={memberCategoriesData}
-                                    dataKey="value"
-                                    cx="50%"
-                                    cy="50%"
-                                    outerRadius={70}
-                                    label={({ name, value }) => `${name}: ${value}`}
-                                    labelLine={{ stroke: palette.black }}
-                                >
-                                    {memberCategoriesData.map((entry, index) => (
-                                        <Cell
-                                            key={`cell-member-${index}`}
-                                            fill={memberColors[index % memberColors.length]}
-                                        />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </Box>
-                </Grid>
-            </Grid>
-
-            {/* Estado de cuenta (BarChart separado) */}
-            <Divider sx={{ my: 5, opacity: 0.8 }} />
-
-            <Box sx={{ height: 300 }}>
-                <Typography
-                    variant="subtitle2"
-                    sx={{
-                        mb: 1,
-                        fontWeight: 600,
-                        color: palette.black,
-                        textAlign: "left",
-                    }}
-                >
-                    Estado de cuenta
-                </Typography>
-                <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={paymentsData}>
-                        <XAxis
-                            dataKey="name"
-                            tick={{ fill: palette.grayLight, fontSize: 12 }}
-                            axisLine={false}
-                        />
-                        <YAxis
-                            tick={{ fill: palette.grayLight, fontSize: 12 }}
-                            axisLine={false}
-                        />
-                        <Tooltip />
-                        <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-                            {paymentsData.map((entry, index) => (
-                                <Cell key={`bar-${index}`} fill={entry.fill} />
-                            ))}
-                        </Bar>
-                    </BarChart>
-                </ResponsiveContainer>
+              {/* línea sutil */}
+              <Box
+                sx={{
+                  width: "45px",
+                  height: "3px",
+                  backgroundColor: kpi.color,
+                  borderRadius: 2,
+                }}
+              />
             </Box>
-        </Box>
-    );
+          </Grid>
+        ))}
+      </Grid>
+
+      <Divider sx={{ my: 4 }} />
+
+      {/* 🔹 Tres donuts alineados */}
+      <Grid
+        container
+        spacing={6}
+        justifyContent="center"
+        alignItems="flex-start"
+        sx={{ mb: 6 }}
+      >
+        <Grid item xs={12} md={4}>
+          <DonutWithLegend
+            title="Distribución por Género"
+            data={genderData}
+            total={totalGender}
+          />
+        </Grid>
+
+        <Grid item xs={12} md={4}>
+          <DonutWithLegend
+            title="Categorías de Socios"
+            data={metrics.categories}
+            total={categoryTotal}
+          />
+        </Grid>
+
+        <Grid item xs={12} md={4}>
+          <DonutWithLegend
+            title="Disciplinas"
+            data={metrics.disciplines}
+            total={disciplineTotal}
+          />
+        </Grid>
+      </Grid>
+
+      <Divider sx={{ my: 6 }} />
+
+      {/* 💰 Estado de cuenta */}
+      <Typography
+        variant="h6"
+        sx={{
+          mb: 2,
+          fontWeight: 600,
+          color: palette.text,
+          fontFamily: '"Outfit", sans-serif',
+        }}
+      >
+        Estado de Cuenta General
+      </Typography>
+
+      <Typography
+        variant="body1"
+        sx={{
+          color: palette.gray,
+          mb: 1,
+          fontFamily: '"Outfit", sans-serif',
+        }}
+      >
+        Cobrado: ${metrics.paid.toLocaleString()} • Pendiente: $
+        {metrics.pending.toLocaleString()}
+      </Typography>
+
+      <Box
+        sx={{
+          position: "relative",
+          height: 12,
+          borderRadius: 6,
+          bgcolor: "#E0E0E0",
+        }}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            height: "100%",
+            width: `${paymentPercent}%`,
+            bgcolor: palette.mint,
+            borderRadius: 6,
+            transition: "width 0.6s ease",
+          }}
+        />
+      </Box>
+
+      <Typography
+        variant="body2"
+        sx={{
+          mt: 0.5,
+          color: palette.text,
+          fontWeight: 500,
+          fontFamily: '"Outfit", sans-serif',
+        }}
+      >
+        {paymentPercent}% Cobrado
+      </Typography>
+    </Box>
+  );
 };
 
-export default AdminDashboard;
+export default AdminDashboardModern;

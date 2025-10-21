@@ -31,7 +31,7 @@ const AdminScreen = () => {
             case "users": return <UsersList />;
             case "applications": return <ApplicationsList />;
             case "rejected": return <RejectedApplicationsList />;
-            case "edituser": return <EditUserForm/>;
+            // case "edituser": return <EditUserForm/>;
             default: return <AdminDashboard />;
         }
     };
