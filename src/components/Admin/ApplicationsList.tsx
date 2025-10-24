@@ -20,6 +20,7 @@ import { joinUpContext } from '../../Context/JoinUpContext';
 import SignUpForm from './SignUpForm';
 
 const ApplicationsList = () => {
+
   const { allApplications } = useContext(getAllJoinUpContext);
   const { setDeleteApplication } = useContext(joinUpContext);
 
@@ -40,7 +41,6 @@ const ApplicationsList = () => {
   const handleDelete = (id: string) => {
     setDeleteApplication(id);
   };
-
   const handleOpenEditForm = (app: any) => {
     setSelectedApplication(app); // ✅ guardamos el usuario seleccionado
     setOpenEditForm(true);
@@ -167,7 +167,7 @@ const ApplicationsList = () => {
               outline: "none",
             }}
           >
-            <SignUpForm user={selectedApplication} onClose={handleCloseEditForm} />
+            <SignUpForm user={selectedApplication} onClose={handleCloseEditForm} mode="applicationsList"/>
           </Box>
         </Fade>
       </Modal>

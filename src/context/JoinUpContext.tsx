@@ -19,6 +19,7 @@ const JoinUpProvider = ({ children }) => {
   const [loadingJU, setLoadingJU] = useState(false)
 
   const [deleteApplication, setDeleteApplication] = useState<string | null>(null);
+  const [deleteRejectedApplication, setDeleteRejectedApplication] = useState<string | null>(null);
   const [deleteSuccess, setDeleteSuccess] = useState("");
   const [deleteError, setDeleteError] = useState("");
   const [loadingDelete, setLoadingDelete] = useState(false);
@@ -47,26 +48,47 @@ const JoinUpProvider = ({ children }) => {
   }, [joinUpUser, db]);
 
 
-useEffect(() => {
-  if (!deleteApplication) return;
+  useEffect(() => {
+    if (!deleteApplication) return;
 
-  const deleteApplicationDoc = async () => {
-    try {
-      setLoadingDelete(true);
-      const docRef = doc(db, "joinUp", deleteApplication);
-      await deleteDoc(docRef);
-      setDeleteSuccess("Application deleted successfully");
-      setDeleteApplication(null); // Clear id after successful delete to allow future deletes
-    } catch (error: any) {
-      setDeleteError(error.message || "An error occurred");
-      console.error("Error deleting document:", error);
-    } finally {
-      setLoadingDelete(false);
-    }
-  };
+    const deleteApplicationDoc = async () => {
+      try {
+        setLoadingDelete(true);
+        const docRef = doc(db, "joinUp", deleteApplication);
+        await deleteDoc(docRef);
+        setDeleteSuccess("Application deleted successfully");
+        setDeleteApplication(null); // Clear id after successful delete to allow future deletes
+      } catch (error: any) {
+        setDeleteError(error.message || "An error occurred");
+        console.error("Error deleting document:", error);
+      } finally {
+        setLoadingDelete(false);
+      }
+    };
 
-  deleteApplicationDoc();
-}, [deleteApplication, db]);
+    deleteApplicationDoc();
+  }, [deleteApplication, db]);
+
+  useEffect(() => {
+    if (!deleteRejectedApplication) return;
+
+    const deleteApplicationDoc = async () => {
+      try {
+        setLoadingDelete(true);
+        const docRef = doc(db, "rejectedApplications", deleteRejectedApplication);
+        await deleteDoc(docRef);
+        setDeleteSuccess("Application deleted successfully");
+        setDeleteRejectedApplication(null); // Clear id after successful delete to allow future deletes
+      } catch (error: any) {
+        setDeleteError(error.message || "An error occurred");
+        console.error("Error deleting document:", error);
+      } finally {
+        setLoadingDelete(false);
+      }
+    };
+
+    deleteApplicationDoc();
+  }, [deleteRejectedApplication, db]);
 
 
 
@@ -84,6 +106,7 @@ useEffect(() => {
       loadingJU,
 
       setDeleteApplication,
+      setDeleteRejectedApplication,
       deleteSuccess,
       deleteError,
       loadingDelete,

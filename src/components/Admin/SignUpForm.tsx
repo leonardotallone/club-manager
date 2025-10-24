@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import {
     Container,
     Paper,
@@ -46,9 +46,11 @@ interface SignUpFormValues {
 interface SignUpFormProps {
     user?: any;
     onClose?: () => void; // ✅ nueva prop opcional
+    mode?: "applicationsList" | "rejectedApplicationsList";
 }
 
-const SignUpForm: React.FC<SignUpFormProps> = ({ user, onClose }) => {
+const SignUpForm: React.FC<SignUpFormProps> = ({ user, onClose, mode }) => {
+
     const { setJoinUpUser } = useContext(joinUpContext);
     const { setSignUpUser, setIdForDeleteApplication, setRejectApplication, setAcceptApplication } = useContext(signUpContext);
     const { loguedUserInformation } = useContext(getAllUsersContext);
@@ -74,7 +76,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ user, onClose }) => {
             familyGroup: [],
             applicationDate: user.applicationDate,
         };
-        console.log("USUARIO A REGISTRAR", newUser);
         setSignUpUser(newUser);
     };
 
@@ -292,58 +293,80 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ user, onClose }) => {
                                 </Grid>
                             </Grid>
 
+
+
                             {/* Botones */}
                             <Grid container spacing={2} sx={{ mt: { xs: 3, md: 4 } }}>
+                                {mode === "applicationsList" ? (
+                                    <>
+                                        <Grid size={{ xs: 12, md: 8 }}>
+                                            <Button
+                                                onClick={onClose}
+                                                variant="contained"
+                                                fullWidth
+                                                sx={{
+                                                    mt: 1,
+                                                    backgroundColor: 'grey',
+                                                    '&:hover': { backgroundColor: 'darkgrey' },
+                                                }}
+                                            >
+                                                CANCELAR
+                                            </Button>
+                                        </Grid>
+                                        <Grid size={{ xs: 12, md: 4 }}>
+                                            <Grid container spacing={1}>
+                                                <Grid size={{ xs: 6 }}>
+                                                    <Button
+                                                        type="submit"
+                                                        onClick={() => setRejectApplication(true)}
+                                                        variant="contained"
+                                                        fullWidth
+                                                        sx={{
+                                                            mt: 1,
+                                                            backgroundColor: '#b71c1c',
+                                                            '&:hover': { backgroundColor: 'darkred' },
+                                                        }}
+                                                    >
+                                                        RECHAZAR
+                                                    </Button>
+                                                </Grid>
+                                                <Grid size={{ xs: 6 }}>
+                                                    <Button
+                                                        type="submit"
+                                                        onClick={() => setAcceptApplication(true)}
+                                                        variant="contained"
+                                                        fullWidth
+                                                        sx={{
+                                                            mt: 1,
+                                                            backgroundColor: '#2e7d32',
+                                                            '&:hover': { backgroundColor: '#1b5e20' },
+                                                        }}
+                                                    >
+                                                        ACEPTAR
+                                                    </Button>
+                                                </Grid>
 
-                                <Grid size={{ xs: 12, md: 8 }}>
-                                    <Button
-                                        onClick={onClose} // ✅ cierra el modal
-                                        variant="contained"
-                                        fullWidth
-                                        sx={{
-                                            mt: 1,
-                                            backgroundColor: 'grey',
-                                            '&:hover': { backgroundColor: 'darkgrey' },
-                                        }}
-                                    >
-                                        CANCELAR
-                                    </Button>
-                                </Grid>
-                                <Grid size={{ xs: 12, md: 4 }}>
-                                    <Grid container spacing={1}>
-                                        <Grid size={{ xs: 6 }}>
-                                            <Button
-                                                type="submit"
-                                                onClick={() => setAcceptApplication(true)}
-                                                variant="contained"
-                                                fullWidth
-                                                sx={{
-                                                    mt: 1,
-                                                    backgroundColor: '#b71c1c',
-                                                    '&:hover': { backgroundColor: 'darkred' },
-                                                }}
-                                            >
-                                                ACEPTAR
-                                            </Button>
+                                            </Grid>
                                         </Grid>
-                                        <Grid size={{ xs: 6 }}>
-                                            <Button
-                                                type="submit"
-                                                onClick={() => setRejectApplication(true)}
-                                                variant="contained"
-                                                fullWidth
-                                                sx={{
-                                                    mt: 1,
-                                                    backgroundColor: '#b71c1c',
-                                                    '&:hover': { backgroundColor: 'darkred' },
-                                                }}
-                                            >
-                                                RECHAZAR
-                                            </Button>
-                                        </Grid>
+                                    </>
+                                ) : (
+                                    <Grid size={{ xs: 12 }}>
+                                        <Button
+                                            onClick={onClose}
+                                            variant="contained"
+                                            fullWidth
+                                            sx={{
+                                                mt: 1,
+                                                backgroundColor: 'grey',
+                                                '&:hover': { backgroundColor: 'darkgrey' },
+                                            }}
+                                        >
+                                            CERRAR
+                                        </Button>
                                     </Grid>
-                                </Grid>
+                                )}
                             </Grid>
+
                         </Form>
                     )}
                 </Formik>

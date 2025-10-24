@@ -44,10 +44,10 @@ const SignUpProvider = ({ children }) => {
   // console.log("USER EN CONTEXT", signUpUser)
   // console.log("ERROR CONTEXT", signUpError)
   // console.log("Rejected App", rejectApplication)
-  console.log("SIGNUP USER", signUpUser)
+  console.log("SIGNUP USER en CONTEXT", signUpUser)
   console.log("ACCEPT APPLICATION", acceptApplication)
 
-
+console.log("REEJCTED. APP",rejectApplication)
 
   const auth = FIREBASE_AUTH;
   const db = getFirestore(FIREBASE_APP);
@@ -141,6 +141,8 @@ const SignUpProvider = ({ children }) => {
             blockade: false,
             admition: "rejected",
             familyGroup: signUpUser.familyGroup,
+            applicationDate:signUpUser.applicationDate,
+          
           };
 
           await addDoc(collection(db, "rejectedApplications"), userData);

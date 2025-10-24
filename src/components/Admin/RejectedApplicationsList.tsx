@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
+  Fade,
   Box,
   Container,
   Typography,
@@ -9,19 +10,28 @@ import {
   Stack,
   useMediaQuery,
   Pagination,
+  Modal,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
+import { useTheme } from "@mui/material/styles";
 
 import { getAllJoinUpContext } from '../../Context/GetAllJoinUpContext';
 import { joinUpContext } from '../../Context/JoinUpContext';
+import SignUpForm from './SignUpForm';
 
 const RejectedApplicationsList = () => {
   const [page, setPage] = useState(1);
+  const [openEditForm, setOpenEditForm] = useState(false);
+  const [selectedApplication, setSelectedApplication] = useState<any>(null); // ✅ nuevo estado
   const { allRejectedApplications } = useContext(getAllJoinUpContext);
-  const { setDeleteApplication } = useContext(joinUpContext);
+  const theme = useTheme();
+  console.log(allRejectedApplications)
+
+  const { setDeleteRejectedApplication } = useContext(joinUpContext);
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery('(max-width:600px)');
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const applicationsPerPage = 4;
   const startIndex = (page - 1) * applicationsPerPage;
@@ -30,8 +40,20 @@ const RejectedApplicationsList = () => {
   const totalPages = Math.ceil((allRejectedApplications?.length || 0) / applicationsPerPage);
 
   const handleDelete = (id: string) => {
-    setDeleteApplication(id);
+    setDeleteRejectedApplication(id);
   };
+
+  const handleOpenEditForm = (app: any) => {
+    setSelectedApplication(app); // ✅ guardamos el usuario seleccionado
+    setOpenEditForm(true);
+  };
+
+  const handleCloseEditForm = () => {
+    setOpenEditForm(false);
+    setSelectedApplication(null); // ✅ limpiamos al cerrar
+  };
+
+
 
   return (
     <Container maxWidth="xl" sx={{ mt: 3, mb: 4 }}>
@@ -39,7 +61,7 @@ const RejectedApplicationsList = () => {
         variant="h6"
         sx={{ mb: 2, fontWeight: 600, color: '#444', textAlign: { xs: 'center', sm: 'left' } }}
       >
-      Solicitudes Rechazadas
+        Solicitudes Rechazadas
       </Typography>
 
       {/* Encabezado de columnas */}
@@ -171,12 +193,12 @@ const RejectedApplicationsList = () => {
                   '&:hover': { color: 'primary.main', background: 'transparent' },
                 }}
               >
-         
+
               </Button>
 
               <Button
                 startIcon={<RemoveRedEyeOutlinedIcon sx={{ fontSize: 18, color: '#666' }} />}
-                onClick={() => navigate(`/admin-display-application/${app}`, { state: app })}
+                 onClick={() => handleOpenEditForm(app)} // ✅ pasamos la aplicación
                 sx={{
                   minWidth: 0,
                   p: 0.5,
@@ -189,6 +211,35 @@ const RejectedApplicationsList = () => {
           </Box>
         ))}
       </Stack>
+
+      {/* 📝 Modal con el formulario */}
+      <Modal
+        open={openEditForm}
+        onClose={handleCloseEditForm}
+        closeAfterTransition
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backdropFilter: "blur(6px)",
+          backgroundColor: "rgba(0,0,0,0.55)",
+          p: 2,
+        }}
+      >
+        <Fade in={openEditForm} timeout={{ enter: 1000, exit: 1000 }}>
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: 740,
+              borderRadius: isMobile ? "24px" : "20px",
+              overflow: "hidden",
+              outline: "none",
+            }}
+          >
+            <SignUpForm user={selectedApplication} onClose={handleCloseEditForm} mode="rejectedApplicationsList"/>
+          </Box>
+        </Fade>
+      </Modal>
 
       {/* Paginación */}
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
