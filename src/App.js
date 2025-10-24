@@ -2,7 +2,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import LandingScreen from "./screens/LandingScreen";
 import AdminScreen from "./screens/AdminScreen";
-import EditUserScreen from "./screens/Admin/EditUserScreen";
+// import EditUserScreen from "./screens/Admin/EditUserScreen";
 import UserScreen from "./screens/UserScreen";
 
 
@@ -16,7 +16,7 @@ function App() {
 
 
       
-        <Route path="/edit-user/:user" element={<EditUserScreen />} />
+        {/* <Route path="/edit-user/:user" element={<EditUserScreen />} /> */}
         <Route path="/user-screen" element={<UserScreen />}/>
       </Routes>
     </BrowserRouter>

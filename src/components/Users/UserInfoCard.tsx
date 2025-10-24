@@ -29,8 +29,7 @@ const UserDashboardModern = () => {
   const { breakdown } = useContext(FeesContext);
 
   const [openCard, setOpenCard] = useState(false);
-  const [openEditForm, setOpenEditForm] = useState(false)
-
+  const [openEditForm, setOpenEditForm] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
 
   const theme = useTheme();
@@ -51,30 +50,22 @@ const UserDashboardModern = () => {
     Array.isArray(loguedUserInformation.familyGroup) &&
     loguedUserInformation.familyGroup.length > 0;
 
-  // 👉 helpers de normalización y fee
   const norm = (s: any) => (s ?? "").toString().toLowerCase().trim();
 
   const getMemberFee = (member: any, idx: number): number => {
-    // 1) DNI
     if (member?.dni) {
       const byDni = breakdown.familiares.find((x: any) => x.dni === member.dni);
       if (byDni) return byDni.fee ?? 0;
     }
-    // 2) Nombre normalizado
     const byName = breakdown.familiares.find(
       (x: any) => norm(x.name) === norm(member?.name)
     );
     if (byName) return byName.fee ?? 0;
-
-    // 3) Fallback por índice (si mantienen el mismo orden)
     const byIndex = breakdown.familiares[idx];
     if (byIndex) return byIndex.fee ?? 0;
-
-    // 4) Último recurso
     return 0;
   };
 
-  // 📊 Chart: nombres SIEMPRE desde loguedUserInformation; valores desde breakdown
   const chartData = [
     {
       name: `${loguedUserInformation.name} ${loguedUserInformation.lastName}`,
@@ -82,14 +73,14 @@ const UserDashboardModern = () => {
     },
     ...(hasFamily
       ? loguedUserInformation.familyGroup.map((fm: any, idx: number) => ({
-        name:
-          `${fm.name ?? ""} ${fm.lastName ?? ""}`.trim() ||
-          `Familiar ${idx + 1}`,
-        value: getMemberFee(fm, idx),
-      }))
+          name:
+            `${fm.name ?? ""} ${fm.lastName ?? ""}`.trim() ||
+            `Familiar ${idx + 1}`,
+          value: getMemberFee(fm, idx),
+        }))
       : []),
   ];
-  // 🪪 Abrir carnet SIEMPRE con objetos completos de loguedUserInformation
+
   const handleOpenCard = (userOrFamily: any) => {
     const isTitular =
       userOrFamily?.dni === loguedUserInformation.dni ||
@@ -98,20 +89,18 @@ const UserDashboardModern = () => {
     const fullData = isTitular
       ? loguedUserInformation
       : loguedUserInformation.familyGroup?.find(
-        (f: any) => f.dni === userOrFamily?.dni || norm(f.name) === norm(userOrFamily?.name)
-      );
+          (f: any) =>
+            f.dni === userOrFamily?.dni || norm(f.name) === norm(userOrFamily?.name)
+        );
 
     const userToShow = fullData || loguedUserInformation;
     setSelectedUser(userToShow);
     setOpenCard(true);
   };
-  const handleCloseCard = () => setOpenCard(false);
-  const handleOpenEditForm = (loguedUserInformation: any) => {
-    setOpenEditForm(true);
-  };
-  const handleCloseEditForm = () => setOpenEditForm(false);
 
- 
+  const handleCloseCard = () => setOpenCard(false);
+  const handleOpenEditForm = () => setOpenEditForm(true);
+  const handleCloseEditForm = () => setOpenEditForm(false);
 
   return (
     <>
@@ -202,7 +191,7 @@ const UserDashboardModern = () => {
               <BadgeOutlinedIcon fontSize={isMobile ? "medium" : "large"} />
             </IconButton>
             <IconButton
-              onClick={() => handleOpenEditForm(loguedUserInformation)}
+              onClick={handleOpenEditForm}
               sx={{
                 color: "#444",
                 border: "1px solid #444",
@@ -212,18 +201,6 @@ const UserDashboardModern = () => {
               }}
             >
               <EditRoundedIcon fontSize={isMobile ? "medium" : "large"} />
-            </IconButton>
-            <IconButton
-              onClick={() => console.log("➕ Agregar nuevo familiar")}
-              sx={{
-                color: "#444",
-                border: "1px solid #444",
-                borderRadius: "12px",
-                p: 1.2,
-                "&:hover": { bgcolor: palette.primary, color: "#fff" },
-              }}
-            >
-              <PersonAddAltRoundedIcon fontSize={isMobile ? "medium" : "large"} />
             </IconButton>
             <IconButton
               onClick={() =>
@@ -254,17 +231,38 @@ const UserDashboardModern = () => {
         >
           {/* 👨‍👩‍👧 Grupo Familiar */}
           <Box sx={{ flex: isMobile ? "none" : "0 0 40%", width: "100%" }}>
-            <Typography
-              variant={isMobile ? "h6" : "h5"}
-              sx={{ fontWeight: 600, mb: 2, textAlign: isMobile ? "center" : "left" }}
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              sx={{ mb: 2 }}
             >
-              Grupo Familiar
-            </Typography>
+              <Typography
+                variant={isMobile ? "h6" : "h5"}
+                sx={{ fontWeight: 600, textAlign: "left" }}
+              >
+                Grupo Familiar
+              </Typography>
+
+              {/* ➕ Botón Agregar familiar */}
+              <IconButton
+                onClick={() => console.log("➕ Agregar nuevo familiar")}
+                sx={{
+                  color: palette.primary,
+                  border: `1px solid ${palette.primary}`,
+                  borderRadius: "12px",
+                  p: 1,
+                  "&:hover": { bgcolor: palette.primary, color: "#fff" },
+                }}
+              >
+                <PersonAddAltRoundedIcon />
+              </IconButton>
+            </Stack>
 
             {hasFamily ? (
               <Stack spacing={isMobile ? 1.5 : 2}>
                 {loguedUserInformation.familyGroup.map((member: any, idx: number) => {
-                  const fee = getMemberFee(member, idx); // 💰 solo el monto viene de breakdown
+                  const fee = getMemberFee(member, idx);
                   return (
                     <Stack
                       key={member?.dni || member?.name || idx}
@@ -301,7 +299,6 @@ const UserDashboardModern = () => {
                           ${fee.toLocaleString()}
                         </Typography>
 
-                        {/* 🪪 Ver carnet del familiar (objeto completo) */}
                         <IconButton
                           size="small"
                           onClick={() => handleOpenCard(member)}
@@ -313,7 +310,6 @@ const UserDashboardModern = () => {
                           <BadgeOutlinedIcon fontSize="medium" />
                         </IconButton>
 
-                        {/* ✏️ / 🗑️ placeholders */}
                         <IconButton
                           size="small"
                           onClick={() => console.log(`✏️ Editar ${member?.name}`)}
@@ -392,7 +388,8 @@ const UserDashboardModern = () => {
                 </Pie>
               </PieChart>
             </ResponsiveContainer>
-            {/* 🧾 Leyenda de nombres */}
+
+            {/* 🧾 Leyenda */}
             <Box
               sx={{
                 mt: 3,
@@ -401,10 +398,10 @@ const UserDashboardModern = () => {
                   chartData.length <= 3
                     ? "row"
                     : isMobile
-                      ? "column"
-                      : chartData.length > 6
-                        ? "column"
-                        : "row",
+                    ? "column"
+                    : chartData.length > 6
+                    ? "column"
+                    : "row",
                 flexWrap: chartData.length > 3 ? "wrap" : "nowrap",
                 justifyContent: "center",
                 alignItems: "center",
@@ -423,8 +420,8 @@ const UserDashboardModern = () => {
                       chartData.length > 6
                         ? "45%"
                         : chartData.length > 3
-                          ? "30%"
-                          : "auto",
+                        ? "30%"
+                        : "auto",
                     justifyContent: chartData.length > 3 ? "flex-start" : "center",
                   }}
                 >
@@ -448,6 +445,7 @@ const UserDashboardModern = () => {
                 </Box>
               ))}
             </Box>
+
             <Typography
               variant="h6"
               sx={{ fontWeight: 700, mt: 2, textAlign: "center" }}
@@ -486,9 +484,7 @@ const UserDashboardModern = () => {
         </Box>
       </Modal>
 
-
-
-      {/* 🪪 Modal Edit Form */}
+      {/* 📝 Modal Edit Form */}
       <Modal
         open={openEditForm}
         onClose={handleCloseEditForm}
@@ -509,7 +505,7 @@ const UserDashboardModern = () => {
             overflow: "hidden",
           }}
         >
-           <EditUserForm user={loguedUserInformation} />
+          <EditUserForm user={loguedUserInformation} />
         </Box>
       </Modal>
     </>
