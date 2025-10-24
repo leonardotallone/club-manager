@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -7,7 +7,8 @@ import {
   Button,
   Avatar,
   Stack,
-
+  Modal,
+  Fade,
   useMediaQuery,
   Pagination,
 } from '@mui/material';
@@ -20,10 +21,16 @@ import { getAllUsersContext } from '../../Context/GetAllUsersContext';
 import { updateUserProfileContext } from '../../Context/UpdateUserProfileContext';
 import { displaySelectorViewContext } from '../../Context/DisplaySelectorViewContext';
 
+import EditUserForm from './EditUserForm';
+
 const UsersList = () => {
   const { allUsers } = useContext(getAllUsersContext);
   const { setUserForEdit } = useContext(updateUserProfileContext);
   const { setActiveAdminView, setActiveUserView } = useContext(displaySelectorViewContext);
+
+  const [openEditForm, setOpenEditForm] = useState(false);
+
+    const [selectedUser, setSelectedUser] = useState<any>(null); // ✅ nuevo estado
 
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery('(max-width:600px)');
@@ -35,12 +42,14 @@ const UsersList = () => {
   const endIndex = startIndex + usersPerPage;
   const displayedUsers = allUsers?.slice(startIndex, endIndex) || [];
 
+  const handleOpenEditForm = (user: any) => {
+    setSelectedUser(user); // ✅ guardamos el usuario seleccionado
+    setOpenEditForm(true);
+  };
 
-
-  const handleEditUser = (user: any) => {
-    setUserForEdit(user);
-    setActiveAdminView('edituser')
-    setActiveUserView('edituser')
+  const handleCloseEditForm = () => {
+    setOpenEditForm(false);
+    setSelectedUser(null); // ✅ limpiamos al cerrar
   };
 
   return (
@@ -163,7 +172,7 @@ const UsersList = () => {
                   '&:hover': { color: 'primary.main', background: 'transparent' },
                 }}
                 // onClick={() => navigate(`/edit-user/${user}`, { state: user })}
-                onClick={() => handleEditUser(user)}
+                onClick={() => handleOpenEditForm(user)}
               >
                 <ModeEditOutlineOutlinedIcon sx={{ fontSize: 18 }} />
               </Button>
@@ -171,6 +180,37 @@ const UsersList = () => {
           </Box>
         ))}
       </Stack>
+
+      {/* 📝 Modal con el formulario */}
+      <Modal
+        open={openEditForm}
+        onClose={handleCloseEditForm}
+        closeAfterTransition
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backdropFilter: "blur(6px)",
+          backgroundColor: "rgba(0,0,0,0.55)",
+          p: 2,
+        }}
+      >
+        <Fade in={openEditForm} timeout={{ enter: 1000, exit: 1000 }}>
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: 740,
+              // borderRadius: isMobile ? "24px" : "20px",
+              overflow: "hidden",
+              outline: "none",
+            }}
+          >
+            <EditUserForm  user={selectedUser}
+             mode="admin"
+            />
+          </Box>
+        </Fade>
+      </Modal>
 
       {/* Paginación */}
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
