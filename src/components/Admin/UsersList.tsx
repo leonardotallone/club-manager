@@ -30,7 +30,7 @@ const UsersList = () => {
 
   const [openEditForm, setOpenEditForm] = useState(false);
 
-    const [selectedUser, setSelectedUser] = useState<any>(null); // ✅ nuevo estado
+  const [selectedUser, setSelectedUser] = useState<any>(null); // ✅ nuevo estado
 
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery('(max-width:600px)');
@@ -195,7 +195,7 @@ const UsersList = () => {
           p: 2,
         }}
       >
-        <Fade in={openEditForm} timeout={{ enter: 1000, exit: 1000 }}>
+        <Fade in={openEditForm} timeout={{ enter: 1000, exit: 500 }}>
           <Box
             sx={{
               width: "100%",
@@ -205,8 +205,9 @@ const UsersList = () => {
               outline: "none",
             }}
           >
-            <EditUserForm  user={selectedUser}
-             mode="admin"
+            <EditUserForm user={selectedUser}
+              mode="admin"
+              onClose={handleCloseEditForm}
             />
           </Box>
         </Fade>

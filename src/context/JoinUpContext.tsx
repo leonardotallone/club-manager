@@ -25,8 +25,8 @@ const JoinUpProvider = ({ children }) => {
   const [loadingDelete, setLoadingDelete] = useState(false);
 
 
-  console.log("DELETE APPLICATION CONTEXT", deleteApplication)
-  console.log("DELETE ERROR", deleteError)
+  // console.log("DELETE APPLICATION CONTEXT", deleteApplication)
+  // console.log("DELETE ERROR", deleteError)
 
   const db = getFirestore(FIREBASE_APP);
 

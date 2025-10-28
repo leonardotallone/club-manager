@@ -5,7 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import Navbar from '../components/Navbar';
 
-import UserInfoCard from '../components/Users/UserInfoCard';
+import UserDashboard from '../components/Users/UserDashboard';
 import DigitalCard from "../components/Users/DigitalCard"
 
 import UserDocs from '../components/Users/UserDocs';
@@ -24,8 +24,8 @@ const UserScreen = () => {
     const renderView = () => {
         switch (activeUserView) {
             case "docs": return <UserDocs />;
-         
-            default: return <UserInfoCard  />;
+
+            default: return <UserDashboard />;
             case "digitalCard": return <DigitalCard />;
         }
     };

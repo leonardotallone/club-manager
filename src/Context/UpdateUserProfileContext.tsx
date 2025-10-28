@@ -17,16 +17,12 @@ const UpdateUserProfileProvider = ({ children }) => {
 
   const [userForEdit, setUserForEdit] = useState<any>()
 
-
-
   const [updateUserData, setUpdateUserData] = useState<any>()
   const [docId, setDocId] = useState<string | undefined>()
+  console.log("DOC ID",docId)
   const [familyUser, setFamilyUser] = useState<FamilyMember | undefined>()
   const [UpdateFamilyUser, setUpdateFamilyUser] = useState<FamilyMember | undefined>()
   const [removeFamilyMember, setRemoveFamilyMember] = useState<any>()
-
-
-
 
   const [successmsj, setSuccessmsj] = useState<string>("");
   const [errormsj, setErrormsj] = useState<string>("");

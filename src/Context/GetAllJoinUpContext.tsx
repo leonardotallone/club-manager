@@ -14,8 +14,6 @@ const GetAllJoinUpProvider = ({ children }) => {
     const [allRejectedApplications, setAllRejectedApplications] = useState<{} | undefined>(undefined);
     const [loadingApplications, setLoadingApplications] = useState(false);
 
-
-    console.log("REJECTED",allRejectedApplications)
     const db = getFirestore(FIREBASE_APP);
 
     useEffect(() => {

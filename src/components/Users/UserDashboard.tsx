@@ -1,5 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
+  Fade,
   Box,
   Typography,
   Avatar,
@@ -17,24 +18,42 @@ import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
 import { FeesContext } from "../../Context/FeesContext";
 import { getAllUsersContext } from "../../Context/GetAllUsersContext";
+import { updateUserProfileContext } from "../../Context/UpdateUserProfileContext";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { useTheme } from "@mui/material/styles";
 import type { PieLabelRenderProps } from "recharts";
 
-import DigitalCard from "../Users/DigitalCard";
-import EditUserForm from "../../components/Admin/EditUserForm";
+import DigitalCard from "./DigitalCard";
+import EditUserForm from "../Admin/EditUserForm";
+import AddFamilyForm from "./AddFamilyForm";
+import EditFamilyForm from "./EditFamilyForm";
 
-const UserDashboardModern = () => {
+
+const UserDashboard = () => {
   const { loguedUserInformation } = useContext(getAllUsersContext);
+  const { setDocId } = useContext(updateUserProfileContext);
+
   const { breakdown } = useContext(FeesContext);
 
   const [openCard, setOpenCard] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
+  const [openAddForm, setOpenAddForm] = useState(false);
+
   const [selectedUser, setSelectedUser] = useState<any>(null);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+
+    useEffect(() => {
+      if (loguedUserInformation?.id) {
+        setDocId(loguedUserInformation.id);
+      }
+    }, [loguedUserInformation, setDocId]);
+
+
   if (!loguedUserInformation || !breakdown) return null;
+
 
   const palette = {
     primary: "#2E7D32",
@@ -73,11 +92,11 @@ const UserDashboardModern = () => {
     },
     ...(hasFamily
       ? loguedUserInformation.familyGroup.map((fm: any, idx: number) => ({
-          name:
-            `${fm.name ?? ""} ${fm.lastName ?? ""}`.trim() ||
-            `Familiar ${idx + 1}`,
-          value: getMemberFee(fm, idx),
-        }))
+        name:
+          `${fm.name ?? ""} ${fm.lastName ?? ""}`.trim() ||
+          `Familiar ${idx + 1}`,
+        value: getMemberFee(fm, idx),
+      }))
       : []),
   ];
 
@@ -89,9 +108,9 @@ const UserDashboardModern = () => {
     const fullData = isTitular
       ? loguedUserInformation
       : loguedUserInformation.familyGroup?.find(
-          (f: any) =>
-            f.dni === userOrFamily?.dni || norm(f.name) === norm(userOrFamily?.name)
-        );
+        (f: any) =>
+          f.dni === userOrFamily?.dni || norm(f.name) === norm(userOrFamily?.name)
+      );
 
     const userToShow = fullData || loguedUserInformation;
     setSelectedUser(userToShow);
@@ -101,6 +120,9 @@ const UserDashboardModern = () => {
   const handleCloseCard = () => setOpenCard(false);
   const handleOpenEditForm = () => setOpenEditForm(true);
   const handleCloseEditForm = () => setOpenEditForm(false);
+
+  const handleOpenAddForm = () => setOpenAddForm(true);
+  const handleCloseAddForm = () => setOpenAddForm(false);
 
   return (
     <>
@@ -246,7 +268,7 @@ const UserDashboardModern = () => {
 
               {/* ➕ Botón Agregar familiar */}
               <IconButton
-                onClick={() => console.log("➕ Agregar nuevo familiar")}
+                onClick={() => handleOpenAddForm()}
                 sx={{
                   color: palette.primary,
                   border: `1px solid ${palette.primary}`,
@@ -352,7 +374,7 @@ const UserDashboardModern = () => {
                     py: 1,
                     "&:hover": { bgcolor: "#1B5E20" },
                   }}
-                  onClick={() => console.log("➡️ Registrar familiar")}
+                  onClick={() => handleOpenAddForm()}
                 >
                   Registrar familiar
                 </Button>
@@ -398,10 +420,10 @@ const UserDashboardModern = () => {
                   chartData.length <= 3
                     ? "row"
                     : isMobile
-                    ? "column"
-                    : chartData.length > 6
-                    ? "column"
-                    : "row",
+                      ? "column"
+                      : chartData.length > 6
+                        ? "column"
+                        : "row",
                 flexWrap: chartData.length > 3 ? "wrap" : "nowrap",
                 justifyContent: "center",
                 alignItems: "center",
@@ -420,8 +442,8 @@ const UserDashboardModern = () => {
                       chartData.length > 6
                         ? "45%"
                         : chartData.length > 3
-                        ? "30%"
-                        : "auto",
+                          ? "30%"
+                          : "auto",
                     justifyContent: chartData.length > 3 ? "flex-start" : "center",
                   }}
                 >
@@ -469,19 +491,21 @@ const UserDashboardModern = () => {
           p: 2,
         }}
       >
-        <Box
-          sx={{
-            width: "100%",
-            maxWidth: 740,
-            borderRadius: isMobile ? "24px" : "20px",
-            overflow: "hidden",
-          }}
-        >
-          <DigitalCard
-            key={selectedUser?.dni || selectedUser?.name}
-            user={selectedUser}
-          />
-        </Box>
+        <Fade in={openCard} timeout={{ enter: 1000, exit: 500 }}>
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: 740,
+              borderRadius: isMobile ? "24px" : "20px",
+              overflow: "hidden",
+            }}
+          >
+            <DigitalCard
+              key={selectedUser?.dni || selectedUser?.name}
+              user={selectedUser}
+            />
+          </Box>
+        </Fade>
       </Modal>
 
       {/* 📝 Modal Edit Form */}
@@ -497,19 +521,50 @@ const UserDashboardModern = () => {
           p: 2,
         }}
       >
-        <Box
-          sx={{
-            width: "100%",
-            maxWidth: 740,
-            borderRadius: isMobile ? "24px" : "20px",
-            overflow: "hidden",
-          }}
-        >
-          <EditUserForm user={loguedUserInformation} />
-        </Box>
+        <Fade in={openEditForm} timeout={{ enter: 1000, exit: 500 }}>
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: 740,
+              borderRadius: isMobile ? "24px" : "20px",
+              overflow: "hidden",
+            }}
+          >
+            <EditUserForm user={loguedUserInformation} onClose={handleCloseEditForm} />
+          </Box>
+        </Fade>
+      </Modal>
+
+      {/* 📝 Modal Add Family Form */}
+      <Modal
+        open={openAddForm}
+        onClose={handleCloseAddForm}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backdropFilter: "blur(6px)",
+          backgroundColor: "rgba(0,0,0,0.55)",
+          p: 2,
+        }}
+      >
+        <Fade in={openAddForm} timeout={{ enter: 1000, exit: 500 }}>
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: 740,
+              borderRadius: isMobile ? "24px" : "20px",
+              overflow: "hidden",
+            }}
+          >
+            <AddFamilyForm onClose={handleCloseAddForm} />
+
+            {/* <AddFamilyForm /> */}
+          </Box>
+        </Fade>
       </Modal>
     </>
   );
 };
 
-export default UserDashboardModern;
+export default UserDashboard;

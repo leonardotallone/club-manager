@@ -16,12 +16,12 @@ import {
     Checkbox,
     Tooltip,
     IconButton,
+    Switch,
+    FormControlLabel,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import LockRoundedIcon from "@mui/icons-material/LockRounded";
 import LockOpenRoundedIcon from "@mui/icons-material/LockOpenRounded";
-import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
-import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -39,24 +39,25 @@ interface SignUpFormValues {
     name: string;
     lastName: string;
     address: string;
-    birthDate: Dayjs;
+    birthDate: Dayjs | null;
     dni: string;
     contactNumber: string;
     avatarURL: string;
     gender: string;
     email: string;
     admin: boolean;
-    disciplines: object;
+    disciplines: string[];
     category: string;
     full: boolean;
     blockade: boolean;
-    familyGroup: object;
-    applicationDate: Dayjs;
+    familyGroup: string;
+    applicationDate: Dayjs | null;
 }
 
 type EditUserFormProps = {
     user: any;
     mode?: "admin" | "user";
+    onClose?: () => void;
 };
 
 const validationSchema = Yup.object({
@@ -66,52 +67,76 @@ const validationSchema = Yup.object({
     contactNumber: Yup.string().required("Campo obligatorio"),
 });
 
-const EditUserForm: React.FC<EditUserFormProps> = ({ user, mode = "user" }) => {
+const ensureStringArray = (v: any): string[] =>
+    Array.isArray(v) ? v : typeof v === "string" ? [v] : [];
+
+const EditUserForm: React.FC<EditUserFormProps> = ({ user, mode = "user", onClose }) => {
     const { categories } = useContext(getAllCategoriesContext);
     const { disciplines } = useContext(getAllDisciplinesContext);
     const { setUpdateUserData, setDocId } = useContext(updateUserProfileContext);
     const { setOpenAdd, setOpenEdit } = useContext(controlModalsContext);
 
-    const [discipline, setDiscipline] = useState<string[]>(user.disciplines || []);
-    const [lockUser, setLockUser] = useState<boolean>(user.blockade);
-    const [full, setFull] = useState<boolean>(user.full);
+    const navigate = useNavigate();
+    const isAdmin = mode === "admin";
+
+    const [discipline, setDiscipline] = useState<string[]>(ensureStringArray(user?.disciplines));
+    const [lockUser, setLockUser] = useState<boolean>(!!user?.blockade);
+    const [full, setFull] = useState<boolean>(!!user?.full);
     const [hasChanges, setHasChanges] = useState<boolean>(false);
 
     const genders = ["Masculino", "Femenino", "Otro"];
-    const navigate = useNavigate();
-    const isAdmin = mode === "admin";
 
     useEffect(() => {
         if (user?.id) setDocId(user.id);
     }, [user, setDocId]);
 
     const handleLockUser = () => {
+        if (!isAdmin) return;
         setLockUser((prev) => !prev);
         setHasChanges(true);
     };
 
-    const handleDiscipline = (event: SelectChangeEvent<typeof discipline>) => {
-        const { value } = event.target;
-        setDiscipline(typeof value === "string" ? value.split(",") : value);
-        setHasChanges(true);
-    };
+    //   const handleDiscipline = (event: SelectChangeEvent<typeof discipline>) => {
+    //     const { value } = event.target;
+    //     const next = typeof value === "string" ? value.split(",") : (value as string[]);
+    //     setDiscipline(next);
+    //     setHasChanges(true);
+    //   };
+
+    const familyGroupNames = Array.isArray(user?.familyGroup)
+        ? user.familyGroup.map((m: any) => `${m?.name ?? ""} ${m?.lastName ?? ""}`.trim()).join(", ")
+        : "";
+
+
 
     const handleSubmit = (values: SignUpFormValues) => {
-        const editedUser = {
+        const base: any = {
             ...values,
             birthDate: values.birthDate ? dayjs(values.birthDate).toDate() : null,
+            applicationDate: values.applicationDate ? dayjs(values.applicationDate).toDate() : null,
             disciplines: discipline,
-            blockade: lockUser,
-            full,
+            address: values.address,
+            contactNumber: values.contactNumber,
+            avatarURL: values.avatarURL,
+            gender: values.gender,
         };
-        setUpdateUserData(editedUser);
+
+        if (isAdmin) {
+            base.blockade = lockUser;                 // admin puede bloquear
+            base.full = user?.full ?? false;          // admin NO modifica "full"
+            base.category = values.category;          // admin puede cambiar categoría
+            // base.admin: eliminado (no se toca)
+        } else {
+            base.blockade = user?.blockade ?? false;  // user no modifica bloqueo
+            base.full = full;                          // user SÍ modifica "full"
+            base.category = user?.category ?? values.category; // user no cambia categoría
+            // base.admin: eliminado (no se toca)
+        }
+
+        setUpdateUserData(base);
         setHasChanges(false);
+        if (onClose) onClose();
     };
-
-    const familyGroupNames =
-        user.familyGroup?.map((m: any) => `${m.name} ${m.lastName}`).join(", ") || "";
-
-    const uniformMargin = { mt: 2.5 };
 
     return (
         <Box
@@ -123,9 +148,9 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ user, mode = "user" }) => {
                 borderRadius: { xs: 0, md: 3 },
                 boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
                 width: "100%",
-                height: { xs: "100vh", md: "auto" },     // 📏 ocupa toda la altura solo en mobile
-                overflowY: { xs: "auto", md: "visible" }, // ✅ scroll solo en mobile
-                WebkitOverflowScrolling: "touch",         // 🧭 scroll fluido iOS
+                height: { xs: "100vh", md: "auto" },
+                overflowY: { xs: "auto", md: "visible" },
+                WebkitOverflowScrolling: "touch",
                 py: { xs: 3, md: 5 },
                 px: { xs: 2, md: 0 },
             }}
@@ -133,14 +158,14 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ user, mode = "user" }) => {
             <Container
                 maxWidth="md"
                 sx={{
-                    pb: { xs: 10, md: 5 }, // 📱 más margen inferior en mobile
+                    pb: { xs: 10, md: 5 },
                     pt: { xs: 1, md: 2 },
                 }}
             >
                 <Typography
                     variant="h6"
                     sx={{
-                        mb: 4,
+                        mb: 3,
                         fontWeight: 700,
                         textAlign: "center",
                         color: "#333",
@@ -150,35 +175,68 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ user, mode = "user" }) => {
                     Edición de Usuario
                 </Typography>
 
+                {/* Controles superiores */}
+                <Box sx={{ display: "flex", gap: 2, justifyContent: "center", mb: 2 }}>
+                    {/* Solo admin: bloquear/desbloquear */}
+                    {isAdmin && (
+                        <Tooltip title={lockUser ? "Desbloquear usuario" : "Bloquear usuario"}>
+                            <IconButton
+                                onClick={handleLockUser}
+                                sx={{
+                                    border: `1px solid ${lockUser ? "crimson" : "green"}`,
+                                    color: lockUser ? "crimson" : "green",
+                                    borderRadius: "12px",
+                                    p: 1,
+                                    "&:hover": { bgcolor: lockUser ? "rgba(220,20,60,0.08)" : "rgba(0,128,0,0.08)" },
+                                }}
+                            >
+                                {lockUser ? <LockRoundedIcon /> : <LockOpenRoundedIcon />}
+                            </IconButton>
+                        </Tooltip>
+                    )}
+
+                    {/* Solo usuario: toggle de Pleno */}
+                    {!isAdmin && (
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={full}
+                                    onChange={(e) => {
+                                        setFull(e.target.checked);
+                                        setHasChanges(true);
+                                    }}
+                                />
+                            }
+                            label="Pleno"
+                        />
+                    )}
+                </Box>
+
                 <Formik<SignUpFormValues>
                     enableReinitialize
                     initialValues={{
-                        name: user.name || "",
-                        lastName: user.lastName || "",
-                        address: user.address || "",
-                        birthDate: user.birthDate?.seconds
-                            ? dayjs(user.birthDate.seconds * 1000)
-                            : dayjs(),
-                        dni: user.dni || "",
-                        contactNumber: user.contactNumber || "",
-                        avatarURL: user.avatarURL || "",
-                        gender: user.gender || "",
-                        email: user.email || "",
-                        admin: user.admin || false,
-                        disciplines: user.disciplines || {},
+                        name: user?.name ?? "",
+                        lastName: user?.lastName ?? "",
+                        address: user?.address ?? "",
+                        birthDate: user?.birthDate?.seconds ? dayjs(user.birthDate.seconds * 1000) : null,
+                        dni: user?.dni ?? "",
+                        contactNumber: user?.contactNumber ?? "",
+                        avatarURL: user?.avatarURL ?? "",
+                        gender: user?.gender ?? "",
+                        email: user?.email ?? "",
+                        admin: !!user?.admin,
+                        disciplines: ensureStringArray(user?.disciplines),
                         category:
-                            categories?.find((c: any) => c.name === user.category)?.name || "",
-                        full: user.full,
-                        blockade: lockUser,
+                            categories?.find((c: any) => c?.name === user?.category)?.name ?? user?.category ?? "",
+                        full: !!user?.full,
+                        blockade: !!user?.blockade,
                         familyGroup: familyGroupNames,
-                        applicationDate: user.applicationDate?.seconds
-                            ? dayjs(user.applicationDate.seconds * 1000)
-                            : dayjs(),
+                        applicationDate: user?.applicationDate?.seconds ? dayjs(user.applicationDate.seconds * 1000) : null,
                     }}
                     validationSchema={validationSchema}
                     onSubmit={handleSubmit}
                 >
-                    {({ handleChange, handleBlur, values, errors, touched }) => (
+                    {({ handleChange, handleBlur, values, errors, touched, dirty, isValid, setFieldValue }) => (
                         <Form onChange={() => !hasChanges && setHasChanges(true)}>
                             <Grid container spacing={4}>
                                 {/* COLUMNA IZQUIERDA */}
@@ -224,17 +282,12 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ user, mode = "user" }) => {
                                             format="DD/MM/YYYY"
                                             label="Fecha de Nacimiento"
                                             value={values.birthDate}
-                                            onChange={(newValue) =>
-                                                handleChange({
-                                                    target: { name: "birthDate", value: newValue },
-                                                })
-                                            }
+                                            onChange={(newValue) => setFieldValue("birthDate", newValue)}
                                             slotProps={{
                                                 textField: {
                                                     variant: "standard",
                                                     fullWidth: true,
                                                     sx: {
-
                                                         "& .MuiInput-underline:after": { borderBottomColor: "green" },
                                                         "& .MuiInput-underline:hover:not(.Mui-disabled):before": { borderBottomColor: "green" },
                                                         "& .MuiInputLabel-root.Mui-focused": { color: "green" },
@@ -244,16 +297,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ user, mode = "user" }) => {
                                         />
                                     </LocalizationProvider>
 
-                                    <FormControl
-                                        variant="standard"
-                                        fullWidth
-                                        sx={{
-                                            mt: 2.5,
-                                            "& .MuiInput-underline:after": { borderBottomColor: "green" },
-                                            "& .MuiInput-underline:hover:not(.Mui-disabled):before": { borderBottomColor: "green" },
-                                            "& .MuiInputLabel-root.Mui-focused": { color: "green" },
-                                        }}
-                                    >
+                                    <FormControl variant="standard" fullWidth sx={{ mt: 2.5 }}>
                                         <InputLabel id="gender-label">Género</InputLabel>
                                         <Select
                                             labelId="gender-label"
@@ -335,49 +379,110 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ user, mode = "user" }) => {
                                         }}
                                     />
 
-                                    <FormControl
-                                        fullWidth
-                                        variant="standard"
-                                        sx={{
-                                            mt: 2.5,
-                                            "& .MuiInputLabel-root.Mui-focused": { color: "green" },
-                                            "& .MuiSelect-icon": { color: "green" },
-                                            "& .MuiInput-underline:after": { borderBottomColor: "green" },
-                                        }}
-                                    >
+                                    {/* Disciplinas */}
+                                    <FormControl variant="standard" fullWidth sx={{ mt: 2.5 }}>
                                         <InputLabel id="discipline-label">Disciplinas</InputLabel>
                                         <Select
                                             labelId="discipline-label"
                                             multiple
-                                            value={discipline}
-                                            onChange={handleDiscipline}
+                                            value={values.disciplines}
+                                            onChange={(event) => {
+                                                const { value } = event.target;
+                                                const next = typeof value === "string" ? value.split(",") : (value as string[]);
+                                                setFieldValue("disciplines", next);
+                                                setDiscipline(next);
+                                            }}
                                             renderValue={(selected) => (
-                                                <Box sx={{
-                                                    display: "flex", flexWrap: "wrap", gap: 1, 
-                                                    "& .MuiInput-underline:after": { borderBottomColor: "green" },
-                                                    "& .MuiInput-underline:hover:not(.Mui-disabled):before": { borderBottomColor: "green" },
-                                                    "& .MuiInputLabel-root.Mui-focused": { color: "green" },
-                                                }}>
-                                                    {(selected as string[]).map((v) => (
+                                                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                                                    {ensureStringArray(selected).map((v) => (
                                                         <Chip key={v} label={v} />
                                                     ))}
                                                 </Box>
                                             )}
                                         >
-                                            {disciplines?.length > 0 ? (
-                                                disciplines.map((item: any) => (
-                                                    <MenuItem key={item.id} value={item.name}>
-                                                        <Checkbox checked={discipline.indexOf(item.name) > -1} />
-                                                        <ListItemText primary={item.name} />
-                                                    </MenuItem>
-                                                ))
+                                            {disciplines?.length ? (
+                                                disciplines.map((item: any) => {
+                                                    const label = item?.name ?? "";
+                                                    return (
+                                                        <MenuItem key={item?.id ?? label} value={label}>
+                                                            <Checkbox checked={ensureStringArray(values.disciplines).includes(label)} />
+                                                            <ListItemText primary={label} />
+                                                        </MenuItem>
+                                                    );
+                                                })
                                             ) : (
                                                 <MenuItem disabled>Cargando...</MenuItem>
                                             )}
                                         </Select>
                                     </FormControl>
-                                </Grid>
 
+                                    {/* SOLO ADMIN */}
+                                    {isAdmin && (
+                                        <>
+                                            <FormControl variant="standard" fullWidth sx={{ mt: 2.5 }}>
+                                                <InputLabel id="category-label">Categoría</InputLabel>
+                                                <Select
+                                                    labelId="category-label"
+                                                    name="category"
+                                                    value={values.category}
+                                                    onChange={handleChange}
+                                                >
+                                                    {categories?.map((c: any) => (
+                                                        <MenuItem key={c.id} value={c.name}>
+                                                            {c.name}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+
+                                            <TextField
+                                                variant="standard"
+                                                fullWidth
+                                                name="familyGroup"
+                                                label="Grupo familiar (solo lectura)"
+                                                value={values.familyGroup}
+                                                disabled
+                                                sx={{
+                                                    mt: 2.5,
+                                                    "& .MuiInput-underline:after": { borderBottomColor: "green" },
+                                                    "& .MuiInputLabel-root.Mui-focused": { color: "green" },
+                                                }}
+                                            />
+                                        </>
+                                    )}
+
+                                    {/* SOLO USER: resumen de estado */}
+                                    {!isAdmin && (
+                                        <>
+                                            <TextField
+                                                variant="standard"
+                                                fullWidth
+                                                name="category"
+                                                label="Categoría"
+                                                value={values.category}
+                                                disabled
+                                                sx={{
+                                                    mt: 2.5,
+                                                    "& .MuiInput-underline:after": { borderBottomColor: "green" },
+                                                    "& .MuiInputLabel-root.Mui-focused": { color: "green" },
+                                                }}
+                                            />
+                                            <TextField
+                                                variant="standard"
+                                                fullWidth
+                                                name="blockade"
+                                                label="Bloqueado"
+                                                value={user?.blockade ? "Sí" : "No"}
+                                                disabled
+                                                sx={{
+                                                    mt: 2.5,
+                                                    "& .MuiInput-underline:after": { borderBottomColor: "green" },
+                                                    "& .MuiInputLabel-root.Mui-focused": { color: "green" },
+                                                }}
+                                            />
+                                        </>
+                                    )}
+                                </Grid>
                             </Grid>
 
                             {/* Botonera */}
@@ -386,9 +491,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ user, mode = "user" }) => {
                                     <Button
                                         variant="contained"
                                         fullWidth
-                                        onClick={() =>
-                                            navigate(isAdmin ? "/admin-users-list" : "/user-dashboard")
-                                        }
+                                        onClick={() => onClose && onClose()}
                                         sx={{
                                             backgroundColor: "grey",
                                             "&:hover": { backgroundColor: "darkgrey" },
@@ -402,11 +505,12 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ user, mode = "user" }) => {
                                         type="submit"
                                         variant="contained"
                                         fullWidth
-                                        disabled={!hasChanges}
+                                        disabled={!isValid || (!dirty && !hasChanges)}
                                         sx={{
-                                            backgroundColor: hasChanges ? "green" : "lightgrey",
+                                            backgroundColor: isValid && (dirty || hasChanges) ? "green" : "lightgrey",
                                             "&:hover": {
-                                                backgroundColor: hasChanges ? "darkred" : "lightgrey",
+                                                backgroundColor:
+                                                    isValid && (dirty || hasChanges) ? "darkgreen" : "lightgrey",
                                             },
                                         }}
                                     >

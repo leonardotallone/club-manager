@@ -89,11 +89,11 @@ const FeesProvider = ({ children }) => {
     }),
     [loguedUserInformation, mainUserFee, familyFees, total]
   );
-console.log(loguedUserInformation)
-  console.log("💵 TITULAR:", mainUserFee);
-  console.log("👨‍👩‍👧 FAMILIA:", familyFees);
-  console.log("💰 TOTAL:", total);
-  console.log("📊 BREAKDOWN:", breakdown);
+// console.log(loguedUserInformation)
+//   console.log("💵 TITULAR:", mainUserFee);
+//   console.log("👨‍👩‍👧 FAMILIA:", familyFees);
+//   console.log("💰 TOTAL:", total);
+//   console.log("📊 BREAKDOWN:", breakdown);
 
   return (
     <FeesContext.Provider value={{ mainUserFee, familyFees, total, breakdown }}>
