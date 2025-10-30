@@ -1,8 +1,6 @@
-import { useContext } from 'react';
-import { useNavigate } from "react-router-dom";
-import { Container, Paper, Box, Typography, Button, TextField, InputLabel, MenuItem, FormControl, Select } from "@mui/material";
+import { useContext, useEffect } from 'react';
+import { Container, Box, Paper, CircularProgress, Typography, Button, TextField, InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 import Grid from '@mui/material/Grid2';
-
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -17,7 +15,10 @@ import * as Yup from "yup";
 import { useParams } from "react-router-dom";
 import { getAllCategoriesContext } from "../Context/GetAllCategoriesContext"
 import { joinUpContext } from "../Context/JoinUpContext"
-import { controlModalsContext } from '../Context/ControModalsContext';
+
+import Notification from './Notification';
+import LoadingOverlay from './LoadingOverlay';
+
 
 interface SignUpFormValues {
 
@@ -38,16 +39,19 @@ interface SignUpFormValues {
     familyGroup: object;
 }
 
-const JoinUpForm: React.FC = () => {
+interface JoinUpFormProps {
+    onClose: () => void;
+}
+
+const JoinUpForm: React.FC<JoinUpFormProps> = ({ onClose }) => {
 
     const { categories } = useContext(getAllCategoriesContext)
-    const { setJoinUpUser } = useContext(joinUpContext)
-    const { setOpenJoinUp } = useContext(controlModalsContext)
+    const { setJoinUpUser, joinUpSuccess, setJoinUpSuccess, joinUpError, setJoinUpError, loadingJU } = useContext(joinUpContext)
 
     const genders = ["Masculino", "Femenino", "Otro"]
 
     const { type } = useParams();
-    const navigate = useNavigate();
+
 
     // Validación con Yup
     const validationSchema = Yup.object({
@@ -134,9 +138,9 @@ const JoinUpForm: React.FC = () => {
             applicationDate: new Date(),
         };
 
-        console.log("USER", user)
         setJoinUpUser(user)
-        navigate("/");
+
+
     };
 
     const capitalizeFirstLetter = (str: string) => {
@@ -144,9 +148,17 @@ const JoinUpForm: React.FC = () => {
         return str.charAt(0).toUpperCase() + str.slice(1);
     };
 
-    const handleCloseJoinUp = () => {
-        setOpenJoinUp(false);
-    };
+    // 🔔 Cierra el modal automáticamente cuando haya un éxito
+    useEffect(() => {
+        if (joinUpSuccess) {
+            const timer = setTimeout(() => {
+                onClose(); // ✅ cierra el modal
+                setJoinUpSuccess(""); // limpia el estado de éxito
+            }, 2500); // espera 2.5 segundos
+
+            return () => clearTimeout(timer);
+        }
+    }, [joinUpSuccess, onClose, setJoinUpSuccess]);
 
 
     return (
@@ -243,7 +255,7 @@ const JoinUpForm: React.FC = () => {
                                         error={touched.address && Boolean(errors.address)}
                                         helperText={touched.address && errors.address ? errors.address : " "}
                                         sx={{
-                                            mb: -1,
+                                            mb: 0,
                                             "& label.Mui-focused": {
                                                 color: "green",  // color verde solo cuando está enfocado
                                             },
@@ -265,10 +277,12 @@ const JoinUpForm: React.FC = () => {
                                                 }}
                                                 slotProps={{
                                                     textField: {
+
                                                         variant: 'standard',
                                                         onBlur: () => handleBlur({ target: { name: 'birthDate' } }),
 
                                                         sx: {
+                                                            mt: 2,
                                                             width: '100%',
                                                             overflow: 'hidden', // <-- Oculta scroll
                                                             "&::-webkit-scrollbar": { display: "none" }, // Chrome/Safari
@@ -448,7 +462,7 @@ const JoinUpForm: React.FC = () => {
 
                                 <Grid size={{ xs: 12, md: 8 }}>
                                     <Button
-                                        onClick={handleCloseJoinUp}
+                                        onClick={onClose}
                                         variant="contained" fullWidth sx={{
                                             mt: 3, mb: 0, backgroundColor: 'grey', // Color de fondo gris
                                             '&:hover': {
@@ -483,8 +497,27 @@ const JoinUpForm: React.FC = () => {
                         </Form>
                     )}
                 </Formik>
-                {/* </Box> */}
+
             </Paper>
+
+            <Notification
+                open={joinUpSuccess}
+                message={joinUpSuccess}
+                type="success"
+                onClose={() => setJoinUpSuccess("")}
+
+
+            />
+
+            <Notification
+                open={joinUpError}
+                message={joinUpError}
+                type="error"
+                onClose={() => setJoinUpError("")}
+            />
+
+            <LoadingOverlay open={loadingJU} message="Enviando solicitud..." />
+
         </Container>
 
 

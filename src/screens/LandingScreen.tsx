@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -23,7 +23,9 @@ import JoinUpForm from "../components/JoinUpForm";
 const LandingScreen = () => {
   const { loading } = useContext(signInUserContext);
   const { loguedUserInformation } = useContext(getAllUsersContext);
-  const { openJoinUp, setOpenJoinUp, setOpenLogin } = useContext(controlModalsContext);
+  const { setOpenLogin } = useContext(controlModalsContext);
+
+   const [openJoinUp, setOpenJoinUp] = useState(false);
 
   const navigate = useNavigate();
   const theme = useTheme();
@@ -142,7 +144,7 @@ const LandingScreen = () => {
         >
           <Fade in={openJoinUp} timeout={{ enter: 2000, exit: 2000 }}>
             <Box>
-              <JoinUpForm />
+              <JoinUpForm onClose={handleCloseJoinUp} />
             </Box>
           </Fade>
         </Modal>

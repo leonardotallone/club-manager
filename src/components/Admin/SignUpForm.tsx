@@ -21,8 +21,8 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { Formik, Form } from "formik";
 import dayjs, { Dayjs } from "dayjs";
 
-import { joinUpContext } from "../../Context/JoinUpContext";
-import { getAllUsersContext } from "../../Context/GetAllUsersContext";
+// import { joinUpContext } from "../../Context/JoinUpContext";
+// import { getAllUsersContext } from "../../Context/GetAllUsersContext";
 import { signUpContext } from '../../Context/SignUpContext';
 
 interface SignUpFormValues {
@@ -51,14 +51,14 @@ interface SignUpFormProps {
 
 const SignUpForm: React.FC<SignUpFormProps> = ({ user, onClose, mode }) => {
 
-    const { setJoinUpUser } = useContext(joinUpContext);
+    // const { setJoinUpUser } = useContext(joinUpContext);
     const { setSignUpUser, setIdForDeleteApplication, setRejectApplication, setAcceptApplication } = useContext(signUpContext);
-    const { loguedUserInformation } = useContext(getAllUsersContext);
+    // const { loguedUserInformation } = useContext(getAllUsersContext);
 
     const genders = ["Masculino", "Femenino", "Otro"];
 
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+    // const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     useEffect(() => {
         if (user) setIdForDeleteApplication(user.id);
@@ -77,6 +77,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ user, onClose, mode }) => {
             applicationDate: user.applicationDate,
         };
         setSignUpUser(newUser);
+        onClose?.();
     };
 
     return (
@@ -310,7 +311,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ user, onClose, mode }) => {
                                                     '&:hover': { backgroundColor: 'darkgrey' },
                                                 }}
                                             >
-                                                CANCELAR
+                                                VOLVER A SOLICITUDES
                                             </Button>
                                         </Grid>
                                         <Grid size={{ xs: 12, md: 4 }}>
@@ -364,7 +365,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ user, onClose, mode }) => {
                                             CERRAR
                                         </Button>
                                     </Grid>
-                                )}
+                                )
+                                }
                             </Grid>
 
                         </Form>

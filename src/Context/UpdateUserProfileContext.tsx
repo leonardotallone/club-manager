@@ -19,7 +19,7 @@ const UpdateUserProfileProvider = ({ children }) => {
 
   const [updateUserData, setUpdateUserData] = useState<any>()
   const [docId, setDocId] = useState<string | undefined>()
-  console.log("DOC ID",docId)
+  console.log("DOC ID", docId)
   const [familyUser, setFamilyUser] = useState<FamilyMember | undefined>()
   const [UpdateFamilyUser, setUpdateFamilyUser] = useState<FamilyMember | undefined>()
   const [removeFamilyMember, setRemoveFamilyMember] = useState<any>()
@@ -104,16 +104,27 @@ const UpdateUserProfileProvider = ({ children }) => {
           const data = docSnap.data();
           const currentFamily: FamilyMember[] = data.familyGroup || [];
 
-          // 2️⃣ Buscamos el familiar por su DNI (o podrías usar `id` si lo tienen)
+
+          // ✅ Buscamos por el DNI original (no el nuevo)
+          // const updatedFamily = currentFamily.map((member: FamilyMember) =>
+          //   member.dni === UpdateFamilyUser.oldDni
+          //     ? { ...member, ...UpdateFamilyUser } // Actualizamos incluyendo el nuevo DNI
+          //     : member
+          // );
+
+
+          const userToSave = { ...UpdateFamilyUser };
+          delete userToSave.oldDni;
+
           const updatedFamily = currentFamily.map((member: FamilyMember) =>
-            member.dni === UpdateFamilyUser!.dni
-              ? { ...member, ...UpdateFamilyUser }
-              : member
+            member.dni === UpdateFamilyUser.oldDni ? { ...member, ...userToSave } : member
           );
 
+          await updateDoc(userDocRef, { familyGroup: updatedFamily });
 
-          console.log("FAMILIAR ACTUALIZADO:", UpdateFamilyUser);
-          console.log("FAMILIA COMPLETA ACTUALIZADA:", updatedFamily);
+
+
+
           // 3️⃣ Subimos el array actualizado a Firestore
           await updateDoc(userDocRef, { familyGroup: updatedFamily });
 

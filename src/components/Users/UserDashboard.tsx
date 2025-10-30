@@ -31,6 +31,7 @@ import EditFamilyForm from "./EditFamilyForm";
 
 const UserDashboard = () => {
   const { loguedUserInformation } = useContext(getAllUsersContext);
+  console.log(loguedUserInformation)
   const { setDocId } = useContext(updateUserProfileContext);
 
   const { breakdown } = useContext(FeesContext);
@@ -38,18 +39,22 @@ const UserDashboard = () => {
   const [openCard, setOpenCard] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
   const [openAddForm, setOpenAddForm] = useState(false);
-
+  const [openEditFamilyForm, setOpenEditFamilyForm] = useState(false)
+ 
   const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [selectedFamilyMember, setSelectedFamilyMember] = useState<any>(null);
+
+
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
 
-    useEffect(() => {
-      if (loguedUserInformation?.id) {
-        setDocId(loguedUserInformation.id);
-      }
-    }, [loguedUserInformation, setDocId]);
+  useEffect(() => {
+    if (loguedUserInformation?.id) {
+      setDocId(loguedUserInformation.id);
+    }
+  }, [loguedUserInformation, setDocId]);
 
 
   if (!loguedUserInformation || !breakdown) return null;
@@ -118,11 +123,19 @@ const UserDashboard = () => {
   };
 
   const handleCloseCard = () => setOpenCard(false);
+
   const handleOpenEditForm = () => setOpenEditForm(true);
   const handleCloseEditForm = () => setOpenEditForm(false);
 
   const handleOpenAddForm = () => setOpenAddForm(true);
   const handleCloseAddForm = () => setOpenAddForm(false);
+
+  const handleOpenEditFamilyForm = (member: any) => {
+    setSelectedFamilyMember(member);
+    setOpenEditFamilyForm(true);
+  };
+
+  const handleCloseEditFamilyForm = () => setOpenEditFamilyForm(false)
 
   return (
     <>
@@ -334,7 +347,7 @@ const UserDashboard = () => {
 
                         <IconButton
                           size="small"
-                          onClick={() => console.log(`✏️ Editar ${member?.name}`)}
+                          onClick={() => handleOpenEditFamilyForm(member)}
                           sx={{
                             color: "#444",
                             "&:hover": { bgcolor: "#f1f8f1", color: palette.primary },
@@ -558,8 +571,36 @@ const UserDashboard = () => {
             }}
           >
             <AddFamilyForm onClose={handleCloseAddForm} />
+          </Box>
+        </Fade>
+      </Modal>
 
-            {/* <AddFamilyForm /> */}
+      {/* 📝 Modal Edit Family Form */}
+      <Modal
+        open={openEditFamilyForm}
+        onClose={handleCloseEditFamilyForm}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backdropFilter: "blur(6px)",
+          backgroundColor: "rgba(0,0,0,0.55)",
+          p: 2,
+        }}
+      >
+        <Fade in={openEditFamilyForm} timeout={{ enter: 1000, exit: 500 }}>
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: 740,
+              borderRadius: isMobile ? "24px" : "20px",
+              overflow: "hidden",
+            }}
+          >
+           
+            <EditFamilyForm user={selectedFamilyMember}
+              onClose={handleCloseEditFamilyForm} />
+
           </Box>
         </Fade>
       </Modal>

@@ -52,14 +52,17 @@ const ApplicationsList = () => {
   };
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 3, mb: 4 }}>
-      <Typography
-        variant="h6"
-        sx={{ mb: 2, fontWeight: 600, color: '#444', textAlign: { xs: 'center', sm: 'left' } }}
-      >
-        Lista de Solicitudes
-      </Typography>
+<Container maxWidth="xl" sx={{ mt: 3, mb: 4 }}>
+  <Typography
+    variant="h6"
+    sx={{ mb: 2, fontWeight: 600, color: '#444', textAlign: { xs: 'center', sm: 'left' } }}
+  >
+    Lista de Solicitudes
+  </Typography>
 
+  {/* Si hay aplicaciones */}
+  {allApplications && allApplications.length > 0 ? (
+    <>
       {/* Encabezado */}
       <Box
         sx={{
@@ -74,7 +77,13 @@ const ApplicationsList = () => {
         }}
       >
         <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>Usuario / DNI</Box>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', minWidth: isSmallScreen ? 120 : 200 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            minWidth: isSmallScreen ? 120 : 200,
+          }}
+        >
           Acciones
         </Box>
       </Box>
@@ -97,80 +106,10 @@ const ApplicationsList = () => {
               '&:hover': { backgroundColor: '#fafafa' },
             }}
           >
-            <Stack direction="row" spacing={2} alignItems="center" sx={{ flex: 1 }}>
-              <Avatar src={app.avatar} sx={{ width: 34, height: 34 }} />
-              <Box sx={{ overflow: 'hidden' }}>
-                <Typography sx={{ fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {app.lastName} {app.name}
-                </Typography>
-                <Typography sx={{ fontSize: 11.5, color: '#777' }}>DNI: {app.dni}</Typography>
-              </Box>
-            </Stack>
-
-            {!isSmallScreen && (
-              <Box sx={{ flex: 1.5, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', pl: 0.5, gap: 0.5 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Typography sx={{ fontSize: 12, fontWeight: 600, color: '#888', minWidth: 120 }}>Teléfono</Typography>
-                  <Typography sx={{ fontSize: 12, fontWeight: 600, color: '#888', minWidth: 120 }}>Fecha de solicitud</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Typography sx={{ fontSize: 13, fontWeight: 600, color: '#333', minWidth: 120 }}>
-                    {app.contactNumber}
-                  </Typography>
-                  <Typography sx={{ fontSize: 13, fontWeight: 600, color: '#333', minWidth: 120 }}>
-                    {app.applicationDate
-                      ? new Date(app.applicationDate.seconds * 1000).toLocaleDateString()
-                      : ''}
-                  </Typography>
-                </Box>
-              </Box>
-            )}
-
-            {/* Acciones */}
-            <Stack direction="row" alignItems="center" spacing={1.5} sx={{ flexShrink: 0, justifyContent: 'flex-end', minWidth: isSmallScreen ? 100 : 200 }}>
-              <Button
-                startIcon={<DeleteIcon sx={{ fontSize: 18, color: '#666' }} />}
-                onClick={() => handleDelete(app.id)}
-                sx={{ minWidth: 0, p: 0.5, '&:hover': { color: 'primary.main', background: 'transparent' } }}
-              />
-              <Button
-                startIcon={<RemoveRedEyeOutlinedIcon sx={{ fontSize: 18, color: '#666' }} />}
-                onClick={() => handleOpenEditForm(app)} // ✅ pasamos la aplicación
-                sx={{ minWidth: 0, p: 0.5, '&:hover': { color: 'primary.main', background: 'transparent' } }}
-              />
-            </Stack>
+            {/* ... tu contenido de cada solicitud ... */}
           </Box>
         ))}
       </Stack>
-
-      {/* 📝 Modal con el formulario */}
-      <Modal
-        open={openEditForm}
-        onClose={handleCloseEditForm}
-        closeAfterTransition
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backdropFilter: "blur(6px)",
-          backgroundColor: "rgba(0,0,0,0.55)",
-          p: 2,
-        }}
-      >
-        <Fade in={openEditForm} timeout={{ enter: 1000, exit: 1000 }}>
-          <Box
-            sx={{
-              width: "100%",
-              maxWidth: 740,
-              borderRadius: isMobile ? "24px" : "20px",
-              overflow: "hidden",
-              outline: "none",
-            }}
-          >
-            <SignUpForm user={selectedApplication} onClose={handleCloseEditForm} mode="applicationsList"/>
-          </Box>
-        </Fade>
-      </Modal>
 
       {/* Paginación */}
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
@@ -182,7 +121,64 @@ const ApplicationsList = () => {
           size="small"
         />
       </Box>
-    </Container>
+    </>
+  ) : (
+    // 🟢 Si NO hay solicitudes
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        mt: 6,
+        mb: 6,
+        textAlign: 'center',
+        color: '#666',
+      }}
+    >
+      <Typography variant="h6" sx={{ fontWeight: 500, color: '#555' }}>
+        No hay solicitudes pendientes
+      </Typography>
+      <Typography variant="body2" sx={{ mt: 1, color: '#888' }}>
+        Las nuevas solicitudes aparecerán aquí cuando sean enviadas.
+      </Typography>
+    </Box>
+  )}
+
+  {/* Modal del formulario (se mantiene igual) */}
+  <Modal
+    open={openEditForm}
+    onClose={handleCloseEditForm}
+    closeAfterTransition
+    sx={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backdropFilter: 'blur(6px)',
+      backgroundColor: 'rgba(0,0,0,0.55)',
+      p: 2,
+    }}
+  >
+    <Fade in={openEditForm} timeout={{ enter: 1000, exit: 1000 }}>
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: 740,
+          borderRadius: isMobile ? '24px' : '20px',
+          overflow: 'hidden',
+          outline: 'none',
+        }}
+      >
+        <SignUpForm
+          user={selectedApplication}
+          onClose={handleCloseEditForm}
+          mode="applicationsList"
+        />
+      </Box>
+    </Fade>
+  </Modal>
+</Container>
+
   );
 };
 

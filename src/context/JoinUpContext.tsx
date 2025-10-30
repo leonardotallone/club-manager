@@ -1,6 +1,137 @@
+// import { useState, createContext, useEffect } from "react";
+// import { FIREBASE_APP } from "../Firebase/Firebase";
+// import { getFirestore, collection, addDoc, deleteDoc, doc } from "firebase/firestore";
+
+// export const joinUpContext = createContext(null);
+
+// interface User {
+//   name: string;
+//   lastName: string;
+//   email: string;
+//   phone: string;
+//   dni: string;
+//   date: string;
+// }
+// const JoinUpProvider = ({ children }) => {
+//   const [joinUpUser, setJoinUpUser] = useState<User | null>(null);
+//   const [joinUpSuccess, setJoinUpSuccess] = useState("")
+//   const [joinUpError, setJoinUpError] = useState("")
+//   const [loadingJU, setLoadingJU] = useState(false)
+
+//   const [deleteApplication, setDeleteApplication] = useState<string | null>(null);
+//   const [deleteRejectedApplication, setDeleteRejectedApplication] = useState<string | null>(null);
+//   const [deleteSuccess, setDeleteSuccess] = useState("");
+//   const [deleteError, setDeleteError] = useState("");
+//   const [loadingDelete, setLoadingDelete] = useState(false);
+
+
+//   // console.log("DELETE APPLICATION CONTEXT", deleteApplication)
+//   // console.log("DELETE ERROR", deleteError)
+
+//   const db = getFirestore(FIREBASE_APP);
+
+//   useEffect(() => {
+//     if (joinUpUser) {
+//       const createUserAndAddDoc = async () => {
+//         try {
+//           setLoadingJU(true);
+//           await addDoc(collection(db, "joinUp"), joinUpUser);
+//           setJoinUpSuccess("User created successfully");
+//         } catch (error: any) {
+//           setJoinUpError(error.message || "An error occurred");
+//         } finally {
+//           setLoadingJU(false);
+//         }
+//       };
+//       createUserAndAddDoc();
+//     }
+//   }, [joinUpUser, db]);
+
+
+//   useEffect(() => {
+//     if (!deleteApplication) return;
+
+//     const deleteApplicationDoc = async () => {
+//       try {
+//         setLoadingDelete(true);
+//         const docRef = doc(db, "joinUp", deleteApplication);
+//         await deleteDoc(docRef);
+//         setDeleteSuccess("Application deleted successfully");
+//         setDeleteApplication(null); // Clear id after successful delete to allow future deletes
+//       } catch (error: any) {
+//         setDeleteError(error.message || "An error occurred");
+//         console.error("Error deleting document:", error);
+//       } finally {
+//         setLoadingDelete(false);
+//       }
+//     };
+
+//     deleteApplicationDoc();
+//   }, [deleteApplication, db]);
+
+//   useEffect(() => {
+//     if (!deleteRejectedApplication) return;
+
+//     const deleteApplicationDoc = async () => {
+//       try {
+//         setLoadingDelete(true);
+//         const docRef = doc(db, "rejectedApplications", deleteRejectedApplication);
+//         await deleteDoc(docRef);
+//         setDeleteSuccess("Application deleted successfully");
+//         setDeleteRejectedApplication(null); // Clear id after successful delete to allow future deletes
+//       } catch (error: any) {
+//         setDeleteError(error.message || "An error occurred");
+//         console.error("Error deleting document:", error);
+//       } finally {
+//         setLoadingDelete(false);
+//       }
+//     };
+
+//     deleteApplicationDoc();
+//   }, [deleteRejectedApplication, db]);
+
+
+
+
+
+
+
+
+//   return (
+//     <joinUpContext.Provider value={{
+//       setJoinUpUser,
+//       joinUpSuccess,
+//       setJoinUpError,
+//       joinUpError,
+//       loadingJU,
+
+//       setDeleteApplication,
+//       setDeleteRejectedApplication,
+//       deleteSuccess,
+//       deleteError,
+//       loadingDelete,
+
+
+//     }}>
+//       {children}
+//     </joinUpContext.Provider>
+//   );
+// };
+// export default JoinUpProvider;
+
+
 import { useState, createContext, useEffect } from "react";
 import { FIREBASE_APP } from "../Firebase/Firebase";
-import { getFirestore, collection, addDoc, deleteDoc, doc } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 
 export const joinUpContext = createContext(null);
 
@@ -12,11 +143,13 @@ interface User {
   dni: string;
   date: string;
 }
+
 const JoinUpProvider = ({ children }) => {
   const [joinUpUser, setJoinUpUser] = useState<User | null>(null);
-  const [joinUpSuccess, setJoinUpSuccess] = useState("")
-  const [joinUpError, setJoinUpError] = useState("")
-  const [loadingJU, setLoadingJU] = useState(false)
+  const [joinUpSuccess, setJoinUpSuccess] = useState("");
+  const [joinUpError, setJoinUpError] = useState("");
+ 
+  const [loadingJU, setLoadingJU] = useState(false);
 
   const [deleteApplication, setDeleteApplication] = useState<string | null>(null);
   const [deleteRejectedApplication, setDeleteRejectedApplication] = useState<string | null>(null);
@@ -24,30 +157,41 @@ const JoinUpProvider = ({ children }) => {
   const [deleteError, setDeleteError] = useState("");
   const [loadingDelete, setLoadingDelete] = useState(false);
 
-
-  // console.log("DELETE APPLICATION CONTEXT", deleteApplication)
-  // console.log("DELETE ERROR", deleteError)
-
   const db = getFirestore(FIREBASE_APP);
 
+  // 🟢 Crear nuevo documento en "joinUp"
   useEffect(() => {
-    if (joinUpUser) {
-      const createUserAndAddDoc = async () => {
-        try {
-          setLoadingJU(true);
-          await addDoc(collection(db, "joinUp"), joinUpUser);
-          setJoinUpSuccess("User created successfully");
-        } catch (error: any) {
-          setJoinUpError(error.message || "An error occurred");
-        } finally {
-          setLoadingJU(false);
+    if (!joinUpUser) return;
+
+    const createUserAndAddDoc = async () => {
+      try {
+        setLoadingJU(true);
+
+        // 🔍 Verificar si ya existe un usuario con el mismo email
+        const q = query(collection(db, "joinUp"), where("email", "==", joinUpUser.email));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          setJoinUpError("Ya existe una solicitud con este correo electrónico.");
+          setJoinUpUser(null); // limpiar para evitar reintentos automáticos
+          return;
         }
-      };
-      createUserAndAddDoc();
-    }
+
+        // ✅ Si no existe, agregar el nuevo documento
+        await addDoc(collection(db, "joinUp"), joinUpUser);
+        setJoinUpSuccess("Solicitud creada correctamente.");
+        setJoinUpError(""); // limpiar errores previos
+      } catch (error: any) {
+        setJoinUpError(error.message || "Ocurrió un error al crear la solicitud.");
+      } finally {
+        setLoadingJU(false);
+      }
+    };
+
+    createUserAndAddDoc();
   }, [joinUpUser, db]);
 
-
+  // 🔴 Eliminar solicitudes activas
   useEffect(() => {
     if (!deleteApplication) return;
 
@@ -56,11 +200,10 @@ const JoinUpProvider = ({ children }) => {
         setLoadingDelete(true);
         const docRef = doc(db, "joinUp", deleteApplication);
         await deleteDoc(docRef);
-        setDeleteSuccess("Application deleted successfully");
-        setDeleteApplication(null); // Clear id after successful delete to allow future deletes
+        setDeleteSuccess("Solicitud eliminada correctamente.");
+        setDeleteApplication(null);
       } catch (error: any) {
-        setDeleteError(error.message || "An error occurred");
-        console.error("Error deleting document:", error);
+        setDeleteError(error.message || "Error al eliminar la solicitud.");
       } finally {
         setLoadingDelete(false);
       }
@@ -69,52 +212,46 @@ const JoinUpProvider = ({ children }) => {
     deleteApplicationDoc();
   }, [deleteApplication, db]);
 
+  // 🔴 Eliminar solicitudes rechazadas
   useEffect(() => {
     if (!deleteRejectedApplication) return;
 
-    const deleteApplicationDoc = async () => {
+    const deleteRejectedDoc = async () => {
       try {
         setLoadingDelete(true);
         const docRef = doc(db, "rejectedApplications", deleteRejectedApplication);
         await deleteDoc(docRef);
-        setDeleteSuccess("Application deleted successfully");
-        setDeleteRejectedApplication(null); // Clear id after successful delete to allow future deletes
+        setDeleteSuccess("Solicitud eliminada correctamente.");
+        setDeleteRejectedApplication(null);
       } catch (error: any) {
-        setDeleteError(error.message || "An error occurred");
-        console.error("Error deleting document:", error);
+        setDeleteError(error.message || "Error al eliminar la solicitud rechazada.");
       } finally {
         setLoadingDelete(false);
       }
     };
 
-    deleteApplicationDoc();
+    deleteRejectedDoc();
   }, [deleteRejectedApplication, db]);
 
-
-
-
-
-
-
-
   return (
-    <joinUpContext.Provider value={{
-      setJoinUpUser,
-      joinUpSuccess,
-      setJoinUpError,
-      joinUpError,
-      loadingJU,
-
-      setDeleteApplication,
-      setDeleteRejectedApplication,
-      deleteSuccess,
-      deleteError,
-      loadingDelete,
-
-
-    }}>
+    <joinUpContext.Provider
+      value={{
+        setJoinUpUser,
+        joinUpSuccess,
+        setJoinUpSuccess,
+        joinUpError,
+        setJoinUpError,
+        loadingJU,
+        setDeleteApplication,
+        setDeleteRejectedApplication,
+        deleteSuccess,
+        deleteError,
+        loadingDelete,
+      }}
+    >
       {children}
     </joinUpContext.Provider>
   );
 };
+
 export default JoinUpProvider;
