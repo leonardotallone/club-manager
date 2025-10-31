@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Fade,
   Box,
@@ -19,6 +20,7 @@ import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
 import { FeesContext } from "../../Context/FeesContext";
 import { getAllUsersContext } from "../../Context/GetAllUsersContext";
 import { updateUserProfileContext } from "../../Context/UpdateUserProfileContext";
+import { removeUserContext } from "../../Context/RemoveUserContext";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { useTheme } from "@mui/material/styles";
 import type { PieLabelRenderProps } from "recharts";
@@ -28,12 +30,15 @@ import EditUserForm from "../Admin/EditUserForm";
 import AddFamilyForm from "./AddFamilyForm";
 import EditFamilyForm from "./EditFamilyForm";
 import EraseConfirm from "../EraseConfirm"
+import LoadingOverlay from "../../components/LoadingOverlay";
+import Notification from "../../components/Notification";
 
 
 const UserDashboard = () => {
   const { loguedUserInformation } = useContext(getAllUsersContext);
-  const { setDocId } = useContext(updateUserProfileContext);
+  const { setDocId, setRemoveFamilyMember, loading, successmsj, setSuccessmsj, errormsj, setErrormsj } = useContext(updateUserProfileContext);
   const { breakdown } = useContext(FeesContext);
+  const { setUserConsent, loadingRemove, removedUserSuccess,  removedUserError, setRemovedUserError } = useContext(removeUserContext)
 
   const [openCard, setOpenCard] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
@@ -43,16 +48,22 @@ const UserDashboard = () => {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [selectedFamilyMember, setSelectedFamilyMember] = useState<any>(null);
 
-
   const [openDialog, setOpenDialog] = useState(false);
-  const [deleteAction, setDeleteAction] = useState<() => void>(() => () => {});
+  const [deleteAction, setDeleteAction] = useState<() => void>(() => () => { });
   const [dialogMessage, setDialogMessage] = useState("");
-  const [notify, setNotify] = useState({ open: false, message: "", type: "success" as "success" | "error" | "info" });
-
-
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (removedUserSuccess) {
+      const timeout = setTimeout(() => {
+        navigate("/");
+      }, 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [removedUserSuccess]);
 
 
   useEffect(() => {
@@ -60,7 +71,6 @@ const UserDashboard = () => {
       setDocId(loguedUserInformation.id);
     }
   }, [loguedUserInformation, setDocId]);
-
 
   if (!loguedUserInformation || !breakdown) return null;
 
@@ -145,14 +155,14 @@ const UserDashboard = () => {
 
   // Acción 1: borrar usuario
   const handleDeleteUser = () => {
-    console.log("🧍 Eliminando usuario...");
-    setNotify({ open: true, message: "Usuario eliminado correctamente", type: "success" });
+    setUserConsent(true)
+
   };
 
   // Acción 2: borrar familiar
-  const handleDeleteFamily = () => {
-    console.log("👨‍👩‍👧 Eliminando familiar...");
-    setNotify({ open: true, message: "Familiar eliminado correctamente", type: "success" });
+  const handleDeleteFamily = (member: any) => {
+    setRemoveFamilyMember(member);
+
   };
 
   return (
@@ -256,11 +266,13 @@ const UserDashboard = () => {
               <EditRoundedIcon fontSize={isMobile ? "medium" : "large"} />
             </IconButton>
             <IconButton
-            onClick={() => {
-            setDeleteAction(() => handleDeleteUser); // 👈 guardamos la acción que queremos ejecutar
-            setDialogMessage("¿Estás seguro de que querés eliminar este usuario?");
-            setOpenDialog(true);
-          }}
+              onClick={() => {
+                setDeleteAction(() => handleDeleteUser); // 👈 guardamos la acción que queremos ejecutar
+                setDialogMessage(`¿Estás seguro de que querés eliminar a ${loguedUserInformation.name} ${loguedUserInformation.lastName}?`);
+                setOpenDialog(true);
+              }}
+
+
               sx={{
                 color: "#444",
                 border: "1px solid #444",
@@ -377,11 +389,11 @@ const UserDashboard = () => {
                         </IconButton>
                         <IconButton
                           size="small"
-                           onClick={() => {
-            setDeleteAction(() => handleDeleteFamily); // 👈 cambiamos la acción dinámica
-            setDialogMessage("¿Estás seguro de que querés eliminar este familiar?");
-            setOpenDialog(true);
-          }}
+                          onClick={() => {
+                            setDeleteAction(() => () => handleDeleteFamily(member));
+                            setDialogMessage(`¿Estás seguro de que querés eliminar a ${member.name}?`);
+                            setOpenDialog(true);
+                          }}
                           sx={{
                             color: "#444",
                             "&:hover": { bgcolor: "#fbeaea", color: "#b71c1c" },
@@ -631,12 +643,28 @@ const UserDashboard = () => {
 
       <EraseConfirm
         open={openDialog}
-        message="¿Estás seguro de que querés eliminar este registro? Esta acción no se puede deshacer."
-         onConfirm={() => {
+        message={dialogMessage}
+        onConfirm={() => {
           deleteAction(); // 👈 ejecuta la acción actual
           setOpenDialog(false);
         }}
         onCancel={() => setOpenDialog(false)}
+      />
+      
+      <LoadingOverlay open={loading} />
+
+      <Notification
+        open={successmsj}
+        message={successmsj}
+        type="success"
+        onClose={() => setSuccessmsj("")}
+      />
+
+      <Notification
+        open={errormsj || removedUserError}
+        message={errormsj || removedUserError}
+        type="error"
+        onClose={() => (setErrormsj(""), setRemovedUserError(""))}
       />
     </>
   );

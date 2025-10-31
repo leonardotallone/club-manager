@@ -1,25 +1,23 @@
 import React, { useContext } from 'react';
-import Grid from '@mui/material/Grid2';
 import { Box, Container, Fade } from "@mui/material";
-import CircularProgress from '@mui/material/CircularProgress';
 
 import Navbar from '../components/Navbar';
-
 import UserDashboard from '../components/Users/UserDashboard';
 import DigitalCard from "../components/Users/DigitalCard"
-
 import UserDocs from '../components/Users/UserDocs';
-
 import LoadingOverlay from "../components/LoadingOverlay"
+import Notification from '../components/Notification';
 import Footer from '../components/Footer';
 import Advertising from '../components/Advertising';
 
 import { getAllUsersContext } from '../Context/GetAllUsersContext';
 import { displaySelectorViewContext } from "../Context/DisplaySelectorViewContext";
+import { removeUserContext } from '../Context/RemoveUserContext';
 
 const UserScreen = () => {
     const { loading } = useContext(getAllUsersContext);
     const { activeUserView } = useContext(displaySelectorViewContext);
+    const {loadingRemove, removedUserSuccess, setRemovedUserSuccess} = useContext(removeUserContext)
 
 
     const renderView = () => {
@@ -57,7 +55,7 @@ const UserScreen = () => {
                     }}
                 >
                     {loading ? (
-                        <LoadingOverlay open={loading}/>
+                        <LoadingOverlay open={loading} />
                     ) : (
                         <Fade key={activeUserView} in timeout={1200}>
                             <Box sx={{ width: "100%" }}>
@@ -74,6 +72,15 @@ const UserScreen = () => {
                     <Footer />
                 </Box>
             </Box>
+
+             <LoadingOverlay open={loadingRemove} />
+
+            <Notification
+                open={removedUserSuccess}
+                message={removedUserSuccess}
+                type="success"
+                onClose={() => (setRemovedUserSuccess(""))}
+            />
         </>
     );
 };

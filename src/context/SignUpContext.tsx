@@ -26,7 +26,7 @@ interface User {
   full: boolean;
   groupHead: boolean;
   familyGroup: object;
-  applicationdate:Date;
+  applicationdate: Date;
 }
 
 const SignUpProvider = ({ children }) => {
@@ -39,15 +39,6 @@ const SignUpProvider = ({ children }) => {
 
 
   const [idForDeleteApplication, setIdForDeleteApplication] = useState(null)
-
-  // console.log("USER ID CONTEXT", idForDeleteApplication)
-  // console.log("USER EN CONTEXT", signUpUser)
-  // console.log("ERROR CONTEXT", signUpError)
-  // console.log("Rejected App", rejectApplication)
-  console.log("SIGNUP USER en CONTEXT", signUpUser)
-  console.log("ACCEPT APPLICATION", acceptApplication)
-
-console.log("REEJCTED. APP",rejectApplication)
 
   const auth = FIREBASE_AUTH;
   const db = getFirestore(FIREBASE_APP);
@@ -81,15 +72,15 @@ console.log("REEJCTED. APP",rejectApplication)
             full: signUpUser.full,
             admition: signUpUser.admition,
             familyGroup: signUpUser.familyGroup,
-            applicationDate:signUpUser.applicationDate,
+            applicationDate: signUpUser.applicationDate,
           };
 
           // Agregar documento a Firestore
           await addDoc(collection(db, "users"), userData);
 
-          setSignUpSuccess("User created successfully");
+          setSignUpSuccess("Usuario creado correctamente");
         } catch (error: any) {
-          setSignUpError(error.message || "Error creating user");
+          setSignUpError(error.message || "Error creando usuario");
         } finally {
           // Borrar la solicitud de registro después de 5 segundos de la colección "joinUp"
           const timeoutId = setTimeout(() => {
@@ -141,8 +132,8 @@ console.log("REEJCTED. APP",rejectApplication)
             blockade: false,
             admition: "rejected",
             familyGroup: signUpUser.familyGroup,
-            applicationDate:signUpUser.applicationDate,
-          
+            applicationDate: signUpUser.applicationDate,
+
           };
 
           await addDoc(collection(db, "rejectedApplications"), userData);
@@ -190,7 +181,7 @@ console.log("REEJCTED. APP",rejectApplication)
 
 
   return (
-    <signUpContext.Provider value={{ setSignUpUser, setIdForDeleteApplication, setRejectApplication, setAcceptApplication, signUpSuccess, signUpError, loading }}>
+    <signUpContext.Provider value={{ setSignUpError,setSignUpUser, setIdForDeleteApplication, setRejectApplication, setAcceptApplication, signUpSuccess, signUpError, loading, setSignUpSuccess }}>
       {children}
     </signUpContext.Provider>
   );

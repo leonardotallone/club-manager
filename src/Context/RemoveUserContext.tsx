@@ -1,4 +1,6 @@
 import React, { useState, createContext, useEffect, useContext } from "react";
+
+
 import { FIREBASE_AUTH } from "../Firebase/Firebase"
 import { getFirestore, doc, deleteDoc } from "firebase/firestore";
 import {
@@ -10,21 +12,23 @@ import {
 import { signInUserContext } from "./SignInUserContext";
 import { getAllUsersContext } from "./GetAllUsersContext";
 
+
 export const removeUserContext = createContext(null);
 
 const RemoveUserProvider = ({ children }) => {
-
+  
   const [userConsent, setUserConsent] = useState(false);
   const [loadingRemove, setLoadingRemove] = useState(false);
   const [removeUserProfile, setRemoveUserProfile] = useState(false);
   const [removedUserError, setRemovedUserError] = useState("");
   const [removedUserSuccess, setRemovedUserSuccess] = useState("");
-
+  
   const { loguedUser } = useContext(signInUserContext);
   const { loguedUserInformation } = useContext(getAllUsersContext);
-
+  
   const auth = FIREBASE_AUTH;
-
+  
+  
   const storage = getStorage()
 
   useEffect(() => {
@@ -56,11 +60,12 @@ const RemoveUserProvider = ({ children }) => {
           await user.delete(); // Delete the user from Firebase Authentication
           await auth.signOut();
 
-          setRemovedUserSuccess("Your account has been deleted");
+          setRemovedUserSuccess("Su cuenta ha sido eliminada correctamente");
           setUserConsent(false);
+
         } catch (error) {
           console.log(error)
-          // setRemovedUserError(error.message);
+          setRemovedUserError(error.message);
         }
       };
       deleteUser();

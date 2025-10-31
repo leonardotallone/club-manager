@@ -117,6 +117,7 @@ const JoinUpProvider = ({ children }) => {
         setJoinUpUser,
         joinUpSuccess,
         setJoinUpSuccess,
+        setDeleteSuccess,
         joinUpError,
         setJoinUpError,
         loadingJU,

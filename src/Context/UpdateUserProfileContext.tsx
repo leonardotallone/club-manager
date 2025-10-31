@@ -22,6 +22,8 @@ const UpdateUserProfileProvider = ({ children }) => {
 
   const [familyUser, setFamilyUser] = useState<FamilyMember | undefined>()
   const [UpdateFamilyUser, setUpdateFamilyUser] = useState<FamilyMember | undefined>()
+
+
   const [removeFamilyMember, setRemoveFamilyMember] = useState<any>()
 
   const [successmsj, setSuccessmsj] = useState<string>("");
@@ -39,11 +41,9 @@ const UpdateUserProfileProvider = ({ children }) => {
         const userDocRef = doc(db, "users", docId);
         try {
           await updateDoc(userDocRef, updateUserData);
-          console.log("🔥 Actualización exitosa!");
-          setSuccessmsj("User profile updated successfully!");
+          setSuccessmsj("🔥 Usuario Actualizado Correctamente!");
         } catch (error) {
-          console.error("Error updating document: ", error);
-          setErrormsj("Error updating user profile");
+          setErrormsj("Error actualizando usuario");
         } finally {
           setLoading(false);
         }
@@ -63,12 +63,9 @@ const UpdateUserProfileProvider = ({ children }) => {
           await updateDoc(userDocRef, {
             familyGroup: arrayUnion(familyUser),
           });
-
-          console.log("👨‍👩‍👧‍👦 Family user agregado correctamente!");
-          setSuccessmsj("Family user added successfully!");
+          setSuccessmsj("🔥 Usuario agregado Correctamente!");
         } catch (error) {
-          console.error("❌ Error agregando family user: ", error);
-          setErrormsj("Error adding family user");
+          setErrormsj("❌ Error agregando usuario");
         } finally {
           setLoading(false);
         }
@@ -97,23 +94,18 @@ const UpdateUserProfileProvider = ({ children }) => {
           const updatedFamily = currentFamily.map((member: FamilyMember) =>
             member.dni === UpdateFamilyUser.oldDni ? { ...member, ...userToSave } : member
           );
-
           await updateDoc(userDocRef, { familyGroup: updatedFamily });
-
           // 3️⃣ Subimos el array actualizado a Firestore
           await updateDoc(userDocRef, { familyGroup: updatedFamily });
-
-          console.log("👨‍👩‍👧‍👦 Familiar actualizado correctamente!");
-          setSuccessmsj("Family user updated successfully!");
+          setSuccessmsj("👨‍👩‍👧‍👦 Familiar actualizado correctamente!");
         } catch (error) {
-          console.error("❌ Error actualizando family user:", error);
-          setErrormsj("Error updating family user");
+
+          setErrormsj("👨‍👩‍👧‍👦 Error actualizado familiar");
         } finally {
           setLoading(false);
         }
       }
     };
-
     updateFamilyUser();
   }, [UpdateFamilyUser, docId, db]);
 
@@ -141,12 +133,10 @@ const UpdateUserProfileProvider = ({ children }) => {
         // 3️⃣ Actualizar el documento en Firestore
         await updateDoc(userRef, { familyGroup: updatedFamily });
 
-        console.log("🗑️ Familiar eliminado correctamente!");
-        setSuccessmsj("Family member removed successfully!");
+        setSuccessmsj("🗑️ Familiar eliminado correctamente!");
         setRemoveFamilyMember(undefined); // Limpiar estado
       } catch (error) {
-        console.error("❌ Error eliminando familiar:", error);
-        setErrormsj("Error removing family member");
+        setErrormsj("❌ Error eliminando familiar:");
       } finally {
         setLoading(false);
       }
@@ -258,6 +248,7 @@ const UpdateUserProfileProvider = ({ children }) => {
         setDocId,
         setFamilyUser,
         setUpdateFamilyUser,
+
         setRemoveFamilyMember,
         setSuccessmsj,
         setErrormsj,

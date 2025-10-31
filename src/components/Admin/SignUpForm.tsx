@@ -2,7 +2,6 @@ import React, { useEffect, useContext } from 'react';
 import {
     Container,
     Paper,
-
     Typography,
     Button,
     TextField,
@@ -10,10 +9,10 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    useMediaQuery
+
 } from "@mui/material";
 import Grid from '@mui/material/Grid2';
-import { useTheme } from "@mui/material/styles";
+
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -24,6 +23,8 @@ import dayjs, { Dayjs } from "dayjs";
 // import { joinUpContext } from "../../Context/JoinUpContext";
 // import { getAllUsersContext } from "../../Context/GetAllUsersContext";
 import { signUpContext } from '../../Context/SignUpContext';
+import Notification from '../../components/Notification';
+import LoadingOverlay from '../../components/LoadingOverlay';
 
 interface SignUpFormValues {
     name: string;
@@ -51,14 +52,11 @@ interface SignUpFormProps {
 
 const SignUpForm: React.FC<SignUpFormProps> = ({ user, onClose, mode }) => {
 
-    // const { setJoinUpUser } = useContext(joinUpContext);
-    const { setSignUpUser, setIdForDeleteApplication, setRejectApplication, setAcceptApplication } = useContext(signUpContext);
-    // const { loguedUserInformation } = useContext(getAllUsersContext);
+   
+    const { signUpSuccess, setSignUpSuccess, signUpError, setSignUpError, setSignUpUser, setIdForDeleteApplication, setRejectApplication, setAcceptApplication, loading } = useContext(signUpContext);
 
     const genders = ["Masculino", "Femenino", "Otro"];
 
-    const theme = useTheme();
-    // const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     useEffect(() => {
         if (user) setIdForDeleteApplication(user.id);
@@ -373,6 +371,23 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ user, onClose, mode }) => {
                     )}
                 </Formik>
             </Paper>
+
+            <LoadingOverlay open={loading} message="Registrando Socio..." />
+
+            {/* <Notification
+                open={signUpSuccess}
+                message={signUpSuccess}
+                type="success"
+                onClose={() => setSignUpSuccess("")}
+            />
+            <Notification
+                open={signUpError}
+                message={signUpError}
+                type="error"
+                onClose={() => setSignUpError("")}
+            /> */}
+
+
         </Container>
     );
 };
