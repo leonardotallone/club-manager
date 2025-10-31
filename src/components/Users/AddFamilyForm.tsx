@@ -27,6 +27,8 @@ import * as Yup from "yup";
 import { getAllDisciplinesContext } from "../../Context/GetAllDisciplinesContext";
 import { updateUserProfileContext } from "../../Context/UpdateUserProfileContext";
 
+import LoadingOverlay from "../../components/LoadingOverlay";
+
 interface AddFamilyFormValues {
     name: string;
     lastName: string;
@@ -67,7 +69,7 @@ interface AddFamilyFormProps {
 
 const AddFamilyForm: React.FC<AddFamilyFormProps> = ({ onClose }) => {
     const { disciplines } = useContext(getAllDisciplinesContext);
-    const { setFamilyUser } = useContext(updateUserProfileContext);
+    const { setFamilyUser, loading } = useContext(updateUserProfileContext);
 
     const [disciplineFamily, setDisciplineFamily] = useState<string[]>([]);
     const [full, setFull] = useState(false);
@@ -414,6 +416,7 @@ const AddFamilyForm: React.FC<AddFamilyFormProps> = ({ onClose }) => {
                         </Form>
                     )}
                 </Formik>
+                <LoadingOverlay open={loading} />
             </Container>
         </Box>
     );

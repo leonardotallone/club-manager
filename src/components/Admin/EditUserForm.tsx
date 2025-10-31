@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import {
   Box,
   Container,
@@ -33,6 +33,8 @@ import { getAllCategoriesContext } from "../../Context/GetAllCategoriesContext";
 import { getAllDisciplinesContext } from "../../Context/GetAllDisciplinesContext";
 import { updateUserProfileContext } from "../../Context/UpdateUserProfileContext";
 import { controlModalsContext } from "../../Context/ControModalsContext";
+
+import LoadingOverlay from "../../components/LoadingOverlay";
 
 interface SignUpFormValues {
   name: string;
@@ -72,10 +74,8 @@ const ensureStringArray = (v: any): string[] =>
 const EditUserForm: React.FC<EditUserFormProps> = ({ user, mode = "user", onClose }) => {
   const { categories } = useContext(getAllCategoriesContext);
   const { disciplines } = useContext(getAllDisciplinesContext);
-  const { setUpdateUserData, setDocId } = useContext(updateUserProfileContext);
-  const { setOpenAdd, setOpenEdit } = useContext(controlModalsContext);
+  const { setUpdateUserData, setDocId, loading } = useContext(updateUserProfileContext);
 
-  const navigate = useNavigate();
   const isAdmin = mode === "admin";
 
   const [discipline, setDiscipline] = useState<string[]>(ensureStringArray(user?.disciplines));
@@ -98,34 +98,6 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ user, mode = "user", onClos
   const familyGroupNames = Array.isArray(user?.familyGroup)
     ? user.familyGroup.map((m: any) => `${m?.name ?? ""} ${m?.lastName ?? ""}`.trim()).join(", ")
     : "";
-
-//   const handleSubmit = (values: SignUpFormValues) => {
-//     const base: any = {
-//       ...values,
-//       birthDate: values.birthDate ? dayjs(values.birthDate).toDate() : null,
-//       applicationDate: values.applicationDate ? dayjs(values.applicationDate).toDate() : null,
-//       disciplines: discipline,
-//       address: values.address,
-//       contactNumber: values.contactNumber,
-//       avatarURL: values.avatarURL,
-//       gender: values.gender,
-//     };
-
-//     if (isAdmin) {
-//       base.blockade = lockUser;
-//       base.full = user?.full ?? false;
-//       base.category = values.category;
-//     } else {
-//       base.blockade = user?.blockade ?? false;
-//       base.full = full;
-//       base.category = user?.category ?? values.category;
-//     }
-
-//     setUpdateUserData(base);
-//     setHasChanges(false);
-//     if (onClose) onClose();
-//   };
-
 
 const handleSubmit = (values: SignUpFormValues) => {
   const base: any = {
@@ -551,6 +523,8 @@ const handleSubmit = (values: SignUpFormValues) => {
             </Form>
           )}
         </Formik>
+
+         <LoadingOverlay open={loading} />
       </Container>
     </Box>
   );

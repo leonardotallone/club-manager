@@ -13,10 +13,6 @@ const ControlModalsProvider = ({ children }) => {
 
     const [openJoinUp, setOpenJoinUp] = useState(false);
 
-    console.log("OPEN RECOVER PASS", openRecoverPassword)
-
-
-
     return (
         <controlModalsContext.Provider value={{
             openAdd,

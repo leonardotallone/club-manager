@@ -19,7 +19,7 @@ const UpdateUserProfileProvider = ({ children }) => {
 
   const [updateUserData, setUpdateUserData] = useState<any>()
   const [docId, setDocId] = useState<string | undefined>()
-  console.log("DOC ID", docId)
+
   const [familyUser, setFamilyUser] = useState<FamilyMember | undefined>()
   const [UpdateFamilyUser, setUpdateFamilyUser] = useState<FamilyMember | undefined>()
   const [removeFamilyMember, setRemoveFamilyMember] = useState<any>()
@@ -27,21 +27,8 @@ const UpdateUserProfileProvider = ({ children }) => {
   const [successmsj, setSuccessmsj] = useState<string>("");
   const [errormsj, setErrormsj] = useState<string>("");
 
-  const [updatedUser, setUpdatedUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
-
-  // const { loguedUserInformation } = useContext(getAllUsersContext);
-  // const { loguedUserInformation } = useContext(getAllUsersContext) as unknown as { loguedUserInformation: UserInformation };
-
-  // const { imageURL } = useContext(avatarUploaderContext);
-
-  // const { subscription } = useContext( payPalSubscriptionSubscribeContext);
-  // const { subscriptionDetails} = useContext( paypalSubscriptionDetailsContext);
-  // const { subscriptionCancelSuccess } = useContext(paypalSubscriptionCancelContext);
-  // console.log("UPDATE USER DATA EN CONTEXT", updateUserData)
-  // console.log("DOC ID", docId)
-  // console.log("FAMILY USER", familyUser)
 
   const db = getFirestore(FIREBASE_APP);
 
@@ -104,15 +91,6 @@ const UpdateUserProfileProvider = ({ children }) => {
           const data = docSnap.data();
           const currentFamily: FamilyMember[] = data.familyGroup || [];
 
-
-          // ✅ Buscamos por el DNI original (no el nuevo)
-          // const updatedFamily = currentFamily.map((member: FamilyMember) =>
-          //   member.dni === UpdateFamilyUser.oldDni
-          //     ? { ...member, ...UpdateFamilyUser } // Actualizamos incluyendo el nuevo DNI
-          //     : member
-          // );
-
-
           const userToSave = { ...UpdateFamilyUser };
           delete userToSave.oldDni;
 
@@ -121,9 +99,6 @@ const UpdateUserProfileProvider = ({ children }) => {
           );
 
           await updateDoc(userDocRef, { familyGroup: updatedFamily });
-
-
-
 
           // 3️⃣ Subimos el array actualizado a Firestore
           await updateDoc(userDocRef, { familyGroup: updatedFamily });
@@ -275,7 +250,6 @@ const UpdateUserProfileProvider = ({ children }) => {
     <updateUserProfileContext.Provider
       value={{
         userForEdit,
-        updatedUser,
         loading,
         successmsj,
         errormsj,

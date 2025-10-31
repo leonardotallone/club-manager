@@ -1,4 +1,3 @@
-// PasswordRecoverForm.tsx
 import React, { useContext, useState } from "react";
 import { Box, Button, TextField, Typography, Modal } from "@mui/material";
 import Grid from "@mui/material/Grid2";
@@ -10,43 +9,43 @@ import { useNavigate } from "react-router-dom";
 import { recoverPasswordContext } from "../Context/RecoverPasswordContext";
 import { controlModalsContext } from "../Context/ControModalsContext";
 
+import LoadingOverlay from "./LoadingOverlay";
+import Notification from "./Notification";
+
 const validationSchema = Yup.object({
   email: Yup.string().email("Correo electrónico inválido").required("El campo es obligatorio"),
 });
 
 const PasswordRecoverForm: React.FC = () => {
-  const ctx = useContext(recoverPasswordContext);
-  if (!ctx) throw new Error("recoverPasswordContext no disponible");
 
-  const { loading, handlePasswordReset } = ctx;
-  const { setOpenRecoverPassword, setOpenRecoverEmail } = useContext(controlModalsContext);
 
-  const [openModalSuccess, setOpenModalSuccess] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const [localError, setLocalError] = useState(""); // <-- error manejado localmente
+  const {
+    handleRecoverPassword,
+    recoverPasswordSuccess,
+    setRecoverPasswordSuccess,
+    recoverPasswordError,
+    setRecoverPasswordError,
+    loading,
+  } = useContext(recoverPasswordContext);
+  const { setOpenRecoverPassword, setOpenRecoverEmail, setOpenLogin } = useContext(controlModalsContext);
 
   const navigate = useNavigate();
 
-  const handleCloseModal = () => {
-    setOpenModalSuccess(false);
-    navigate("/");
-  };
 
-  const handleSubmit = async (values: { email: string }) => {
-    // Limpio el error local IMEDIATAMENTE
-    setLocalError("");
-    // Llamo al provider pasando el email
-    const result = await handlePasswordReset(values.email);
 
-    if (!result.ok) {
-      // muestro el error en el helperText a través de localError
-      setLocalError(result.message ?? "Error inesperado");
-      return;
+  const handleSubmit = async (values: { email: string }, { resetForm }: any) => {
+    const ok = await handleRecoverPassword(values.email);
+    if (ok) resetForm(); // limpia el campo si fue exitoso
+
+    if (ok) {
+      resetForm();
+      // ✅ Espera breve para que el usuario vea la notificación
+      setTimeout(() => {
+        setOpenRecoverPassword(false);
+        setOpenLogin(true);
+      }, 3000);
     }
 
-    // éxito
-    setModalMessage(result.message ?? "Solicitud enviada");
-    setOpenModalSuccess(true);
   };
 
   return (
@@ -82,14 +81,14 @@ const PasswordRecoverForm: React.FC = () => {
               onChange={(e) => {
                 handleChange(e);
                 // limpio el error local de forma inmediata al tipear
-                if (localError) setLocalError("");
+                // if (localError) setLocalError("");
                 // si el provider devolviera errores por campo podrías llamar:
                 // setFieldError("email", "");
               }}
               onBlur={handleBlur}
-              error={(touched.email && Boolean(errors.email)) || Boolean(localError)}
+              error={(touched.email && Boolean(errors.email))}
               helperText={
-                touched.email && errors.email ? errors.email : localError ? localError : " "
+                touched.email && errors.email ? errors.email : " "
               }
               sx={{
                 mb: 3,
@@ -127,7 +126,7 @@ const PasswordRecoverForm: React.FC = () => {
                     height: 32,
                   }}
                 >
-                  {loading ? "Enviando..." : "Enviar"}
+                  Enviar
                 </Button>
               </Grid>
             </Grid>
@@ -153,30 +152,21 @@ const PasswordRecoverForm: React.FC = () => {
         )}
       </Formik>
 
-      <Modal open={openModalSuccess} onClose={handleCloseModal} aria-labelledby="child-modal-title">
-        <Box sx={{
-          maxWidth: 300,
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          bgcolor: "rgba(29, 29, 29, 0.85)",
-          borderRadius: 2,
-          boxShadow: 24,
-          p: 3,
-          textAlign: "center",
-        }}>
-          <Typography id="child-modal-title" sx={{ fontSize: 17, color: "white", fontWeight: 700, mb: 1 }}>
-            Solicitud Enviada Exitosamente
-          </Typography>
-          <Typography sx={{ fontSize: 13, color: "white", fontWeight: 400, mb: 2 }}>
-            {modalMessage}
-          </Typography>
-          <Button onClick={handleCloseModal} sx={{ backgroundColor: "transparent", color: "#b71c1c", textTransform: "none", fontSize: 17 }}>
-            Aceptar
-          </Button>
-        </Box>
-      </Modal>
+
+      <Notification
+        open={recoverPasswordSuccess}
+        message={recoverPasswordSuccess}
+        type="success"
+        onClose={() => setRecoverPasswordSuccess("")}
+      />
+      <Notification
+        open={recoverPasswordError}
+        message={recoverPasswordError}
+        type="error"
+        onClose={() => setRecoverPasswordError("")}
+      />
+
+      <LoadingOverlay open={loading} />
     </Box>
   );
 };

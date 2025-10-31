@@ -27,22 +27,27 @@ import DigitalCard from "./DigitalCard";
 import EditUserForm from "../Admin/EditUserForm";
 import AddFamilyForm from "./AddFamilyForm";
 import EditFamilyForm from "./EditFamilyForm";
+import EraseConfirm from "../EraseConfirm"
 
 
 const UserDashboard = () => {
   const { loguedUserInformation } = useContext(getAllUsersContext);
-  console.log(loguedUserInformation)
   const { setDocId } = useContext(updateUserProfileContext);
-
   const { breakdown } = useContext(FeesContext);
 
   const [openCard, setOpenCard] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
   const [openAddForm, setOpenAddForm] = useState(false);
   const [openEditFamilyForm, setOpenEditFamilyForm] = useState(false)
- 
+
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [selectedFamilyMember, setSelectedFamilyMember] = useState<any>(null);
+
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [deleteAction, setDeleteAction] = useState<() => void>(() => () => {});
+  const [dialogMessage, setDialogMessage] = useState("");
+  const [notify, setNotify] = useState({ open: false, message: "", type: "success" as "success" | "error" | "info" });
 
 
 
@@ -136,6 +141,19 @@ const UserDashboard = () => {
   };
 
   const handleCloseEditFamilyForm = () => setOpenEditFamilyForm(false)
+
+
+  // Acción 1: borrar usuario
+  const handleDeleteUser = () => {
+    console.log("🧍 Eliminando usuario...");
+    setNotify({ open: true, message: "Usuario eliminado correctamente", type: "success" });
+  };
+
+  // Acción 2: borrar familiar
+  const handleDeleteFamily = () => {
+    console.log("👨‍👩‍👧 Eliminando familiar...");
+    setNotify({ open: true, message: "Familiar eliminado correctamente", type: "success" });
+  };
 
   return (
     <>
@@ -238,9 +256,11 @@ const UserDashboard = () => {
               <EditRoundedIcon fontSize={isMobile ? "medium" : "large"} />
             </IconButton>
             <IconButton
-              onClick={() =>
-                console.log("🗑️ Eliminar titular y grupo familiar completo")
-              }
+            onClick={() => {
+            setDeleteAction(() => handleDeleteUser); // 👈 guardamos la acción que queremos ejecutar
+            setDialogMessage("¿Estás seguro de que querés eliminar este usuario?");
+            setOpenDialog(true);
+          }}
               sx={{
                 color: "#444",
                 border: "1px solid #444",
@@ -357,7 +377,11 @@ const UserDashboard = () => {
                         </IconButton>
                         <IconButton
                           size="small"
-                          onClick={() => console.log(`🗑️ Eliminar ${member?.name}`)}
+                           onClick={() => {
+            setDeleteAction(() => handleDeleteFamily); // 👈 cambiamos la acción dinámica
+            setDialogMessage("¿Estás seguro de que querés eliminar este familiar?");
+            setOpenDialog(true);
+          }}
                           sx={{
                             color: "#444",
                             "&:hover": { bgcolor: "#fbeaea", color: "#b71c1c" },
@@ -597,13 +621,23 @@ const UserDashboard = () => {
               overflow: "hidden",
             }}
           >
-           
+
             <EditFamilyForm user={selectedFamilyMember}
               onClose={handleCloseEditFamilyForm} />
 
           </Box>
         </Fade>
       </Modal>
+
+      <EraseConfirm
+        open={openDialog}
+        message="¿Estás seguro de que querés eliminar este registro? Esta acción no se puede deshacer."
+         onConfirm={() => {
+          deleteAction(); // 👈 ejecuta la acción actual
+          setOpenDialog(false);
+        }}
+        onCancel={() => setOpenDialog(false)}
+      />
     </>
   );
 };

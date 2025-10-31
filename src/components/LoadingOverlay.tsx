@@ -9,7 +9,7 @@ interface LoadingOverlayProps {
 }
 
 const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
-  message = "Cargando...",
+  message = "",
   color = "#b71c1c",
   size = 48,
   open = false,

@@ -10,6 +10,7 @@ import DigitalCard from "../components/Users/DigitalCard"
 
 import UserDocs from '../components/Users/UserDocs';
 
+import LoadingOverlay from "../components/LoadingOverlay"
 import Footer from '../components/Footer';
 import Advertising from '../components/Advertising';
 
@@ -56,27 +57,13 @@ const UserScreen = () => {
                     }}
                 >
                     {loading ? (
-                        <Box
-                            sx={{
-                                position: 'absolute',
-                                inset: 0,
-                                backgroundColor: 'rgba(0,0,0,0.4)',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                borderRadius: 2,
-                            }}
-                        >
-                            <CircularProgress color="inherit" />
-                        </Box>
-                    ) : (<>
-                        <Fade key={activeUserView} in={!loading} timeout={1200}>
+                        <LoadingOverlay open={loading}/>
+                    ) : (
+                        <Fade key={activeUserView} in timeout={1200}>
                             <Box sx={{ width: "100%" }}>
                                 {renderView()}
                             </Box>
                         </Fade>
-                    </>
-
                     )}
                 </Container>
 

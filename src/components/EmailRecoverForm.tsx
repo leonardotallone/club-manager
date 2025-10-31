@@ -6,6 +6,9 @@ import * as Yup from "yup";
 import { recoverUserContext } from '../Context/RecoverUserContext';
 import { controlModalsContext } from '../Context/ControModalsContext';
 
+import LoadingOverlay from './LoadingOverlay';
+import Notification from './Notification';
+
 const validationSchema = Yup.object({
   dni: Yup.string()
     .matches(/^\d+$/, "El DNI debe contener solo números")
@@ -14,32 +17,32 @@ const validationSchema = Yup.object({
 });
 
 const EmailRecoverForm: React.FC = () => {
-  const { setDni, recoverUserError, setRecoverUserError, recoverUserSuccess, setRecoverUserSuccess } = useContext(recoverUserContext);
+  const { setDni, recoverUserError, setRecoverUserError, recoverUserSuccess, setRecoverUserSuccess, loading } = useContext(recoverUserContext);
   const { setOpenRecoverEmail, setOpenRecoverPassword, setOpenLogin } = useContext(controlModalsContext);
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
 
   // Estado para almacenar la función resetForm de Formik
   const [resetFn, setResetFn] = useState<(() => void) | null>(null);
 
-  useEffect(() => {
-    if (recoverUserSuccess) setOpen(true);
-  }, [recoverUserSuccess]);
+  // useEffect(() => {
+  //   if (recoverUserSuccess) setOpen(true);
+  // }, [recoverUserSuccess]);
 
-  useEffect(() => {
-    if (!open && resetFn) {
-      resetFn();
-    }
-  }, [open, resetFn]);
+  // useEffect(() => {
+  //   if (!open && resetFn) {
+  //     resetFn();
+  //   }
+  // }, [open, resetFn]);
 
-  const handleCloseModal = () => {
-    setOpen(false);
-    setDni("");
-    setRecoverUserSuccess("");
-    setRecoverUserError("");
-    if (resetFn) resetFn();
-    setOpenRecoverEmail(false)
-    setOpenLogin(true);
-  };
+  // const handleCloseModal = () => {
+  //   setOpen(false);
+  //   setDni("");
+  //   setRecoverUserSuccess("");
+  //   setRecoverUserError("");
+  //   if (resetFn) resetFn();
+  //   setOpenRecoverEmail(false)
+  //   setOpenLogin(true);
+  // };
 
   const handleSubmit = (values: { dni: string }, { resetForm }: { resetForm: () => void }) => {
     setDni({ dni: values.dni });
@@ -98,13 +101,11 @@ const EmailRecoverForm: React.FC = () => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 onFocus={() => setRecoverUserError("")}
-                error={(touched.dni && Boolean(errors.dni)) || Boolean(recoverUserError)}
+                error={(touched.dni && Boolean(errors.dni))}
                 helperText={
                   touched.dni && errors.dni
-                    ? errors.dni
-                    : recoverUserError
-                      ? recoverUserError
-                      : " "
+                    ? errors.dni :
+                    " "
                 }
                 sx={{
                   mb: 3,
@@ -171,74 +172,20 @@ const EmailRecoverForm: React.FC = () => {
         }}
       </Formik>
 
-      <Modal open={open} onClose={handleCloseModal}>
-        <Box
-          sx={{
-            width: 340,
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            backdropFilter: "blur(10px)",
-            bgcolor: "rgba(255, 255, 255, 0.9)",
-            borderRadius: 3,
-            boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
-            p: 4,
-            textAlign: "center",
-          }}
-        >
-          <Box
-            sx={{
-              width: 60,
-              height: 60,
-              borderRadius: "50%",
-              backgroundColor: "#4caf50",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              mx: "auto",
-              mb: 2,
-            }}
-          >
-            <Typography sx={{ color: "white", fontSize: 32, fontWeight: 600 }}>✓</Typography>
-          </Box>
+      <Notification
+        open={recoverUserSuccess}
+        message={`Su Correo es ${recoverUserSuccess}`}
+        type="success"
+        onClose={() => setRecoverUserSuccess("")}
+      />
+      <Notification
+        open={recoverUserError}
+        message={recoverUserError}
+        type="error"
+        onClose={() => setRecoverUserError("")}
+      />
 
-          <Typography sx={{ fontSize: 18, fontWeight: 700, color: "#2e7d32", mb: 1 }}>
-            ¡Usuario encontrado!
-          </Typography>
-
-          <Typography sx={{ fontSize: 14, color: "#424242", mb: 1 }}>
-            El correo electrónico asociado a este DNI es:
-          </Typography>
-
-          <Typography
-            sx={{
-              fontSize: 16,
-              fontWeight: 700,
-              color: "#b71c1c",
-              mb: 3,
-              wordBreak: "break-word",
-            }}
-          >
-            {recoverUserSuccess}
-          </Typography>
-
-          <Button
-            onClick={handleCloseModal}
-            fullWidth
-            sx={{
-              backgroundColor: "#b71c1c",
-              color: "white",
-              textTransform: "none",
-              fontWeight: 600,
-              borderRadius: 2,
-              '&:hover': { backgroundColor: "darkred" },
-            }}
-          >
-            Aceptar
-          </Button>
-        </Box>
-      </Modal>
+      <LoadingOverlay open={loading} />
     </Box>
   );
 };

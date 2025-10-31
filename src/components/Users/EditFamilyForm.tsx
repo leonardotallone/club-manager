@@ -26,6 +26,8 @@ import * as Yup from "yup";
 import { getAllDisciplinesContext } from "../../Context/GetAllDisciplinesContext";
 import { updateUserProfileContext } from "../../Context/UpdateUserProfileContext";
 
+import LoadingOverlay from "../../components/LoadingOverlay";
+
 interface EditFamilyFormProps {
     user: any;
     onClose: () => void;
@@ -58,7 +60,7 @@ const ensureStringArray = (v: any): string[] =>
 
 const EditFamilyForm: React.FC<EditFamilyFormProps> = ({ user, onClose }) => {
     const { disciplines } = useContext(getAllDisciplinesContext);
-    const { setUpdateFamilyUser } = useContext(updateUserProfileContext);
+    const { setUpdateFamilyUser, loading } = useContext(updateUserProfileContext);
     const genders = ["Masculino", "Femenino", "Otro"];
 
     return (
@@ -360,6 +362,7 @@ const EditFamilyForm: React.FC<EditFamilyFormProps> = ({ user, onClose }) => {
                         </Form>
                     )}
                 </Formik>
+                <LoadingOverlay open={loading} />
             </Container>
         </Box>
     );

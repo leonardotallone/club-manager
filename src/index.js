@@ -20,7 +20,7 @@ import RecoverUserProvider from "./Context/RecoverUserContext";
 
 import SignedUserProvider from "./Context/SignedUserContext";
 import RecoverPasswordProvider from "./Context/RecoverPasswordContext";
-import NewPasswordProvider from "./Context/NewPasswordContext";
+
 import ControlModalsProvider from "./Context/ControModalsContext";
 import DisplaySelectorViewProvider from "./Context/DisplaySelectorViewContext";
 
@@ -40,33 +40,31 @@ root.render(
       <DisplaySelectorViewProvider>
         <SignInUserProvider>
           <GetAllJoinUpProvider>
-            <NewPasswordProvider>
-              <SignedUserProvider>
-                <SignUpProvider>
-                  <JoinUpProvider>
-                    <GetAllUsersProvider>
-                      <RecoverUserProvider>
-                        <RecoverPasswordProvider>
-                          <GetAllCategoriesProvider>
-                            <GetAllDisciplinesProvider>
-                              <ControlModalsProvider>
-                                <RemoveUserProvider>
-                                  <UpdateUserProfileProvider>
-                                    <FeesProvider>
-                                      <App />
-                                    </FeesProvider>
-                                  </UpdateUserProfileProvider>
-                                </RemoveUserProvider>
-                              </ControlModalsProvider>
-                            </GetAllDisciplinesProvider>
-                          </GetAllCategoriesProvider>
-                        </RecoverPasswordProvider>
-                      </RecoverUserProvider>
-                    </GetAllUsersProvider>
-                  </JoinUpProvider>
-                </SignUpProvider>
-              </SignedUserProvider>
-            </NewPasswordProvider>
+            <SignedUserProvider>
+              <SignUpProvider>
+                <JoinUpProvider>
+                  <GetAllUsersProvider>
+                    <RecoverUserProvider>
+                      <RecoverPasswordProvider>
+                        <GetAllCategoriesProvider>
+                          <GetAllDisciplinesProvider>
+                            <ControlModalsProvider>
+                              <RemoveUserProvider>
+                                <UpdateUserProfileProvider>
+                                  <FeesProvider>
+                                    <App />
+                                  </FeesProvider>
+                                </UpdateUserProfileProvider>
+                              </RemoveUserProvider>
+                            </ControlModalsProvider>
+                          </GetAllDisciplinesProvider>
+                        </GetAllCategoriesProvider>
+                      </RecoverPasswordProvider>
+                    </RecoverUserProvider>
+                  </GetAllUsersProvider>
+                </JoinUpProvider>
+              </SignUpProvider>
+            </SignedUserProvider>
           </GetAllJoinUpProvider>
         </SignInUserProvider>
       </DisplaySelectorViewProvider>

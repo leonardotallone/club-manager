@@ -21,7 +21,7 @@ const RecoverUserProvider = ({ children }) => {
             );
 
             if (!userFound) {
-                setRecoverUserError("El DNI ingresado no se encuentra registrado");
+                setRecoverUserError("El Documento ingresado, no se encuentra registrado");
                 setRecoverUserSuccess("");
             } else {
                 setRecoverUserSuccess(userFound.email); // ✅ guardamos email
